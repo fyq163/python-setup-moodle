@@ -108,10 +108,13 @@
 
   function buildToc(toc, el) {
     if (!el) return;
+    // Build a clean nested/flat list. The 1 / 1.1 / 1.2 numbering is rendered
+    // entirely by CSS counters (see .sidebar in style.css) — no numbers in the
+    // markup, so the Markdown never needs them.
     var ol = document.createElement('ol');
     toc.forEach(function (item) {
       var li = document.createElement('li');
-      if (item.level === 'H3') li.style.marginLeft = '.6rem';
+      li.className = (item.level === 'H3') ? 'toc-h3' : 'toc-h2';
       var a = document.createElement('a');
       a.href = '#' + item.id;
       a.textContent = item.text;

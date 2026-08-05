@@ -20,7 +20,7 @@ versions collide:
 A virtual environment keeps each project's dependencies in its own folder, so projects
 never step on each other — and never touch the system Python.
 
-> [!WARNING]
+> ⚠️
 > On macOS/Linux, `/usr/bin/python3` is managed by the system. Installing packages into it
 > with `sudo pip install …` can break OS tools. **Always work inside a project environment.**
 
@@ -95,7 +95,7 @@ set of packages. Think of it as `requirements.txt` on steroids.
 | Human-readable | Yes | Machine-generated (don't edit by hand) |
 | Tool | pip / uv | uv only |
 
-> [!TIP]
+> 💡
 > For coursework, `requirements.txt` is enough and easier to read. Once a project
 > matters (a real app, a paper's analysis), switch to `uv.lock` so results stay
 > reproducible. Either way, **keep the file alongside your project** so the environment
@@ -152,7 +152,7 @@ A quick comparison to help you choose.
 | Speed | Slower | Very fast |
 | Best for | Data-science stacks needing system libs | Everyday Python projects |
 
-> [!TIP]
+> 💡
 > Our default recommendation: **uv**. Create one `.venv` per project, and use `uv run`
 > so you rarely have to activate manually. Switch to conda only if a package you need
 > ships non-Python system libraries.

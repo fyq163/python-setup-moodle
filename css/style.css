@@ -42,6 +42,8 @@ body {
 a { color: var(--primary); text-decoration: none; transition: color .15s ease; }
 a:hover { color: var(--primary-dark); }
 h1, h2, h3, h4 { color: #111827; line-height: 1.3; font-weight: 700; }
+/* Keep anchored headings clear of the sticky top navigation when jumped to. */
+h1, h2, h3 { scroll-margin-top: calc(var(--nav-h) + 1rem); }
 h2 { font-size: 24px; margin-top: 2.2rem; }
 h3 { font-size: 19px; margin-top: 1.6rem; }
 h4 { font-size: 16px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
@@ -90,16 +92,44 @@ code {
 }
 .article { min-width: 0; }
 
-/* ---------- Sidebar TOC ---------- */
+/* ---------- Sidebar TOC ("In this chapter") ---------- */
 .sidebar {
   position: sticky; top: calc(var(--nav-h) + 1.5rem); align-self: start;
+  /* Never let a long TOC push the footer off-screen or get clipped: cap its
+     height to the viewport (minus the nav + some breathing room) and scroll. */
+  max-height: calc(100vh - var(--nav-h) - 3rem);
+  overflow-y: auto;
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 1.1rem 1.2rem; box-shadow: var(--shadow);
 }
-.sidebar h4 { margin: 0 0 .6rem; }
-.sidebar ol { margin: 0; padding-left: 1.1rem; }
-.sidebar li { margin: .35rem 0; }
-.sidebar a { color: var(--text-muted); font-size: 14.5px; }
+.sidebar h4 {
+  margin: 0 0 .8rem; font-size: 13px; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--primary-dark); border-bottom: 1px solid var(--border); padding-bottom: .5rem;
+}
+.sidebar ol { margin: 0; padding-left: 0; list-style: none; counter-reset: toc-major; }
+.sidebar li { margin: .3rem 0; position: relative; }
+/* H2 = top-level entry (1, 2, 3…). Increment the major counter and reset the
+   minor one; render just the major number. */
+.sidebar li.toc-h2 {
+  counter-increment: toc-major; counter-reset: toc-minor;
+  padding-left: 1.8rem;
+}
+.sidebar li.toc-h2 > a::before {
+  content: counter(toc-major); position: absolute; left: 0;
+  min-width: 1.4rem; color: var(--primary); font-weight: 700;
+  font-variant-numeric: tabular-nums; font-size: 12.5px;
+}
+/* H3 = sub-entry (1.1, 1.2, 2.1…). Increment the minor counter and render the
+   combined "major.minor" number; indent a little further. */
+.sidebar li.toc-h3 {
+  counter-increment: toc-minor; padding-left: 2.8rem;
+}
+.sidebar li.toc-h3 > a::before {
+  content: counter(toc-major) "." counter(toc-minor); position: absolute; left: 0;
+  min-width: 2.2rem; color: var(--primary); font-weight: 700;
+  font-variant-numeric: tabular-nums; font-size: 12.5px;
+}
+.sidebar a { color: var(--text-muted); font-size: 14.5px; display: block; }
 .sidebar a:hover { color: var(--primary); }
 
 /* ---------- Page header (tag + title) ---------- */

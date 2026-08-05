@@ -23,7 +23,7 @@ identical:
 
 ![TODO: Screenshot of VS Code — the "Python: Select Interpreter" picker, highlighting the virtual environment created in Chapter 3.](../assets/img/placeholder.svg)
 
-> [!TIP]
+> 💡
 > Once the interpreter is selected, the play button (▶) and the terminal both use *your*
 > project's Python — not the system one. That is the whole point.
 
@@ -53,17 +53,8 @@ They are just editors with an AI chat bolted on; everything from Chapter 1 (path
 running scripts) still applies. Launch them in your project folder and they use whatever
 Python your shell currently has active.
 
-## GitHub Copilot — student subscription
+## GitHub Copilot — university subscription
 
 GitHub Copilot is an AI pair-programmer that suggests code as you type. **Students get it
-free** (and many other developer tools) through the [GitHub Education](https://education.github.com/)
+free** (and many other developer tools) through the [GitHub Copilot - Information Technology Services - HKU](https://its.hku.hk/software/github-copilot/)
 pack with a school email.
-
-1. Register with your `.edu` / university email at GitHub Education.
-2. In VS Code / JetBrains, install the **GitHub Copilot** extension and sign in.
-3. Start typing — suggestions appear inline; press `Tab` to accept.
-
-> [!TIP]
-> **Tip:** With a school email you can often get GitHub Copilot (and other developer tools)
-> for free via the GitHub Education pack. Even the editor used to write this guide
-> (CodeBuddy) offers student access — check your faculty's software portal too.

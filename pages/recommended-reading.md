@@ -53,6 +53,6 @@ ruff format .         # format: rewrite files to a consistent style
 Drop a `ruff.toml` in your project to configure rules. Most teams adopt ruff because it
 runs in milliseconds even on large codebases.
 
-> [!TIP]
+> 💡
 > **Workflow:** write code → `ruff format .` → `ruff check .` → `uv run main.py`. Your
 > editor shows the same warnings live if you enable the Ruff extension.

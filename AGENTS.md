@@ -22,6 +22,15 @@ This repo serves as tutorial for beginners to learn how to use install a python 
    - Authoring notes belong only in `![TODO: ...]` image placeholders or HTML comments
      (`<!-- TODO: ... -->`), which are hidden from the rendered page. `readme.md` and
      `serve.py` are maintainer docs and are exempt from this rule.
+6. **use emoji callouts, not GitHub-style alert syntax.** Never write GitHub-style alert
+   blocks (`> [!NOTE]`, `> [!TIP]`, `> [!WARNING]`, `> [!IMPORTANT]`) in any reader-facing
+   `.md`. Replace them with a leading emoji on the blockquote instead:
+   - `> [!NOTE]`     → `> 📝`
+   - `> [!TIP]`      → `> 💡`
+   - `> [!WARNING]`  → `> ⚠️`
+   - `> [!IMPORTANT]`→ `> ❗`
+   - `> [!CAUTION]`  → `> ⚠️`
+   This keeps callouts visible without relying on GitHub-only rendering.
 ## development phase
 - phase1: in html format, pure html for github page and paste to html previewer
 - phase2: tutorials in markdown format, with code snippets

@@ -33,8 +33,9 @@ install a Python environment and run their first lessons. Content is written in
 ### Markdown features supported
 
 - Standard Markdown: headings, lists, tables, fenced code blocks, links, images.
-- **GitHub-style alerts** become callouts: `> [!NOTE]`, `> [!TIP]`, `> [!WARNING]`,
-  `> [!IMPORTANT]`.
+- **Emoji callouts** become callouts: start a blockquote with `> 📝` (note), `> 💡` (tip),
+  `> ⚠️` (warning), or `> ❗` (important). Do **not** use GitHub-style alert syntax
+  (`> [!NOTE]` etc.), which only renders on GitHub.
 - A standalone image `![alt](path)` is wrapped in a `<figure>` with the `alt` text as the
   caption. Use `assets/img/placeholder.svg` as a placeholder and replace `src` later.
 - Shell code blocks (`bash`/`sh`/`zsh`/`powershell`/`cmd`) get colored `$` prompts and

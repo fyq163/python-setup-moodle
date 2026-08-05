@@ -18,88 +18,50 @@ beginners. You only need Python installed once per machine.
   - **Linux:** most desktops/servers → **x86_64**; newer ARM boards → **aarch64**.
 
 If you are unsure, the installer pages below usually auto-detect the right one.
-## Method A · Standalone installer
 
-Best if you want the official Python and nothing else.
+> **⚠️ Choose a Stable Release (all methods & platforms).** Whether you use the standalone
+> installer, conda, or uv, pick a **Stable Release** — the latest stable version (e.g.
+> Python 3.12.x or 3.13.x). **Do not** download or install anything marked *Pre-release* or
+> *Development*: those builds are for testing and may be unstable or break your packages.
 
-### Windows
+## Method A · With uv (most recommended)
 
-1. Go to [https://python.org/downloads/windows](https://www.python.org/downloads/windows).
-2. Download the **Windows installer (64-bit)**. 
-3. **Important:** on the first setup screen, tick **"Add python.exe to PATH"** before
-   clicking Install Now.
-4. After install, reopen PowerShell and verify:
+Best for beginners: one fast tool, local environments, minimal fuss.
 
-```powershell
-python --version
-# Python 3.12.x   (on Windows the command is `python`, not `python3`)
-```
-> Most windows personal computer are amd64 archetecure, if you are Microsfot Surface, it could be arm64
-Typical install path:
-```text
-C:\Users\<you>\AppData\Local\Programs\Python\Python312\
-```
+1. Install uv. Open the uv website (docs.astral.sh/uv) in your browser, go to the
+   **Installation** page, and download the installer for your system (macOS, Windows, or
+   Linux). Run it and follow the on-screen prompts — pick the default options when asked.
+   When it finishes, uv is installed.
 
-> [!WARNING]
-> If `python --version` still says "command not found" or opens the Microsoft Store, you
-> forgot to tick **Add to PATH**. Re-run the installer and choose "Modify", then enable
-> "Add Python to environment variables".
-> Readmre: https://learn.microsoft.com/en-us/windows/dev-environment/python?tabs=winget
+> 📝 After install, **close the terminal and open a new one**, then verify with `uv --version`.
 
-### macOS
-
-Two routes:
-
-- **Official installer** from [https://python.org/downloads/macos](https://www.python.org/downloads/macos)
-  (choose the **macOS 64-bit universal2** or **arm64** build). It may ask you to manually
-  adjust `PATH` — see "after install" below.
-- **Homebrew** (recommended if you already use it):
+2. Install a Python and create your first project:
 
 ```bash
-brew install python@3.12
+uv python install 3.12          # download CPython 3.12 (one time)
+uv init myproject               # create a project folder with a .venv
+cd myproject
+uv pip install pandas           # install a package into this project
+uv run main.py                  # run a script with this project's Python
 ```
 
-Typical paths:
-```text
-# Official installer:
-/Library/Frameworks/Python.framework/Versions/3.12/bin/python3
-# Homebrew:
-/opt/homebrew/bin/python3        # Apple Silicon
-/usr/local/bin/python3           # Intel
-```
+- **After closing the terminal**, you do **not** need to "activate" — just run
+  `uv run <script>` from the project folder and uv uses the local `.venv` automatically.
+- **To pin a pre-installed interpreter** (avoid re-downloading), set it in
+  `pyproject.toml`: `requires-python = "&gt;=3.12"` and `uv venv --python 3.12`.
 
-### Linux
-
-Use your package manager, or build from source.
-
-- Debian/Ubuntu:
-  ```bash
-  sudo apt update && sudo apt install python3 python3-pip python3-venv
-  ```
-- Fedora:
-  ```bash
-  sudo dnf install python3 python3-pip
-  ```
-- Arch:
-  ```bash
-  sudo pacman -S python python-pip
-  ```
-
-Source / other builds: [https://python.org/downloads/source](https://www.python.org/downloads/source).
-
-> [!NOTE]
-> On Linux, the system `python3` (e.g. `/usr/bin/python3`) is used by the OS. For your
-> own projects, still create a virtual environment (Chapter 2) rather than installing
-> packages globally with `sudo`.
-
-## Method B · With conda (Miniconda)
+## Method B · With conda (Miniconda, recommended)
 
 Best if you will use data-science packages with non-Python system dependencies.
 
-1. Install Miniconda for your platform:
-   - macOS: [mac-cli-install](https://www.anaconda.com/docs/getting-started/miniconda/install/mac-cli-install)
-   - Windows: [windows-cli-install (PowerShell)](https://www.anaconda.com/docs/getting-started/miniconda/install/windows-cli-install)
-   - Linux: [linux-install](https://www.anaconda.com/docs/getting-started/miniconda/install/linux-install)
+1. Install Miniconda. Open the Miniconda website (anaconda.com) in your browser, find the
+   **Miniconda** download for your system (macOS, Windows, or Linux), and download the
+   installer. Run it and follow the on-screen prompts — when asked whether to "Add Miniconda
+   to PATH" or "run conda init", you can leave the default; we explain `conda init` below.
+   When it finishes, Miniconda is installed.
+
+   > 📝 After install, **close the terminal and open a new one** so the `conda` command is
+   > available. Then verify with `conda --version`.
 2. Create and activate an environment:
 
 ```bash
@@ -114,39 +76,116 @@ python --version
   it download another copy: `conda create --name py312 --clone base` or use
   `conda create --name py312 python=$(python3 --version 2>&1 | cut -d' ' -f2)`.
 
-## Method C · With uv (recommended)
+### What to do if you are asked to run `conda init`
 
-Best for beginners: one fast tool, local environments, minimal fuss.
+The first time you open a terminal after installing conda, `conda activate` may fail with a
+message like *"To activate this environment, run `conda init` first."* Here is why, and what
+to do.
 
-1. Install uv:
+**Why `conda init` is needed.** `conda activate` only works if conda has hooked into your
+shell's startup file. `conda init` writes a small block of code into that file so the shell
+loads conda automatically every time you open a new terminal. Until you do this, the shell
+doesn't know what `conda activate` means.
 
-```bash
-# macOS / Linux
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Windows (PowerShell)
-winget install --id=astral-sh.uv -e
-
-# Or via Homebrew on macOS
-brew install uv
-```
-
-2. Install a Python and create your first project:
+**How to do it.** Just run it once for your shell (the command is harmless to re-run):
 
 ```bash
-uv python install 3.12          # download CPython 3.12 (one time)
-uv init myproject               # create a project folder with a .venv
-cd myproject
-uv pip install pandas           # install a package into this project
-uv run main.py                  # run a script with this project's Python
+conda init bash        # Linux default shell
+conda init zsh         # macOS default shell
+conda init powershell  # Windows (run in PowerShell)
 ```
 
-- **After closing the terminal**, you do **not** need to "activate" — just run `uv run
-  <script>` from the project folder and uv uses the local `.venv` automatically.
-- **To pin a pre-installed interpreter** (avoid re-downloading), set it in
-  `pyproject.toml`: `requires-python = ">=3.12"` and `uv venv --python 3.12`.
+Then **close and reopen the terminal** — the change only takes effect in new sessions.
 
-Source: [docs.astral.sh/uv/getting-started/installation](https://docs.astral.sh/uv/getting-started/installation/#pypi)
+**Where does conda write the code?**
+- **macOS / Linux (unix):** into your shell's rc file in your home directory —
+  `~/.bashrc` for bash, `~/.zshrc` for zsh. Open a new terminal and conda is ready.
+- **Windows:** into your **PowerShell profile script** (e.g.
+  `C:\Users\<you>\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1`),
+  *not* a `.bashrc`/`.zshrc` (those don't exist on Windows). If you use Git Bash on Windows,
+  conda instead writes to `~/.bashrc` under your Git install.
+
+**After `conda init`, you get a permanent prompt prefix.** Every new terminal will now show
+your current conda environment in the prompt, e.g. `(base)` when no environment is active.
+That `(base)` is a reminder of which environment your commands run in.
+
+> **⚠️ Don't use `base` as your main environment.** `base` is conda's built-in default env.
+> Keep it clean and instead `conda activate py312` (or any env you create) for real work,
+> so packages for different projects don't clash. Tip: run `conda config --set
+> auto_activate_base false` to stop conda from auto-activating `base` every time you open a
+> terminal.
+
+## Method C · Standalone installer
+
+Best if you want the official Python and nothing else.
+
+### Windows
+
+1. Open the python.org Windows download page in your browser.
+2. Download the **Windows installer (64-bit)** — the `amd64` executable.
+3. **Important:** on the first setup screen, tick **"Add python.exe to PATH"** before
+   clicking Install Now.
+4. After install, reopen PowerShell and verify:
+
+```powershell
+python --version
+# Python 3.12.x   (on Windows the command is `python`, not `python3`)
+```
+Most Windows personal computers are amd64 architecture; if you have a Microsoft Surface, it may be arm64.
+To be sure which one you have, run this in PowerShell and check the value it prints:
+```powershell
+echo $env:PROCESSOR_ARCHITECTURE
+# ARM64  -> you have an Arm-based Surface; download the arm64 installer
+# AMD64  -> standard x64 PC; download the amd64 installer
+```
+Typical install path:
+```text
+C:\Users\<you>\AppData\Local\Programs\Python\Python312\
+```
+
+> ⚠️\
+> If `python --version` still says "command not found" or opens the Microsoft Store, you
+> forgot to tick **Add to PATH**. Re-run the installer and choose "Modify", then enable
+> "Add Python to environment variables".
+
+### macOS
+
+Two routes:
+
+- **Official installer** — open the python.org macOS download page in your browser and
+  **always choose the "macOS 64-bit universal2" build.** A universal2 installer works on
+  both Apple Silicon (arm64) and Intel Macs, so you don't need to figure out your chip.
+  Avoid the "macOS 64-bit Intel-only installer": it only supports Intel Macs and only exists
+  for older Python versions, so it's already outdated. Download the `.pkg`, double-click to
+  run, and follow the prompts. It may ask you to manually adjust `PATH` — see "after install"
+  below.
+- **Homebrew** (recommended if you already use it): open the Homebrew website (brew.sh),
+  install Homebrew first if you don't have it, then use it to install Python 3.12. It adds
+  itself to PATH automatically when brew is set up.
+
+Typical paths:
+```text
+# Official installer:
+/Library/Frameworks/Python.framework/Versions/3.12/bin/python3
+# Homebrew:
+/opt/homebrew/bin/python3        # Apple Silicon
+/usr/local/bin/python3           # Intel
+```
+
+### Linux
+
+Use your package manager, or build from source.
+
+- Open your distro's software tool (or the package manager the system already uses) and
+  install `python3` — e.g. on Debian/Ubuntu use `apt`, on Fedora use `dnf`, on Arch use
+  `pacman`. The package-manager Python is usually at `/usr/bin/python3`.
+- Or open the python.org source page in your browser, download the source tarball, then
+  compile it yourself (more advanced — skip unless you have a reason).
+
+> 📝
+> On Linux, the system `python3` (e.g. `/usr/bin/python3`) is used by the OS. For your
+> own projects, still create a virtual environment (Chapter 2) rather than installing
+> packages globally with `sudo`.
 
 ## After install · test it works
 
@@ -164,7 +203,7 @@ On macOS you might see something like:
 /Applications/Xcode.app/Contents/Developer/usr/bin/python3   # Apple's, not yours
 ```
 
-> [!WARNING]
+> ⚠️
 > If it points to **Xcode's** or the **system** Python instead of what you installed, your
 > `PATH` is wrong. Fix it by either activating your environment (`conda activate …` /
 > `source .venv/bin/activate`) or adding the install path to your shell config
@@ -222,12 +261,12 @@ Python    : 3.12.4 (main, Jun  6 2024, 10:26:29) [Clang 15.0.0]
 Executable: /opt/homebrew/bin/python3
 ```
 
-> [!TIP]
+> 💡
 > The `if __name__ == "__main__":` line is a Python convention: it makes `main()` run
 > only when you execute the file directly (not when you `import` it as a module later).
 > Copy the block above — every code block on this site has a **Copy** button.
 
-> [!NOTE]
+> 📝
 > **About the shebang line (`#!/usr/bin/env python3`).** It is *not* Python
 > syntax and does nothing when you run the file through an interpreter — it's only a
 > tip for the operating system.
