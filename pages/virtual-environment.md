@@ -41,6 +41,66 @@ uv pip install pandas  # install a package into this project's env
 uv run main.py         # run a script using this project's Python
 ```
 
+## Locking & recording dependencies: `uv lock` and `requirements.txt`
+
+Installing packages is only half the story. To make your project **reproducible** —
+so someone else (or future you) can rebuild the exact same environment — you record
+what you installed.
+
+### `requirements.txt` (the classic, pip-style list)
+
+A plain text file listing every package (and version) your project needs:
+
+```text
+pandas==2.2.2
+numpy>=1.26.0
+requests
+```
+
+- Generate it from your current env with pip/uv:
+
+```bash
+uv pip freeze > requirements.txt     # uv
+pip freeze    > requirements.txt     # plain pip
+```
+
+- Rebuild an env from it on another machine:
+
+```bash
+uv pip install -r requirements.txt
+```
+
+The catch: `requirements.txt` only pins *top-level* packages. If `pandas` silently
+pulls in a specific `numpy`, that sub-dependency version is **not fixed** — two people
+can end up with different environments.
+
+### `uv lock` (the modern, exact solution)
+
+`uv` goes further with a **lockfile** — `uv.lock` — that pins **every** package,
+including all transitive dependencies, to exact versions and hashes:
+
+```bash
+uv add pandas          # adds pandas AND writes/updates uv.lock + pyproject.toml
+uv lock                # (re)resolve and write uv.lock without installing
+uv sync                # install exactly what uv.lock specifies
+```
+
+`uv.lock` guarantees that everyone who runs `uv sync` gets a byte-for-byte identical
+set of packages. Think of it as `requirements.txt` on steroids.
+
+| | `requirements.txt` | `uv.lock` |
+| --- | --- | --- |
+| Pins top-level packages | Yes (if you use `==`) | Yes |
+| Pins transitive deps | No | Yes — exact versions + hashes |
+| Human-readable | Yes | Machine-generated (don't edit by hand) |
+| Tool | pip / uv | uv only |
+
+> [!TIP]
+> For coursework, `requirements.txt` is enough and easier to read. Once a project
+> matters (a real app, a paper's analysis), switch to `uv.lock` so results stay
+> reproducible. Either way, **keep the file alongside your project** so the environment
+> travels with your code.
+
 ## conda / Anaconda / Miniconda
 
 **conda** is an older, very popular environment manager, especially in data science. The

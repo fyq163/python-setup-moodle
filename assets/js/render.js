@@ -60,8 +60,16 @@
       var first = bq.firstElementChild;
       if (first && /^\[!(\w+)\]/.test(first.textContent || '')) {
         var kind = (first.textContent.match(/\[!(\w+)\]/) || [])[1].toLowerCase();
-        first.remove();
         bq.classList.add('note', 'note-' + kind);
+        // Strip the leading [!TYPE] marker from the text instead of deleting the
+        // whole paragraph — this works whether the marker is on its own line or
+        // shares a line with the body text, so no content is lost.
+        [].forEach.call(bq.childNodes, function (node) {
+          if (node.nodeType === 1 && /^\[!(\w+)\]/.test(node.textContent || '')) {
+            node.textContent = node.textContent.replace(/^\[!(\w+)\]\s*/, '');
+            if (node.textContent.trim() === '') node.remove();
+          }
+        });
       }
     });
     content.querySelectorAll('p > img:only-child').forEach(function (img) {
@@ -172,7 +180,20 @@
     }
   }
 
+  function applyTheme() {
+    // Respect the OS "night mode" / dark color scheme preference.
+    var mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+    document.documentElement.setAttribute('data-theme', mq && mq.matches ? 'dark' : 'light');
+    // Keep in sync if the user toggles their OS theme while the page is open.
+    if (mq && mq.addEventListener) {
+      mq.addEventListener('change', function (e) {
+        document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+      });
+    }
+  }
+
   function render() {
+    applyTheme();
     buildChrome();
     var mdPath = document.body.getAttribute('data-md');
     var content = document.getElementById('content');

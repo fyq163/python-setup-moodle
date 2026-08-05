@@ -9,8 +9,8 @@ beginners. You only need Python installed once per machine.
 
 ## How to choose a version & architecture
 
-- **Version:** pick a recent stable release — **Python 3.12** or **3.11** are safe choices
-  in 2026. Avoid Python 2 (dead since 2020) and the very latest `.0` release if a package
+- **Version:** pick a recent stable release — **Python 3.12** or **3.13** are safe choices
+  in 2026. Not Python 2 (dead since 2020) and the very latest `.0` release if a package
   you need hasn't caught up yet.
 - **Architecture** (your CPU type):
   - **macOS:** Apple Silicon Macs (M1/M2/M3/M4) → **arm64**. Intel Macs → **x86_64**.
@@ -18,26 +18,23 @@ beginners. You only need Python installed once per machine.
   - **Linux:** most desktops/servers → **x86_64**; newer ARM boards → **aarch64**.
 
 If you are unsure, the installer pages below usually auto-detect the right one.
-
-![TODO: Screenshot of python.org downloads page — highlight choosing the installer that matches OS + CPU architecture (arm64 / amd64 / x86_64).](../assets/img/placeholder.svg)
-
-## Method A · Standalone installer (double-click)
+## Method A · Standalone installer
 
 Best if you want the official Python and nothing else.
 
 ### Windows
 
-1. Go to [python.org/downloads/windows](https://www.python.org/downloads/windows).
-2. Download the **Windows installer (64-bit)** — the `amd64` executable.
+1. Go to [https://python.org/downloads/windows](https://www.python.org/downloads/windows).
+2. Download the **Windows installer (64-bit)**. 
 3. **Important:** on the first setup screen, tick **"Add python.exe to PATH"** before
    clicking Install Now.
 4. After install, reopen PowerShell and verify:
 
-```bash
+```powershell
 python --version
 # Python 3.12.x   (on Windows the command is `python`, not `python3`)
 ```
-
+> Most windows personal computer are amd64 archetecure, if you are Microsfot Surface, it could be arm64
 Typical install path:
 ```text
 C:\Users\<you>\AppData\Local\Programs\Python\Python312\
@@ -47,12 +44,13 @@ C:\Users\<you>\AppData\Local\Programs\Python\Python312\
 > If `python --version` still says "command not found" or opens the Microsoft Store, you
 > forgot to tick **Add to PATH**. Re-run the installer and choose "Modify", then enable
 > "Add Python to environment variables".
+> Readmre: https://learn.microsoft.com/en-us/windows/dev-environment/python?tabs=winget
 
 ### macOS
 
 Two routes:
 
-- **Official installer** from [python.org/downloads/macos](https://www.python.org/downloads/macos)
+- **Official installer** from [https://python.org/downloads/macos](https://www.python.org/downloads/macos)
   (choose the **macOS 64-bit universal2** or **arm64** build). It may ask you to manually
   adjust `PATH` — see "after install" below.
 - **Homebrew** (recommended if you already use it):
@@ -87,7 +85,7 @@ Use your package manager, or build from source.
   sudo pacman -S python python-pip
   ```
 
-Source / other builds: [python.org/downloads/source](https://www.python.org/downloads/source).
+Source / other builds: [https://python.org/downloads/source](https://www.python.org/downloads/source).
 
 > [!NOTE]
 > On Linux, the system `python3` (e.g. `/usr/bin/python3`) is used by the OS. For your
@@ -229,7 +227,8 @@ Executable: /opt/homebrew/bin/python3
 > only when you execute the file directly (not when you `import` it as a module later).
 > Copy the block above — every code block on this site has a **Copy** button.
 
-> [!NOTE] **About the shebang line (`#!/usr/bin/env python3`).** It is *not* Python
+> [!NOTE]
+> **About the shebang line (`#!/usr/bin/env python3`).** It is *not* Python
 > syntax and does nothing when you run the file through an interpreter — it's only a
 > tip for the operating system.
 >

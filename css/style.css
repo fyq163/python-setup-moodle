@@ -6,9 +6,9 @@
    ============================================================ */
 
 :root {
-  --primary: #0052D9;
-  --primary-dark: #003CAB;
-  --primary-soft: #ECF2FE;
+  --primary: #005A33;
+  --primary-dark: #003D22;
+  --primary-soft: #E7F0EA;
   --bg: #FFFFFF;
   --bg-alt: #F5F8FF;
   --surface: #FFFFFF;
@@ -25,7 +25,7 @@
   --maxw: 1120px;
   --nav-h: 62px;
   --shadow: 0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.06);
-  --shadow-lg: 0 12px 40px rgba(0,82,217,.18);
+  --shadow-lg: 0 12px 40px rgba(0,90,51,.18);
 }
 
 * { box-sizing: border-box; }
@@ -71,7 +71,7 @@ code {
 }
 .topnav .brand .dot {
   width: 12px; height: 12px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), #60A5FA);
+  background: linear-gradient(135deg, var(--primary), #4ADE80);
   box-shadow: 0 0 0 4px var(--primary-soft);
 }
 .topnav .navlinks { margin-left: auto; display: flex; gap: .4rem; flex-wrap: wrap; }
@@ -198,8 +198,8 @@ t-tag:not(:defined)[theme="primary"] { background: #E0E7FF; color: var(--primary
 
 /* ---------- Hero (index) ---------- */
 .hero {
-  background: radial-gradient(1200px 500px at 80% -10%, #DBEAFE 0%, transparent 60%),
-              linear-gradient(135deg, #0052D9 0%, #003CAB 100%);
+  background: radial-gradient(1200px 500px at 80% -10%, #D7E9DE 0%, transparent 60%),
+              linear-gradient(135deg, #005A33 0%, #003D22 100%);
   color: #fff; padding: 4rem clamp(1rem, 4vw, 2.4rem) 3.4rem;
 }
 .hero .container { max-width: var(--maxw); }
@@ -218,7 +218,7 @@ t-tag:not(:defined)[theme="primary"] { background: #E0E7FF; color: var(--primary
   border-radius: var(--radius); padding: 1.2rem 1.3rem; box-shadow: var(--shadow);
   transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-.toc-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: #BFD7FE; }
+.toc-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: #A8D5B8; }
 .toc-item .num {
   display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px;
   background: var(--primary-soft); color: var(--primary-dark); font-weight: 800; font-size: 14px; margin-bottom: .6rem;
@@ -240,3 +240,82 @@ footer.site a { color: var(--primary); }
   .sidebar { position: static; top: auto; }
   .topnav .navlinks { display: none; }
 }
+
+/* ---------- Dark theme (night mode) ----------
+   Triggered automatically when the OS requests dark color scheme, or when
+   <html data-theme="dark"> is set by assets/js/render.js. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0B1120;
+    --bg-alt: #0F172A;
+    --surface: #111827;
+    --text: #E2E8F0;
+    --text-muted: #94A3B8;
+    --border: #1E293B;
+    --primary-soft: #0E2A1A;
+    --primary-dark: #4ADE80;
+    --code-bg: #0B1120;
+    --code-text: #E2E8F0;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
+    --shadow-lg: 0 12px 40px rgba(0,90,51,.35);
+  }
+}
+html[data-theme="dark"] {
+  --bg: #0B1120;
+  --bg-alt: #0F172A;
+  --surface: #111827;
+  --text: #E2E8F0;
+  --text-muted: #94A3B8;
+  --border: #1E293B;
+  --primary-soft: #0E2A1A;
+  --primary-dark: #4ADE80;
+  --code-bg: #0B1120;
+  --code-text: #E2E8F0;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
+  --shadow-lg: 0 12px 40px rgba(0,90,51,.35);
+}
+@media (prefers-color-scheme: dark) {
+  body { background: var(--bg-alt); }
+  .topnav { background: rgba(17,24,39,.85); border-bottom-color: var(--border); }
+  .topnav .brand { color: #F8FAFC; }
+  .markdown blockquote { background: var(--primary-soft); }
+  .markdown blockquote.note-tip { background: #0E2A1A; }
+  .markdown blockquote.note-warning,
+  .markdown blockquote.note-caution { background: #2C2410; }
+  .markdown blockquote.note-important { background: #2C1414; }
+  th { background: var(--bg-alt); color: #F8FAFC; }
+  tr:hover td { background: var(--primary-soft); }
+  .hero { background: radial-gradient(1200px 500px at 80% -10%, #0E2A1A 0%, transparent 60%),
+                      linear-gradient(135deg, #003D22 0%, #001A0F 100%); }
+  figure.screenshot { background: var(--bg-alt); }
+  figure.screenshot figcaption { background: #0F172A; }
+  t-tag:not(:defined) { background: #1E293B; color: var(--text-muted); }
+  t-tag:not(:defined)[theme="success"] { background: #0E2A1A; color: #4ADE80; }
+  t-tag:not(:defined)[theme="warning"] { background: #2C2410; color: #FBBF24; }
+  t-tag:not(:defined)[theme="primary"] { background: #0E2A1A; color: #4ADE80; }
+}
+html[data-theme="dark"] body { background: var(--bg-alt); }
+html[data-theme="dark"] .topnav { background: rgba(17,24,39,.85); border-bottom-color: var(--border); }
+html[data-theme="dark"] .topnav .brand { color: #F8FAFC; }
+html[data-theme="dark"] .markdown blockquote { background: var(--primary-soft); }
+html[data-theme="dark"] .markdown blockquote.note-tip { background: #0E2A1A; }
+html[data-theme="dark"] .markdown blockquote.note-warning,
+html[data-theme="dark"] .markdown blockquote.note-caution { background: #2C2410; }
+html[data-theme="dark"] .markdown blockquote.note-important { background: #2C1414; }
+html[data-theme="dark"] th { background: var(--bg-alt); color: #F8FAFC; }
+html[data-theme="dark"] tr:hover td { background: var(--primary-soft); }
+html[data-theme="dark"] .hero { background: radial-gradient(1200px 500px at 80% -10%, #0E2A1A 0%, transparent 60%),
+                      linear-gradient(135deg, #003D22 0%, #001A0F 100%); }
+html[data-theme="dark"] figure.screenshot { background: var(--bg-alt); }
+html[data-theme="dark"] figure.screenshot figcaption { background: #0F172A; }
+html[data-theme="dark"] t-tag:not(:defined) { background: #1E293B; color: var(--text-muted); }
+html[data-theme="dark"] t-tag:not(:defined)[theme="success"] { background: #0E2A1A; color: #4ADE80; }
+html[data-theme="dark"] t-tag:not(:defined)[theme="warning"] { background: #2C2410; color: #FBBF24; }
+html[data-theme="dark"] t-tag:not(:defined)[theme="primary"] { background: #0E2A1A; color: #4ADE80; }
+
+/* ---------- Index page: hide the auto-generated #toc list ----------
+   The #toc element is populated by buildToc in render.js as an <ol>
+   ("1. python version / 2. Why learn this..."). On the index page we keep
+   the markdown-rendered ## headings (inside #content) visible but hide this
+   injected list. Chapter pages render their TOC via .sidebar, unaffected. */
+body[data-md="index.md"] #toc { display: none; }

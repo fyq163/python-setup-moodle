@@ -128,7 +128,12 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.send_header('Content-Length', str(len(data)))
         self.send_header('Cache-Control', 'no-store')
         self.end_headers()
-        self.wfile.write(data)
+        try:
+            self.wfile.write(data)
+        except BrokenPipeError:
+            # Client closed the connection early (refresh/close/tab switch).
+            # Harmless — the response was already sent; just ignore it.
+            pass
 
     def handle_reload(self):
         try:
@@ -142,11 +147,15 @@ class Handler(http.server.BaseHTTPRequestHandler):
             if cur > last or time.time() > deadline:
                 break
             _event.wait(0.5)
-        self.send_response(200)
-        self.send_header('Content-Type', 'text/plain; charset=utf-8')
-        self.send_header('Cache-Control', 'no-store')
-        self.end_headers()
-        self.wfile.write(str(_counter).encode())
+        try:
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/plain; charset=utf-8')
+            self.send_header('Cache-Control', 'no-store')
+            self.end_headers()
+            self.wfile.write(str(_counter).encode())
+        except BrokenPipeError:
+            # Client gave up waiting (e.g. navigated away). Ignore.
+            pass
 
     def log_message(self, fmt, *args):
         pass

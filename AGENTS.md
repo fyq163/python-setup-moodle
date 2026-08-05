@@ -12,6 +12,16 @@ This repo serves as tutorial for beginners to learn how to use install a python 
 2. basic python distribution and installation on different system, virtual environment etc
 3. how to run codes
 4. how to what to put in place of --config 
+5. **never** include any instructions to **site developer** other than "TODO"
+   - The reader is a beginner student, NOT the repo maintainer. **Never** put any
+     authoring/dev-operations instructions into the tutorial text (`.md` chapters that
+     render to reader-facing pages). This includes, but is not limited to:
+     - "edit a `.md` / refresh the page to update" type hints
+     - "commit/push the file to git", "run `serve.py`", "reload the page" instructions
+     - any mention of the build/watch/reload workflow or repo internals
+   - Authoring notes belong only in `![TODO: ...]` image placeholders or HTML comments
+     (`<!-- TODO: ... -->`), which are hidden from the rendered page. `readme.md` and
+     `serve.py` are maintainer docs and are exempt from this rule.
 ## development phase
 - phase1: in html format, pure html for github page and paste to html previewer
 - phase2: tutorials in markdown format, with code snippets
@@ -28,7 +38,6 @@ To better facilitate programming bootcamp students, we will provide a series of 
 There are secions that can be skipped for those who have already learned the basics of programming. e.g. basic unix-alike system introduction.
 And why it's necessary to learn this while agents can do it for you. Also mention difference with pypy and cpython and state we use cpython
 
-(index table with hyperlink)
 
 ### basic unix-alike system introduction (very basic )
 - (very short) what is command line, bash for linux, zsh for macos, recommand pwsh for windows, hot to find them on computer; how to invoke 
@@ -117,4 +126,3 @@ how to use can refer to command line part above
 # Design.md
 - commands should be seperated per system type, should be ready to paste and execute
 - so the code block should not have copyable `$` which will mislead the reader
-- 
