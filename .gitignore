@@ -2,3 +2,5 @@ azure-api-key.py
 hku-logo-xs.png
 .workspace/
 .codebuddy/
+.vscode
+.idea
