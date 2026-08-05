@@ -1,8 +1,10 @@
 name: Deploy static content to Pages
 
 on:
-  # Runs on pushes targeting the default branch
-  push:
+  # Only runs when a pull request is merged into the default branch, so a
+  # plain `git commit` / `git push` to a branch never triggers a deploy.
+  pull_request:
+    types: [closed]
     branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
@@ -26,6 +28,8 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    # Only deploy when the PR was actually merged (not just closed).
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

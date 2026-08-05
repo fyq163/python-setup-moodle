@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3 · Installing Python</title>
+<style>/* ============================================================
+   Python Setup Guide — shared stylesheet
+   Markdown-driven static site. Chrome (nav/sidebar/pager) is built
+   by assets/js/render.js; the article body comes from .md files.
+   Design tokens follow TDesign's palette.
+   ============================================================ */
+
+:root {
+  --primary: #005A33;
+  --primary-dark: #003D22;
+  --primary-soft: #E7F0EA;
+  --bg: #FFFFFF;
+  --bg-alt: #F5F8FF;
+  --surface: #FFFFFF;
+  --text: #1F2937;
+  --text-muted: #6B7280;
+  --border: #E5E7EB;
+  --code-bg: #0F172A;
+  --code-text: #E2E8F0;
+  --ok: #16A34A;
+  --warn: #D97706;
+  --danger: #DC2626;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --maxw: 1120px;
+  --nav-h: 62px;
+  --shadow: 0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.06);
+  --shadow-lg: 0 12px 40px rgba(0,90,51,.18);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg-alt);
+  font-size: 16px;
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--primary); text-decoration: none; transition: color .15s ease; }
+a:hover { color: var(--primary-dark); }
+h1, h2, h3, h4 { color: #111827; line-height: 1.3; font-weight: 700; }
+/* Keep anchored headings clear of the sticky top navigation when jumped to. */
+h1, h2, h3 { scroll-margin-top: calc(var(--nav-h) + 1rem); }
+h2 { font-size: 24px; margin-top: 2.2rem; }
+h3 { font-size: 19px; margin-top: 1.6rem; }
+h4 { font-size: 16px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+p { margin: .8rem 0; }
+
+code {
+  font-family: 'SFMono-Regular', ui-monospace, Menlo, Consolas, 'Liberation Mono', monospace;
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  padding: .12em .42em;
+  border-radius: 6px;
+  font-size: .9em;
+}
+
+/* ---------- Top navigation ---------- */
+.topnav {
+  position: sticky; top: 0; z-index: 50;
+  height: var(--nav-h); display: flex; align-items: center; gap: 1.2rem;
+  padding: 0 clamp(1rem, 4vw, 2.4rem);
+  background: rgba(255,255,255,.85);
+  backdrop-filter: saturate(160%) blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.topnav .brand {
+  font-weight: 800; font-size: 17px; color: #111827;
+  display: flex; align-items: center; gap: .55rem;
+}
+.topnav .brand .dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #4ADE80);
+  box-shadow: 0 0 0 4px var(--primary-soft);
+}
+.topnav .navlinks { margin-left: auto; display: flex; gap: .4rem; flex-wrap: wrap; }
+.topnav .navlinks a {
+  padding: .4rem .8rem; border-radius: 999px;
+  color: var(--text-muted); font-size: 14px; font-weight: 600;
+}
+.topnav .navlinks a:hover { background: var(--primary-soft); color: var(--primary-dark); }
+
+/* ---------- Layout ---------- */
+.container { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.4rem); }
+.layout {
+  max-width: var(--maxw); margin: 0 auto;
+  padding: 2rem clamp(1rem, 4vw, 2.4rem) 4rem;
+  display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 2.4rem; align-items: start;
+}
+.article { min-width: 0; }
+
+/* ---------- Sidebar TOC ("In this chapter") ---------- */
+.sidebar {
+  position: sticky; top: calc(var(--nav-h) + 1.5rem); align-self: start;
+  /* Never let a long TOC push the footer off-screen or get clipped: cap its
+     height to the viewport (minus the nav + some breathing room) and scroll. */
+  max-height: calc(100vh - var(--nav-h) - 3rem);
+  overflow-y: auto;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.1rem 1.2rem; box-shadow: var(--shadow);
+}
+.sidebar h4 {
+  margin: 0 0 .8rem; font-size: 13px; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--primary-dark); border-bottom: 1px solid var(--border); padding-bottom: .5rem;
+}
+.sidebar ol { margin: 0; padding-left: 0; list-style: none; counter-reset: toc-major; }
+.sidebar li { margin: .3rem 0; position: relative; }
+/* H2 = top-level entry (1, 2, 3…). Increment the major counter and reset the
+   minor one; render just the major number. */
+.sidebar li.toc-h2 {
+  counter-increment: toc-major; counter-reset: toc-minor;
+  padding-left: 1.8rem;
+}
+.sidebar li.toc-h2 > a::before {
+  content: counter(toc-major); position: absolute; left: 0;
+  min-width: 1.4rem; color: var(--primary); font-weight: 700;
+  font-variant-numeric: tabular-nums; font-size: 12.5px;
+}
+/* H3 = sub-entry (1.1, 1.2, 2.1…). Increment the minor counter and render the
+   combined "major.minor" number; indent a little further. */
+.sidebar li.toc-h3 {
+  counter-increment: toc-minor; padding-left: 2.8rem;
+}
+.sidebar li.toc-h3 > a::before {
+  content: counter(toc-major) "." counter(toc-minor); position: absolute; left: 0;
+  min-width: 2.2rem; color: var(--primary); font-weight: 700;
+  font-variant-numeric: tabular-nums; font-size: 12.5px;
+}
+.sidebar a { color: var(--text-muted); font-size: 14.5px; display: block; }
+.sidebar a:hover { color: var(--primary); }
+
+/* ---------- Page header (tag + title) ---------- */
+.pagehead { margin-bottom: .4rem; }
+.pagehead h1 { margin: .2rem 0 .8rem; font-size: 30px; }
+
+/* ---------- Markdown body ---------- */
+.markdown h2 { border-bottom: 1px solid var(--border); padding-bottom: .3rem; }
+.markdown h3 { margin-top: 1.6rem; }
+.markdown ul, .markdown ol { padding-left: 1.4rem; }
+.markdown li { margin: .35rem 0; }
+.markdown img { max-width: 100%; height: auto; }
+
+/* ---------- Code blocks ---------- */
+pre {
+  background: var(--code-bg); color: var(--code-text);
+  padding: 1.1rem 1.2rem; border-radius: var(--radius-sm);
+  overflow-x: auto; font-size: 14px; line-height: 1.6; border: 1px solid #1E293B;
+}
+pre { position: relative; }
+pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+pre .prompt { color: #60A5FA; }
+pre .comment { color: #64748B; }
+.copy-btn {
+  position: absolute; top: .5rem; right: .5rem;
+  font: inherit; font-size: 12px; line-height: 1;
+  padding: .35rem .6rem; border-radius: var(--radius-sm);
+  border: 1px solid #334155; background: #1E293B; color: #CBD5E1;
+  cursor: pointer; opacity: 0; transition: opacity .15s ease, background .15s ease;
+}
+pre:hover .copy-btn, .copy-btn:focus { opacity: 1; }
+.copy-btn:hover { background: #334155; color: #fff; }
+
+/* ---------- Tables ---------- */
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 14.5px; }
+th, td { text-align: left; padding: .7rem .9rem; border-bottom: 1px solid var(--border); }
+th { background: var(--bg-alt); color: #111827; font-weight: 700; }
+tr:hover td { background: var(--primary-soft); }
+
+/* ---------- Placeholder figure ---------- */
+figure.screenshot {
+  margin: 1.4rem 0; border: 1px dashed var(--border);
+  border-radius: var(--radius); overflow: hidden; background: var(--bg-alt);
+}
+figure.screenshot img { display: block; width: 100%; height: auto; background: #E2E8F0; }
+figure.screenshot img.img-failed { height: 220px; object-fit: contain; filter: grayscale(1); }
+figure.screenshot figcaption {
+  padding: .7rem 1rem; font-size: 13.5px; color: var(--text-muted);
+  border-top: 1px dashed var(--border); background: #FCFCFD;
+}
+figure.screenshot figcaption::before { content: "▢ "; color: var(--warn); font-weight: 700; }
+
+/* ---------- Callouts (GitHub-style alerts) ---------- */
+.markdown blockquote {
+  border-left: 4px solid var(--primary); background: var(--primary-soft);
+  padding: .8rem 1.1rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 1.1rem 0; font-size: 14.5px;
+}
+.markdown blockquote p { margin: .4rem 0; }
+.markdown blockquote.note-tip { border-color: var(--ok); background: #F0FDF4; }
+.markdown blockquote.note-warning,
+.markdown blockquote.note-caution { border-color: var(--warn); background: #FFFBEB; }
+.markdown blockquote.note-important { border-color: var(--danger); background: #FEF2F2; }
+.markdown blockquote strong { color: #111827; }
+
+/* ---------- Tags (chapter chips) ---------- */
+.tag {
+  display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .03em;
+  padding: .15rem .6rem; border-radius: 999px; margin-bottom: .5rem;
+}
+.tag-optional { background: #FEF3C7; color: var(--warn); }
+.tag-skip { background: #E0E7FF; color: var(--primary-dark); }
+.tag-required { background: #DCFCE7; color: var(--ok); }
+/* Fallback styling for <t-tag> before TDesign upgrades (or if the CDN is blocked). */
+t-tag:not(:defined) {
+  display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .03em;
+  padding: .15rem .6rem; border-radius: 999px; margin-bottom: .5rem;
+  background: #E5E7EB; color: var(--text-muted);
+}
+t-tag:not(:defined)[theme="success"] { background: #DCFCE7; color: var(--ok); }
+t-tag:not(:defined)[theme="warning"] { background: #FEF3C7; color: var(--warn); }
+t-tag:not(:defined)[theme="primary"] { background: #E0E7FF; color: var(--primary-dark); }
+
+/* ---------- Prev / next nav ---------- */
+.pager {
+  display: flex; justify-content: space-between; gap: 1rem; margin: 2.5rem auto 0;
+  max-width: var(--maxw); padding: 0 clamp(1rem, 4vw, 2.4rem); flex-wrap: wrap;
+}
+.pager a {
+  flex: 1 1 200px; border: 1px solid var(--border); border-radius: var(--radius);
+  padding: .9rem 1.1rem; background: var(--surface); box-shadow: var(--shadow);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.pager a:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.pager .dir { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
+.pager .ttl { font-weight: 700; color: #111827; }
+
+/* ---------- Hero (index) ---------- */
+.hero {
+  background: radial-gradient(1200px 500px at 80% -10%, #D7E9DE 0%, transparent 60%),
+              linear-gradient(135deg, #005A33 0%, #003D22 100%);
+  color: #fff; padding: 4rem clamp(1rem, 4vw, 2.4rem) 3.4rem;
+}
+.hero .container { max-width: var(--maxw); }
+.hero .eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: 13px; font-weight: 700; opacity: .85; }
+.hero h1 { color: #fff; font-size: clamp(30px, 5vw, 46px); margin: .5rem 0 .8rem; }
+.hero p.lead { font-size: 18px; max-width: 720px; opacity: .95; }
+.hero .pill {
+  display: inline-block; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.3);
+  padding: .3rem .8rem; border-radius: 999px; font-size: 13px; font-weight: 600; margin: .3rem .4rem .3rem 0;
+}
+
+/* ---------- TOC index table ---------- */
+.toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.1rem; margin-top: 1.6rem; }
+.toc-item {
+  display: block; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.2rem 1.3rem; box-shadow: var(--shadow);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.toc-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: #A8D5B8; }
+.toc-item .num {
+  display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px;
+  background: var(--primary-soft); color: var(--primary-dark); font-weight: 800; font-size: 14px; margin-bottom: .6rem;
+}
+.toc-item h3 { margin: 0 0 .3rem; font-size: 17px; }
+.toc-item p { margin: 0; font-size: 13.5px; color: var(--text-muted); }
+.toc-item .meta { margin-top: .7rem; font-size: 12px; }
+
+/* ---------- Footer ---------- */
+footer.site {
+  border-top: 1px solid var(--border); background: var(--surface); color: var(--text-muted);
+  font-size: 13.5px; padding: 2rem clamp(1rem, 4vw, 2.4rem); text-align: center;
+}
+footer.site a { color: var(--primary); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; top: auto; }
+  .topnav .navlinks { display: none; }
+}
+
+/* ---------- Dark theme (night mode) ----------
+   Triggered automatically when the OS requests dark color scheme, or when
+   <html data-theme="dark"> is set by assets/js/render.js. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0B1120;
+    --bg-alt: #0F172A;
+    --surface: #111827;
+    --text: #E2E8F0;
+    --text-muted: #94A3B8;
+    --border: #1E293B;
+    --primary-soft: #0E2A1A;
+    --primary-dark: #4ADE80;
+    --code-bg: #0B1120;
+    --code-text: #E2E8F0;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
+    --shadow-lg: 0 12px 40px rgba(0,90,51,.35);
+  }
+}
+html[data-theme="dark"] {
+  --bg: #0B1120;
+  --bg-alt: #0F172A;
+  --surface: #111827;
+  --text: #E2E8F0;
+  --text-muted: #94A3B8;
+  --border: #1E293B;
+  --primary-soft: #0E2A1A;
+  --primary-dark: #4ADE80;
+  --code-bg: #0B1120;
+  --code-text: #E2E8F0;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
+  --shadow-lg: 0 12px 40px rgba(0,90,51,.35);
+}
+@media (prefers-color-scheme: dark) {
+  body { background: var(--bg-alt); }
+  .topnav { background: rgba(17,24,39,.85); border-bottom-color: var(--border); }
+  .topnav .brand { color: #F8FAFC; }
+  .markdown blockquote { background: var(--primary-soft); }
+  .markdown blockquote.note-tip { background: #0E2A1A; }
+  .markdown blockquote.note-warning,
+  .markdown blockquote.note-caution { background: #2C2410; }
+  .markdown blockquote.note-important { background: #2C1414; }
+  th { background: var(--bg-alt); color: #F8FAFC; }
+  tr:hover td { background: var(--primary-soft); }
+  .hero { background: radial-gradient(1200px 500px at 80% -10%, #0E2A1A 0%, transparent 60%),
+                      linear-gradient(135deg, #003D22 0%, #001A0F 100%); }
+  figure.screenshot { background: var(--bg-alt); }
+  figure.screenshot figcaption { background: #0F172A; }
+  t-tag:not(:defined) { background: #1E293B; color: var(--text-muted); }
+  t-tag:not(:defined)[theme="success"] { background: #0E2A1A; color: #4ADE80; }
+  t-tag:not(:defined)[theme="warning"] { background: #2C2410; color: #FBBF24; }
+  t-tag:not(:defined)[theme="primary"] { background: #0E2A1A; color: #4ADE80; }
+}
+html[data-theme="dark"] body { background: var(--bg-alt); }
+html[data-theme="dark"] .topnav { background: rgba(17,24,39,.85); border-bottom-color: var(--border); }
+html[data-theme="dark"] .topnav .brand { color: #F8FAFC; }
+html[data-theme="dark"] .markdown blockquote { background: var(--primary-soft); }
+html[data-theme="dark"] .markdown blockquote.note-tip { background: #0E2A1A; }
+html[data-theme="dark"] .markdown blockquote.note-warning,
+html[data-theme="dark"] .markdown blockquote.note-caution { background: #2C2410; }
+html[data-theme="dark"] .markdown blockquote.note-important { background: #2C1414; }
+html[data-theme="dark"] th { background: var(--bg-alt); color: #F8FAFC; }
+html[data-theme="dark"] tr:hover td { background: var(--primary-soft); }
+html[data-theme="dark"] .hero { background: radial-gradient(1200px 500px at 80% -10%, #0E2A1A 0%, transparent 60%),
+                      linear-gradient(135deg, #003D22 0%, #001A0F 100%); }
+html[data-theme="dark"] figure.screenshot { background: var(--bg-alt); }
+html[data-theme="dark"] figure.screenshot figcaption { background: #0F172A; }
+html[data-theme="dark"] t-tag:not(:defined) { background: #1E293B; color: var(--text-muted); }
+html[data-theme="dark"] t-tag:not(:defined)[theme="success"] { background: #0E2A1A; color: #4ADE80; }
+html[data-theme="dark"] t-tag:not(:defined)[theme="warning"] { background: #2C2410; color: #FBBF24; }
+html[data-theme="dark"] t-tag:not(:defined)[theme="primary"] { background: #0E2A1A; color: #4ADE80; }
+
+/* ---------- Index page: hide the auto-generated #toc list ----------
+   The #toc element is populated by buildToc in render.js as an <ol>
+   ("1. python version / 2. Why learn this..."). On the index page we keep
+   the markdown-rendered ## headings (inside #content) visible but hide this
+   injected list. Chapter pages render their TOC via .sidebar, unaffected. */
+body[data-md="index.md"] #toc { display: none; }
+</style>
+</head>
+<body data-md="installation.md">
+<header id="topnav" class="topnav"><a class="brand" href="index.html"><span class="dot"></span> Python Setup Guide</a><nav class="navlinks"><a href="unix-basics.html">Basic Unix-like Systems</a><a href="virtual-environment.html">Virtual Environments</a><a href="installation.html">Installing Python</a><a href="ide-setup.html">Code Editors & IDEs</a><a href="recommended-reading.html">Recommended Reading</a></nav></header>
+<div class="layout">
+<aside class="sidebar"><h4>In this chapter</h4><nav id="toc"><ol><li class="toc-h2"><a href="#how-to-choose-a-version-amp-architecture">How to choose a version &amp;amp; architecture</a></li><li class="toc-h2"><a href="#method-a-with-uv-most-recommended">Method A · With uv (most recommended)</a></li><li class="toc-h2"><a href="#method-b-with-conda-miniconda-recommended">Method B · With conda (Miniconda, recommended)</a></li><li class="toc-h3"><a href="#what-to-do-if-you-are-asked-to-run-conda-init">What to do if you are asked to run conda init</a></li><li class="toc-h2"><a href="#method-c-standalone-installer">Method C · Standalone installer</a></li><li class="toc-h3"><a href="#windows">Windows</a></li><li class="toc-h3"><a href="#macos">macOS</a></li><li class="toc-h3"><a href="#linux">Linux</a></li><li class="toc-h2"><a href="#after-install-test-it-works">After install · test it works</a></li><li class="toc-h2"><a href="#how-to-debug-a-broken-install">How to debug a broken install</a></li><li class="toc-h2"><a href="#run-your-first-program">Run your first program</a></li></ol></nav></aside>
+<div class="article">
+<div id="pagehead" class="pagehead"><span class="tag tag-required">Required</span><h1 id="top">3 · Installing Python</h1></div>
+<main id="content" class="markdown">
+<p>The detailed chapter. Three methods (standalone / conda / uv) × three platforms (macOS
+arm64, Windows amd64, Linux x86_64). <strong>Pick one method</strong> — we recommend <strong>uv</strong> for
+beginners. You only need Python installed once per machine.</p>
+<h2 id="how-to-choose-a-version-amp-architecture">How to choose a version &amp; architecture</h2>
+<ul>
+<li><strong>Version:</strong> pick a recent stable release — <strong>Python 3.12</strong> or <strong>3.13</strong> are safe choices
+  in 2026. Not Python 2 (dead since 2020) and the very latest <code>.0</code> release if a package
+  you need hasn't caught up yet.</li>
+<li><strong>Architecture</strong> (your CPU type):</li>
+<li><strong>macOS:</strong> Apple Silicon Macs (M1/M2/M3/M4) → <strong>arm64</strong>. Intel Macs → <strong>x86_64</strong>.</li>
+<li><strong>Windows:</strong> almost all modern PCs → <strong>amd64</strong> (also called x64).</li>
+<li><strong>Linux:</strong> most desktops/servers → <strong>x86_64</strong>; newer ARM boards → <strong>aarch64</strong>.</li>
+</ul>
+<p>If you are unsure, the installer pages below usually auto-detect the right one.</p>
+<blockquote>
+<p><strong>⚠️ Choose a Stable Release (all methods &amp; platforms).</strong> Whether you use the standalone
+installer, conda, or uv, pick a <strong>Stable Release</strong> — the latest stable version (e.g.
+Python 3.12.x or 3.13.x). <strong>Do not</strong> download or install anything marked <em>Pre-release</em> or
+<em>Development</em>: those builds are for testing and may be unstable or break your packages.</p>
+</blockquote>
+<h2 id="method-a-with-uv-most-recommended">Method A · With uv (most recommended)</h2>
+<p>Best for beginners: one fast tool, local environments, minimal fuss.</p>
+<ol>
+<li>Install uv. Open the uv website (docs.astral.sh/uv) in your browser, go to the
+   <strong>Installation</strong> page, and download the installer for your system (macOS, Windows, or
+   Linux). Run it and follow the on-screen prompts — pick the default options when asked.
+   When it finishes, uv is installed.</li>
+</ol>
+<blockquote>
+<p>📝 After install, <strong>close the terminal and open a new one</strong>, then verify with <code>uv --version</code>.</p>
+</blockquote>
+<ol start="2">
+<li>Install a Python and create your first project:</li>
+</ol>
+<pre><code class="language-bash">uv python install 3.12          # download CPython 3.12 (one time)
+uv init myproject               # create a project folder with a .venv
+cd myproject
+uv pip install pandas           # install a package into this project
+uv run main.py                  # run a script with this project's Python
+</code></pre>
+<ul>
+<li><strong>After closing the terminal</strong>, you do <strong>not</strong> need to "activate" — just run
+  <code>uv run &lt;script&gt;</code> from the project folder and uv uses the local <code>.venv</code> automatically.</li>
+<li><strong>To pin a pre-installed interpreter</strong> (avoid re-downloading), set it in
+  <code>pyproject.toml</code>: <code>requires-python = "&amp;gt;=3.12"</code> and <code>uv venv --python 3.12</code>.</li>
+</ul>
+<h2 id="method-b-with-conda-miniconda-recommended">Method B · With conda (Miniconda, recommended)</h2>
+<p>Best if you will use data-science packages with non-Python system dependencies.</p>
+<ol>
+<li>Install Miniconda. Open the Miniconda website (anaconda.com) in your browser, find the
+   <strong>Miniconda</strong> download for your system (macOS, Windows, or Linux), and download the
+   installer. Run it and follow the on-screen prompts — when asked whether to "Add Miniconda
+   to PATH" or "run conda init", you can leave the default; we explain <code>conda init</code> below.
+   When it finishes, Miniconda is installed.</li>
+</ol>
+<blockquote>
+<p>📝 After install, <strong>close the terminal and open a new one</strong> so the <code>conda</code> command is
+available. Then verify with <code>conda --version</code>.
+2. Create and activate an environment:</p>
+</blockquote>
+<pre><code class="language-bash">conda create --name py312 python=3.12
+conda activate py312
+python --version
+</code></pre>
+<ul>
+<li><strong>After closing the terminal</strong>, the environment deactivates. Re-enter it with
+  <code>conda activate py312</code> — the environment still exists globally, so you never recreate it.</li>
+<li><strong>To save disk space</strong>, point conda at a Python you already installed instead of letting
+  it download another copy: <code>conda create --name py312 --clone base</code> or use
+  <code>conda create --name py312 python=$(python3 --version 2&gt;&amp;1 | cut -d' ' -f2)</code>.</li>
+</ul>
+<h3 id="what-to-do-if-you-are-asked-to-run-conda-init">What to do if you are asked to run <code>conda init</code></h3>
+<p>The first time you open a terminal after installing conda, <code>conda activate</code> may fail with a
+message like <em>"To activate this environment, run <code>conda init</code> first."</em> Here is why, and what
+to do.</p>
+<p><strong>Why <code>conda init</code> is needed.</strong> <code>conda activate</code> only works if conda has hooked into your
+shell's startup file. <code>conda init</code> writes a small block of code into that file so the shell
+loads conda automatically every time you open a new terminal. Until you do this, the shell
+doesn't know what <code>conda activate</code> means.</p>
+<p><strong>How to do it.</strong> Just run it once for your shell (the command is harmless to re-run):</p>
+<pre><code class="language-bash">conda init bash        # Linux default shell
+conda init zsh         # macOS default shell
+conda init powershell  # Windows (run in PowerShell)
+</code></pre>
+<p>Then <strong>close and reopen the terminal</strong> — the change only takes effect in new sessions.</p>
+<p><strong>Where does conda write the code?</strong>
+- <strong>macOS / Linux (unix):</strong> into your shell's rc file in your home directory —
+  <code>~/.bashrc</code> for bash, <code>~/.zshrc</code> for zsh. Open a new terminal and conda is ready.
+- <strong>Windows:</strong> into your <strong>PowerShell profile script</strong> (e.g.
+  <code>C:\Users\&lt;you&gt;\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1</code>),
+  <em>not</em> a <code>.bashrc</code>/<code>.zshrc</code> (those don't exist on Windows). If you use Git Bash on Windows,
+  conda instead writes to <code>~/.bashrc</code> under your Git install.</p>
+<p><strong>After <code>conda init</code>, you get a permanent prompt prefix.</strong> Every new terminal will now show
+your current conda environment in the prompt, e.g. <code>(base)</code> when no environment is active.
+That <code>(base)</code> is a reminder of which environment your commands run in.</p>
+<blockquote>
+<p><strong>⚠️ Don't use <code>base</code> as your main environment.</strong> <code>base</code> is conda's built-in default env.
+Keep it clean and instead <code>conda activate py312</code> (or any env you create) for real work,
+so packages for different projects don't clash. Tip: run <code>conda config --set
+auto_activate_base false</code> to stop conda from auto-activating <code>base</code> every time you open a
+terminal.</p>
+</blockquote>
+<h2 id="method-c-standalone-installer">Method C · Standalone installer</h2>
+<p>Best if you want the official Python and nothing else.</p>
+<h3 id="windows">Windows</h3>
+<ol>
+<li>Open the python.org Windows download page in your browser.</li>
+<li>Download the <strong>Windows installer (64-bit)</strong> — the <code>amd64</code> executable.</li>
+<li><strong>Important:</strong> on the first setup screen, tick <strong>"Add python.exe to PATH"</strong> before
+   clicking Install Now.</li>
+<li>After install, reopen PowerShell and verify:</li>
+</ol>
+<pre><code class="language-powershell">python --version
+# Python 3.12.x   (on Windows the command is `python`, not `python3`)
+</code></pre>
+<p>Most Windows personal computers are amd64 architecture; if you have a Microsoft Surface, it may be arm64.
+To be sure which one you have, run this in PowerShell and check the value it prints:</p>
+<pre><code class="language-powershell">echo $env:PROCESSOR_ARCHITECTURE
+# ARM64  -&gt; you have an Arm-based Surface; download the arm64 installer
+# AMD64  -&gt; standard x64 PC; download the amd64 installer
+</code></pre>
+<p>Typical install path:</p>
+<pre><code class="language-text">C:\Users\&lt;you&gt;\AppData\Local\Programs\Python\Python312\
+</code></pre>
+<blockquote>
+<p>⚠️\
+If <code>python --version</code> still says "command not found" or opens the Microsoft Store, you
+forgot to tick <strong>Add to PATH</strong>. Re-run the installer and choose "Modify", then enable
+"Add Python to environment variables".</p>
+</blockquote>
+<h3 id="macos">macOS</h3>
+<p>Two routes:</p>
+<ul>
+<li><strong>Official installer</strong> — open the python.org macOS download page in your browser and
+  <strong>always choose the "macOS 64-bit universal2" build.</strong> A universal2 installer works on
+  both Apple Silicon (arm64) and Intel Macs, so you don't need to figure out your chip.
+  Avoid the "macOS 64-bit Intel-only installer": it only supports Intel Macs and only exists
+  for older Python versions, so it's already outdated. Download the <code>.pkg</code>, double-click to
+  run, and follow the prompts. It may ask you to manually adjust <code>PATH</code> — see "after install"
+  below.</li>
+<li><strong>Homebrew</strong> (recommended if you already use it): open the Homebrew website (brew.sh),
+  install Homebrew first if you don't have it, then use it to install Python 3.12. It adds
+  itself to PATH automatically when brew is set up.</li>
+</ul>
+<p>Typical paths:</p>
+<pre><code class="language-text"># Official installer:
+/Library/Frameworks/Python.framework/Versions/3.12/bin/python3
+# Homebrew:
+/opt/homebrew/bin/python3        # Apple Silicon
+/usr/local/bin/python3           # Intel
+</code></pre>
+<h3 id="linux">Linux</h3>
+<p>Use your package manager, or build from source.</p>
+<ul>
+<li>Open your distro's software tool (or the package manager the system already uses) and
+  install <code>python3</code> — e.g. on Debian/Ubuntu use <code>apt</code>, on Fedora use <code>dnf</code>, on Arch use
+  <code>pacman</code>. The package-manager Python is usually at <code>/usr/bin/python3</code>.</li>
+<li>Or open the python.org source page in your browser, download the source tarball, then
+  compile it yourself (more advanced — skip unless you have a reason).</li>
+</ul>
+<blockquote>
+<p>📝
+On Linux, the system <code>python3</code> (e.g. <code>/usr/bin/python3</code>) is used by the OS. For your
+own projects, still create a virtual environment (Chapter 2) rather than installing
+packages globally with <code>sudo</code>.</p>
+</blockquote>
+<h2 id="after-install-test-it-works">After install · test it works</h2>
+<p>Run this in your terminal. It prints the path of the Python that actually runs — this is
+the one your commands use.</p>
+<pre><code class="language-bash">python3 -c &quot;import sys; print(sys.executable)&quot;
+</code></pre>
+<p>On macOS you might see something like:</p>
+<pre><code class="language-text">/opt/homebrew/bin/python3        # good — the one you installed
+# or, if you forgot to set PATH:
+/Applications/Xcode.app/Contents/Developer/usr/bin/python3   # Apple's, not yours
+</code></pre>
+<blockquote>
+<p>⚠️
+If it points to <strong>Xcode's</strong> or the <strong>system</strong> Python instead of what you installed, your
+<code>PATH</code> is wrong. Fix it by either activating your environment (<code>conda activate …</code> /
+<code>source .venv/bin/activate</code>) or adding the install path to your shell config
+(<code>~/.zshrc</code> on macOS, <code>~/.bashrc</code> on Linux). Then reopen the terminal and re-test.</p>
+</blockquote>
+<h2 id="how-to-debug-a-broken-install">How to debug a broken install</h2>
+<ol>
+<li><strong>Find the correct executable path</strong> with <code>which python3</code> (macOS/Linux) or
+   <code>Get-Command python</code> (PowerShell).</li>
+<li><strong>Confirm PATH</strong>: <code>echo $PATH</code> (macOS/Linux) or <code>$env:PATH</code> (PowerShell) — your install
+   directory should appear <em>before</em> system paths.</li>
+<li><strong>Activate your environment</strong> (conda / <code>.venv</code>) — this is the easiest fix and avoids
+   touching <code>PATH</code> at all.</li>
+<li>As a last resort, add the install path to your shell startup file and restart the
+   terminal.</li>
+</ol>
+<h2 id="run-your-first-program">Run your first program</h2>
+<p>Now that Python is installed, let's run a real script. Create a file named
+<code>hello.py</code> (any plain-text editor works) and paste the code below. Then run it with
+<code>python3 hello.py</code> (or <code>uv run hello.py</code> if you used uv).</p>
+<p>This example prints a friendly greeting and reports your machine's architecture
+(<code>platform.machine()</code>), the Python version, and the operating system — a quick sanity
+check that your install is alive and that you know which CPU it runs on.</p>
+<pre><code class="language-python">import sys
+import platform
+
+def main():
+    # 1. The classic first program
+    print(&quot;Hello, world!&quot;)
+
+    # 2. Report the computer architecture and environment
+    print(&quot;\n--- Your machine ---&quot;)
+    print(f&quot;OS        : {platform.system()} {platform.release()}&quot;)
+    print(f&quot;Arch      : {platform.machine()}&quot;)   # e.g. arm64, x86_64, AMD64
+    print(f&quot;Python    : {sys.version.splitlines()[0]}&quot;)
+    print(f&quot;Executable: {sys.executable}&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<p>Expected output (your numbers will differ):</p>
+<pre><code class="language-text">Hello, world!
+
+--- Your machine ---
+OS        : Darwin 24.0.0
+Arch      : arm64
+Python    : 3.12.4 (main, Jun  6 2024, 10:26:29) [Clang 15.0.0]
+Executable: /opt/homebrew/bin/python3
+</code></pre>
+<blockquote>
+<p>💡
+The <code>if __name__ == "__main__":</code> line is a Python convention: it makes <code>main()</code> run
+only when you execute the file directly (not when you <code>import</code> it as a module later).
+Copy the block above — every code block on this site has a <strong>Copy</strong> button.</p>
+<p>📝
+<strong>About the shebang line (<code>#!/usr/bin/env python3</code>).</strong> It is <em>not</em> Python
+syntax and does nothing when you run the file through an interpreter — it's only a
+tip for the operating system.</p>
+<p>```python</p>
+<h1 id="usrbinenv-python3">!/usr/bin/env python3</h1>
+<p>print("Hello, world!")
+```</p>
+<p><strong>What it is / why write it.</strong> On macOS &amp; Linux the <code>#!</code> (shebang) tells the OS which
+program should run the file when you launch it directly. After <code>chmod +x hello.py</code>
+you can run <code>./hello.py</code> and the OS finds <code>python3</code> for you. Using
+<code>/usr/bin/env python3</code> (not a hardcoded <code>/usr/bin/python3</code>) lets <code>env</code> search <code>PATH</code>,
+so it picks up whatever Python you have active (conda / uv's <code>.venv</code>).</p>
+<p><strong>Why it "does nothing".</strong> The shebang only matters when the OS launches the file
+itself. The moment you run it explicitly — <code>python3 hello.py</code> / <code>uv run hello.py</code>,
+exactly what we used above — Python treats that line as an ordinary comment and
+ignores it. So far it has had no effect at all.</p>
+<table>
+<thead>
+<tr>
+<th>How you run it</th>
+<th>Shebang used?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>python3 hello.py</code> / <code>uv run hello.py</code></td>
+<td>No — ignored as a comment</td>
+</tr>
+<tr>
+<td><code>./hello.py</code> (after <code>chmod +x</code>)</td>
+<td>Yes — OS uses it to find the interpreter</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Windows:</strong> the shebang is meaningless there — Windows picks the program from the
+<code>.py</code> extension/association, not the first line, so you can leave it out.</p>
+</blockquote>
+</main>
+</div>
+</div>
+<nav class="pager"><a class="prev" href="virtual-environment.html"><span class="dir">← Previous</span><span class="ttl">2 · Virtual Environments</span></a><a class="next" href="ide-setup.html"><span class="dir">→ Next</span><span class="ttl">4 · Code Editors & IDEs</span></a></nav>
+<footer id="footer" class="site">
+<p>Python Setup Guide &middot; <a href="index.html">Back to home</a></p>
+<p>Content is a work in progress &mdash; see the project readme for status.</p>
+</footer>
+</body>
+</html>

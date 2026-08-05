@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Setup Guide for HKU Beginners</title>
+<style>/* ============================================================
+   Python Setup Guide — shared stylesheet
+   Markdown-driven static site. Chrome (nav/sidebar/pager) is built
+   by assets/js/render.js; the article body comes from .md files.
+   Design tokens follow TDesign's palette.
+   ============================================================ */
+
+:root {
+  --primary: #005A33;
+  --primary-dark: #003D22;
+  --primary-soft: #E7F0EA;
+  --bg: #FFFFFF;
+  --bg-alt: #F5F8FF;
+  --surface: #FFFFFF;
+  --text: #1F2937;
+  --text-muted: #6B7280;
+  --border: #E5E7EB;
+  --code-bg: #0F172A;
+  --code-text: #E2E8F0;
+  --ok: #16A34A;
+  --warn: #D97706;
+  --danger: #DC2626;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --maxw: 1120px;
+  --nav-h: 62px;
+  --shadow: 0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.06);
+  --shadow-lg: 0 12px 40px rgba(0,90,51,.18);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg-alt);
+  font-size: 16px;
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--primary); text-decoration: none; transition: color .15s ease; }
+a:hover { color: var(--primary-dark); }
+h1, h2, h3, h4 { color: #111827; line-height: 1.3; font-weight: 700; }
+/* Keep anchored headings clear of the sticky top navigation when jumped to. */
+h1, h2, h3 { scroll-margin-top: calc(var(--nav-h) + 1rem); }
+h2 { font-size: 24px; margin-top: 2.2rem; }
+h3 { font-size: 19px; margin-top: 1.6rem; }
+h4 { font-size: 16px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+p { margin: .8rem 0; }
+
+code {
+  font-family: 'SFMono-Regular', ui-monospace, Menlo, Consolas, 'Liberation Mono', monospace;
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  padding: .12em .42em;
+  border-radius: 6px;
+  font-size: .9em;
+}
+
+/* ---------- Top navigation ---------- */
+.topnav {
+  position: sticky; top: 0; z-index: 50;
+  height: var(--nav-h); display: flex; align-items: center; gap: 1.2rem;
+  padding: 0 clamp(1rem, 4vw, 2.4rem);
+  background: rgba(255,255,255,.85);
+  backdrop-filter: saturate(160%) blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.topnav .brand {
+  font-weight: 800; font-size: 17px; color: #111827;
+  display: flex; align-items: center; gap: .55rem;
+}
+.topnav .brand .dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #4ADE80);
+  box-shadow: 0 0 0 4px var(--primary-soft);
+}
+.topnav .navlinks { margin-left: auto; display: flex; gap: .4rem; flex-wrap: wrap; }
+.topnav .navlinks a {
+  padding: .4rem .8rem; border-radius: 999px;
+  color: var(--text-muted); font-size: 14px; font-weight: 600;
+}
+.topnav .navlinks a:hover { background: var(--primary-soft); color: var(--primary-dark); }
+
+/* ---------- Layout ---------- */
+.container { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.4rem); }
+.layout {
+  max-width: var(--maxw); margin: 0 auto;
+  padding: 2rem clamp(1rem, 4vw, 2.4rem) 4rem;
+  display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 2.4rem; align-items: start;
+}
+.article { min-width: 0; }
+
+/* ---------- Sidebar TOC ("In this chapter") ---------- */
+.sidebar {
+  position: sticky; top: calc(var(--nav-h) + 1.5rem); align-self: start;
+  /* Never let a long TOC push the footer off-screen or get clipped: cap its
+     height to the viewport (minus the nav + some breathing room) and scroll. */
+  max-height: calc(100vh - var(--nav-h) - 3rem);
+  overflow-y: auto;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.1rem 1.2rem; box-shadow: var(--shadow);
+}
+.sidebar h4 {
+  margin: 0 0 .8rem; font-size: 13px; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--primary-dark); border-bottom: 1px solid var(--border); padding-bottom: .5rem;
+}
+.sidebar ol { margin: 0; padding-left: 0; list-style: none; counter-reset: toc-major; }
+.sidebar li { margin: .3rem 0; position: relative; }
+/* H2 = top-level entry (1, 2, 3…). Increment the major counter and reset the
+   minor one; render just the major number. */
+.sidebar li.toc-h2 {
+  counter-increment: toc-major; counter-reset: toc-minor;
+  padding-left: 1.8rem;
+}
+.sidebar li.toc-h2 > a::before {
+  content: counter(toc-major); position: absolute; left: 0;
+  min-width: 1.4rem; color: var(--primary); font-weight: 700;
+  font-variant-numeric: tabular-nums; font-size: 12.5px;
+}
+/* H3 = sub-entry (1.1, 1.2, 2.1…). Increment the minor counter and render the
+   combined "major.minor" number; indent a little further. */
+.sidebar li.toc-h3 {
+  counter-increment: toc-minor; padding-left: 2.8rem;
+}
+.sidebar li.toc-h3 > a::before {
+  content: counter(toc-major) "." counter(toc-minor); position: absolute; left: 0;
+  min-width: 2.2rem; color: var(--primary); font-weight: 700;
+  font-variant-numeric: tabular-nums; font-size: 12.5px;
+}
+.sidebar a { color: var(--text-muted); font-size: 14.5px; display: block; }
+.sidebar a:hover { color: var(--primary); }
+
+/* ---------- Page header (tag + title) ---------- */
+.pagehead { margin-bottom: .4rem; }
+.pagehead h1 { margin: .2rem 0 .8rem; font-size: 30px; }
+
+/* ---------- Markdown body ---------- */
+.markdown h2 { border-bottom: 1px solid var(--border); padding-bottom: .3rem; }
+.markdown h3 { margin-top: 1.6rem; }
+.markdown ul, .markdown ol { padding-left: 1.4rem; }
+.markdown li { margin: .35rem 0; }
+.markdown img { max-width: 100%; height: auto; }
+
+/* ---------- Code blocks ---------- */
+pre {
+  background: var(--code-bg); color: var(--code-text);
+  padding: 1.1rem 1.2rem; border-radius: var(--radius-sm);
+  overflow-x: auto; font-size: 14px; line-height: 1.6; border: 1px solid #1E293B;
+}
+pre { position: relative; }
+pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+pre .prompt { color: #60A5FA; }
+pre .comment { color: #64748B; }
+.copy-btn {
+  position: absolute; top: .5rem; right: .5rem;
+  font: inherit; font-size: 12px; line-height: 1;
+  padding: .35rem .6rem; border-radius: var(--radius-sm);
+  border: 1px solid #334155; background: #1E293B; color: #CBD5E1;
+  cursor: pointer; opacity: 0; transition: opacity .15s ease, background .15s ease;
+}
+pre:hover .copy-btn, .copy-btn:focus { opacity: 1; }
+.copy-btn:hover { background: #334155; color: #fff; }
+
+/* ---------- Tables ---------- */
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 14.5px; }
+th, td { text-align: left; padding: .7rem .9rem; border-bottom: 1px solid var(--border); }
+th { background: var(--bg-alt); color: #111827; font-weight: 700; }
+tr:hover td { background: var(--primary-soft); }
+
+/* ---------- Placeholder figure ---------- */
+figure.screenshot {
+  margin: 1.4rem 0; border: 1px dashed var(--border);
+  border-radius: var(--radius); overflow: hidden; background: var(--bg-alt);
+}
+figure.screenshot img { display: block; width: 100%; height: auto; background: #E2E8F0; }
+figure.screenshot img.img-failed { height: 220px; object-fit: contain; filter: grayscale(1); }
+figure.screenshot figcaption {
+  padding: .7rem 1rem; font-size: 13.5px; color: var(--text-muted);
+  border-top: 1px dashed var(--border); background: #FCFCFD;
+}
+figure.screenshot figcaption::before { content: "▢ "; color: var(--warn); font-weight: 700; }
+
+/* ---------- Callouts (GitHub-style alerts) ---------- */
+.markdown blockquote {
+  border-left: 4px solid var(--primary); background: var(--primary-soft);
+  padding: .8rem 1.1rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 1.1rem 0; font-size: 14.5px;
+}
+.markdown blockquote p { margin: .4rem 0; }
+.markdown blockquote.note-tip { border-color: var(--ok); background: #F0FDF4; }
+.markdown blockquote.note-warning,
+.markdown blockquote.note-caution { border-color: var(--warn); background: #FFFBEB; }
+.markdown blockquote.note-important { border-color: var(--danger); background: #FEF2F2; }
+.markdown blockquote strong { color: #111827; }
+
+/* ---------- Tags (chapter chips) ---------- */
+.tag {
+  display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .03em;
+  padding: .15rem .6rem; border-radius: 999px; margin-bottom: .5rem;
+}
+.tag-optional { background: #FEF3C7; color: var(--warn); }
+.tag-skip { background: #E0E7FF; color: var(--primary-dark); }
+.tag-required { background: #DCFCE7; color: var(--ok); }
+/* Fallback styling for <t-tag> before TDesign upgrades (or if the CDN is blocked). */
+t-tag:not(:defined) {
+  display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .03em;
+  padding: .15rem .6rem; border-radius: 999px; margin-bottom: .5rem;
+  background: #E5E7EB; color: var(--text-muted);
+}
+t-tag:not(:defined)[theme="success"] { background: #DCFCE7; color: var(--ok); }
+t-tag:not(:defined)[theme="warning"] { background: #FEF3C7; color: var(--warn); }
+t-tag:not(:defined)[theme="primary"] { background: #E0E7FF; color: var(--primary-dark); }
+
+/* ---------- Prev / next nav ---------- */
+.pager {
+  display: flex; justify-content: space-between; gap: 1rem; margin: 2.5rem auto 0;
+  max-width: var(--maxw); padding: 0 clamp(1rem, 4vw, 2.4rem); flex-wrap: wrap;
+}
+.pager a {
+  flex: 1 1 200px; border: 1px solid var(--border); border-radius: var(--radius);
+  padding: .9rem 1.1rem; background: var(--surface); box-shadow: var(--shadow);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.pager a:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.pager .dir { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
+.pager .ttl { font-weight: 700; color: #111827; }
+
+/* ---------- Hero (index) ---------- */
+.hero {
+  background: radial-gradient(1200px 500px at 80% -10%, #D7E9DE 0%, transparent 60%),
+              linear-gradient(135deg, #005A33 0%, #003D22 100%);
+  color: #fff; padding: 4rem clamp(1rem, 4vw, 2.4rem) 3.4rem;
+}
+.hero .container { max-width: var(--maxw); }
+.hero .eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: 13px; font-weight: 700; opacity: .85; }
+.hero h1 { color: #fff; font-size: clamp(30px, 5vw, 46px); margin: .5rem 0 .8rem; }
+.hero p.lead { font-size: 18px; max-width: 720px; opacity: .95; }
+.hero .pill {
+  display: inline-block; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.3);
+  padding: .3rem .8rem; border-radius: 999px; font-size: 13px; font-weight: 600; margin: .3rem .4rem .3rem 0;
+}
+
+/* ---------- TOC index table ---------- */
+.toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.1rem; margin-top: 1.6rem; }
+.toc-item {
+  display: block; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.2rem 1.3rem; box-shadow: var(--shadow);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.toc-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: #A8D5B8; }
+.toc-item .num {
+  display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px;
+  background: var(--primary-soft); color: var(--primary-dark); font-weight: 800; font-size: 14px; margin-bottom: .6rem;
+}
+.toc-item h3 { margin: 0 0 .3rem; font-size: 17px; }
+.toc-item p { margin: 0; font-size: 13.5px; color: var(--text-muted); }
+.toc-item .meta { margin-top: .7rem; font-size: 12px; }
+
+/* ---------- Footer ---------- */
+footer.site {
+  border-top: 1px solid var(--border); background: var(--surface); color: var(--text-muted);
+  font-size: 13.5px; padding: 2rem clamp(1rem, 4vw, 2.4rem); text-align: center;
+}
+footer.site a { color: var(--primary); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; top: auto; }
+  .topnav .navlinks { display: none; }
+}
+
+/* ---------- Dark theme (night mode) ----------
+   Triggered automatically when the OS requests dark color scheme, or when
+   <html data-theme="dark"> is set by assets/js/render.js. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0B1120;
+    --bg-alt: #0F172A;
+    --surface: #111827;
+    --text: #E2E8F0;
+    --text-muted: #94A3B8;
+    --border: #1E293B;
+    --primary-soft: #0E2A1A;
+    --primary-dark: #4ADE80;
+    --code-bg: #0B1120;
+    --code-text: #E2E8F0;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
+    --shadow-lg: 0 12px 40px rgba(0,90,51,.35);
+  }
+}
+html[data-theme="dark"] {
+  --bg: #0B1120;
+  --bg-alt: #0F172A;
+  --surface: #111827;
+  --text: #E2E8F0;
+  --text-muted: #94A3B8;
+  --border: #1E293B;
+  --primary-soft: #0E2A1A;
+  --primary-dark: #4ADE80;
+  --code-bg: #0B1120;
+  --code-text: #E2E8F0;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
+  --shadow-lg: 0 12px 40px rgba(0,90,51,.35);
+}
+@media (prefers-color-scheme: dark) {
+  body { background: var(--bg-alt); }
+  .topnav { background: rgba(17,24,39,.85); border-bottom-color: var(--border); }
+  .topnav .brand { color: #F8FAFC; }
+  .markdown blockquote { background: var(--primary-soft); }
+  .markdown blockquote.note-tip { background: #0E2A1A; }
+  .markdown blockquote.note-warning,
+  .markdown blockquote.note-caution { background: #2C2410; }
+  .markdown blockquote.note-important { background: #2C1414; }
+  th { background: var(--bg-alt); color: #F8FAFC; }
+  tr:hover td { background: var(--primary-soft); }
+  .hero { background: radial-gradient(1200px 500px at 80% -10%, #0E2A1A 0%, transparent 60%),
+                      linear-gradient(135deg, #003D22 0%, #001A0F 100%); }
+  figure.screenshot { background: var(--bg-alt); }
+  figure.screenshot figcaption { background: #0F172A; }
+  t-tag:not(:defined) { background: #1E293B; color: var(--text-muted); }
+  t-tag:not(:defined)[theme="success"] { background: #0E2A1A; color: #4ADE80; }
+  t-tag:not(:defined)[theme="warning"] { background: #2C2410; color: #FBBF24; }
+  t-tag:not(:defined)[theme="primary"] { background: #0E2A1A; color: #4ADE80; }
+}
+html[data-theme="dark"] body { background: var(--bg-alt); }
+html[data-theme="dark"] .topnav { background: rgba(17,24,39,.85); border-bottom-color: var(--border); }
+html[data-theme="dark"] .topnav .brand { color: #F8FAFC; }
+html[data-theme="dark"] .markdown blockquote { background: var(--primary-soft); }
+html[data-theme="dark"] .markdown blockquote.note-tip { background: #0E2A1A; }
+html[data-theme="dark"] .markdown blockquote.note-warning,
+html[data-theme="dark"] .markdown blockquote.note-caution { background: #2C2410; }
+html[data-theme="dark"] .markdown blockquote.note-important { background: #2C1414; }
+html[data-theme="dark"] th { background: var(--bg-alt); color: #F8FAFC; }
+html[data-theme="dark"] tr:hover td { background: var(--primary-soft); }
+html[data-theme="dark"] .hero { background: radial-gradient(1200px 500px at 80% -10%, #0E2A1A 0%, transparent 60%),
+                      linear-gradient(135deg, #003D22 0%, #001A0F 100%); }
+html[data-theme="dark"] figure.screenshot { background: var(--bg-alt); }
+html[data-theme="dark"] figure.screenshot figcaption { background: #0F172A; }
+html[data-theme="dark"] t-tag:not(:defined) { background: #1E293B; color: var(--text-muted); }
+html[data-theme="dark"] t-tag:not(:defined)[theme="success"] { background: #0E2A1A; color: #4ADE80; }
+html[data-theme="dark"] t-tag:not(:defined)[theme="warning"] { background: #2C2410; color: #FBBF24; }
+html[data-theme="dark"] t-tag:not(:defined)[theme="primary"] { background: #0E2A1A; color: #4ADE80; }
+
+/* ---------- Index page: hide the auto-generated #toc list ----------
+   The #toc element is populated by buildToc in render.js as an <ol>
+   ("1. python version / 2. Why learn this..."). On the index page we keep
+   the markdown-rendered ## headings (inside #content) visible but hide this
+   injected list. Chapter pages render their TOC via .sidebar, unaffected. */
+body[data-md="index.md"] #toc { display: none; }
+</style>
+</head>
+<body data-md="index.md">
+<header id="topnav" class="topnav"><a class="brand" href="index.html"><span class="dot"></span> Python Setup Guide</a><nav class="navlinks"><a href="unix-basics.html">Basic Unix-like Systems</a><a href="virtual-environment.html">Virtual Environments</a><a href="installation.html">Installing Python</a><a href="ide-setup.html">Code Editors & IDEs</a><a href="recommended-reading.html">Recommended Reading</a></nav></header>
+<section class="hero"><div class="container">
+<span class="eyebrow">The University of Hong Kong &middot; Programming Bootcamp</span>
+<h1>Welcome, new HKU students &#128075;</h1>
+<p class="lead">This guide helps you set up a Python environment on your own computer and use it to
+learn your first Python lessons &mdash; even if you have never opened a terminal before.
+Pick the chapters you need; skip the ones you already know.</p>
+<div>
+<span class="pill">&#128013; CPython (reference implementation)</span>
+<span class="pill">&#128187; macOS &middot; Windows &middot; Linux</span>
+<span class="pill">&#128640; Beginner friendly</span>
+</div>
+</div></section>
+<section class="container" style="padding-top:2.4rem;">
+<div id="content" class="markdown">
+<h2 id="why-learn-this-when-ai-agents-can-code-for-you">Why learn this when AI agents can code for you?</h2>
+<p>An agent can <em>write</em> Python, but
+it cannot <em>install</em> the interpreter on your machine, fix a broken <code>PATH</code>, or tell
+you why <code>python</code> points to the wrong binary. When a script crashes, you still have
+to run it, read the traceback, and rebuild the environment yourself — and you
+cannot do any of that without a working setup. Learning this once means you are
+never blocked just because a tool failed. </p>
+<h2 id="python-version">python version</h2>
+<p>We use <strong>CPython</strong>, the official
+reference implementation of Python, rather than alternatives such as <strong>PyPy</strong>.
+PyPy is a different implementation with a JIT compiler that can run some programs
+much faster, but it is not the standard interpreter, may lag behind on new Python
+features, and is rarely what courseware or libraries expect. CPython is what
+<code>python.org</code> ships and what every tutorial in this guide assumes.</p>
+<h2 id="how-to-use-this-guide">How to use this guide:</h2>
+<p>click a card below to jump to that chapter. Tags show
+whether a chapter is required or can be skipped.</p>
+</div>
+<h2 id="toc">Chapters</h2>
+<div id="tochome" class="toc-grid"><a class="toc-item" href="unix-basics.html"><span class="num">1</span><h3>Basic Unix-like Systems</h3><p>Command line, terminal, sudo, -h/--help, options vs arguments, exe vs no-extension.</p><div class="meta"><span class="tag tag-skip">Skippable</span></div></a><a class="toc-item" href="virtual-environment.html"><span class="num">2</span><h3>Virtual Environments</h3><p>Why not just use the system Python. uv vs conda, local vs global environments.</p><div class="meta"><span class="tag tag-optional">Optional</span></div></a><a class="toc-item" href="installation.html"><span class="num">3</span><h3>Installing Python</h3><p>Standalone installer, conda, and uv — across macOS (arm64), Windows (amd64) and Linux (x86_64).</p><div class="meta"><span class="tag tag-required">Required</span></div></a><a class="toc-item" href="ide-setup.html"><span class="num">4</span><h3>Code Editors & IDEs</h3><p>VS Code / Cursor / CodeBuddy, PyCharm Community, and GitHub Copilot student access.</p><div class="meta"><span class="tag tag-required">Required</span></div></a><a class="toc-item" href="recommended-reading.html"><span class="num">5</span><h3>Recommended Reading</h3><p>PEP 8 style, language servers (ty, pyright) and linters (ruff) to level up.</p><div class="meta"><span class="tag tag-optional">Optional</span></div></a></div>
+</section>
+<footer id="footer" class="site">
+<p>Python Setup Guide &middot; <a href="index.html">Back to home</a></p>
+<p>Content is a work in progress &mdash; see the project readme for status.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,4 @@
+# Dependencies for the standalone HTML release build (build_release.py).
+# Not needed by the live GitHub Pages site — only by your own CI that produces
+# the copy-pasteable, dependency-free HTML release.
+markdown>=3.3
