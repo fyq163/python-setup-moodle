@@ -76,8 +76,15 @@ def slugify(s):
 def render_body(md_text):
     """Render markdown to HTML and add heading ids / collect a TOC."""
     html = _md.markdown(md_text, extensions=MD_EXTENSIONS)
-    # TODO: image src still uses the local relative path (`../assets/img/...`).
-    # Rewrite to a GitHub permalink before publishing (see file header).
+    # Rewrite local image paths (../assets/img/...) to GitHub permalink
+    # via jsDelivr CDN, so the release HTML is fully self-contained and
+    # needs no bundled assets/ folder.
+    GITHUB_CDN = "https://cdn.jsdelivr.net/gh/fyq163/python-setup-moodle@main"
+    html = re.sub(
+        r'src="\.\./assets/img/([^"]+)"',
+        lambda mo: 'src="%s/assets/img/%s"' % (GITHUB_CDN, mo.group(1)),
+        html,
+    )
     # Turn any leftover GitHub-style alert markers into emoji callouts.
     html = re.sub(
         r'<blockquote>\s*<p>\s*\[!(NOTE|TIP|WARNING|IMPORTANT|CAUTION)\]\s*',

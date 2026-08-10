@@ -18,10 +18,11 @@ identical:
 4. Select the interpreter: press `Ctrl/Cmd + Shift + P`, type **"Python: Select
    Interpreter"**, and choose the environment you made in Chapter 3 (the `.venv` or conda
    env). The bottom-right status bar then shows that Python.
+   ![vscode plugin marketplace](https://cdn.jsdelivr.net/gh/fyq163/python-setup-moodle@main/assets/img/vscode-extension-python.png)
 5. Use the built-in terminal (`Ctrl/Cmd + `` `) to run `uv run main.py` or
    `python main.py`.
 
-![TODO: Screenshot of VS Code — the "Python: Select Interpreter" picker, highlighting the virtual environment created in Chapter 3.](../assets/img/placeholder.svg)
+![Screenshot of VS Code — the "Python: Select Interpreter" picker, highlighting the virtual environment created in Chapter 3.](https://cdn.jsdelivr.net/gh/fyq163/python-setup-moodle@main/assets/img/vscode-interpreter-selection.png)
 
 > 💡
 > Once the interpreter is selected, the play button (▶) and the terminal both use *your*
@@ -57,4 +58,3 @@ Python your shell currently has active.
 
 GitHub Copilot is an AI pair-programmer that suggests code as you type. **Students get it
 free** (and many other developer tools) through the [GitHub Copilot - Information Technology Services - HKU](https://its.hku.hk/software/github-copilot/)
-pack with a school email.

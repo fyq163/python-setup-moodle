@@ -24,11 +24,66 @@ never step on each other — and never touch the system Python.
 > On macOS/Linux, `/usr/bin/python3` is managed by the system. Installing packages into it
 > with `sudo pip install …` can break OS tools. **Always work inside a project environment.**
 
+## conda / Anaconda / Miniconda
+
+**conda** is an environment manager especially popular in data science. The naming is
+confusing, so here is the split. There are two conda *distributions*:
+
+- **Anaconda** — the full distribution: conda plus 250+ pre-installed packages. Large
+  (~3 GB). Good if you want everything out of the box.
+- **Miniconda** — conda with *no* pre-installed packages. Small and clean. **We recommend
+  Miniconda** if you go the conda route.
+- **conda-forge** — a *community channel* (see below), **not** a distribution. It is a
+  repository of packages; usually more up to date than the default `defaults` channel.
+
+The only difference between the two distributions is **what comes pre-installed**:
+
+| | Anaconda | Miniconda |
+| --- | --- | --- |
+| What it is | Full distribution: conda + 250+ packages | Minimal installer: conda only |
+| Download size | ~3 GB | ~100 MB |
+| Install time | Longer | Short |
+| Disk footprint | Large | Small |
+| Best for | Want everything out of the box | Clean start — you pick the packages |
+| `conda` command | Identical | Identical |
+
+> 💡 Both distributions ship the **same `conda` command** — `conda create`,
+> `conda activate`, etc. work exactly the same way. Only the pre-installed package set
+> differs.
+
+Unlike uv/pip, conda can also install **non-Python** dependencies (e.g. CUDA, R), which is
+why many scientists like it.
+
+```bash
+conda create --name py312 python=3.12   # create a named environment
+conda activate py312                     # switch into it
+```
+
+## Channels: conda-forge and others
+
+A **channel** is a repository conda downloads packages from. The two you will meet:
+
+- `defaults` — Anaconda's official, curated channel.
+- `conda-forge` — a community-run channel with broader, faster-updated packages.
+
+We recommend preferring conda-forge:
+
+```bash
+conda create -n py312 python=3.12 -c conda-forge
+```
+
+This differs from **PyPI** (the Python Package Index), which is what `pip` and `uv` use.
+conda packages and PyPI packages are not always interchangeable. **Inside a conda
+environment, prefer `conda install`** over `pip`: packages installed with `pip` live outside
+conda's view, so conda may fail to see or manage them, and dependency conflicts are easier to
+miss. Use `pip` only in special cases (a package exists only on PyPI) — which is rare for
+this course.
+
 ## uv
 
 **[uv](https://docs.astral.sh/uv/)** is a modern, extremely fast Python package and
 environment manager written in Rust. It replaces `pip`, `virtualenv`, and parts of
-`conda`. We recommend it for beginners because:
+`conda`. We recommend it for everyday Python projects because:
 
 - One tool does everything (install Python, create envs, install packages, run scripts).
 - It is 10–100× faster than `pip`.
@@ -40,6 +95,16 @@ cd myproject
 uv pip install pandas  # install a package into this project's env
 uv run main.py         # run a script using this project's Python
 ```
+
+💡 **Second way — install from a `requirements.txt`.** Instead of installing packages one by
+one, list them all in a `requirements.txt` (format below) and install in one go:
+
+```bash
+uv pip install -r requirements.txt
+```
+
+Run this from inside the project folder (after `cd myproject`) so the packages land in
+`myproject/.venv` — not in a stray `~/.venv` in your home directory.
 
 ## Locking & recording dependencies: `uv lock` and `requirements.txt`
 
@@ -101,44 +166,6 @@ set of packages. Think of it as `requirements.txt` on steroids.
 > reproducible. Either way, **keep the file alongside your project** so the environment
 > travels with your code.
 
-## conda / Anaconda / Miniconda
-
-**conda** is an older, very popular environment manager, especially in data science. The
-naming is confusing, so here is the split:
-
-- **Anaconda** — the full distribution: conda plus 250+ pre-installed packages. Large
-  (~3 GB). Good if you want everything out of the box.
-- **Miniconda** — conda with *no* pre-installed packages. Small and clean. **We recommend
-  Miniconda** if you go the conda route.
-- **conda-forge** — a community channel (see below) of packages; usually more up to date
-  than the default `defaults` channel.
-
-Unlike uv/pip, conda can also install **non-Python** dependencies (e.g. CUDA, R), which is
-why many scientists like it.
-
-```bash
-conda create --name py312 python=3.12   # create a named environment
-conda activate py312                     # switch into it
-```
-
-## Channels: conda-forge and others
-
-A **channel** is a repository conda downloads packages from. The two you will meet:
-
-- `defaults` — Anaconda's official, curated channel.
-- `conda-forge` — a community-run channel with broader, faster-updated packages.
-
-We recommend preferring conda-forge:
-
-```bash
-conda create -n py312 python=3.12 -c conda-forge
-```
-
-This differs from **PyPI** (the Python Package Index), which is what `pip` and `uv` use.
-conda packages and PyPI packages are not always interchangeable — generally, *inside* an
-environment, prefer `uv pip`/`pip` for Python packages and let conda handle only what it
-does best.
-
 ## `conda` vs `uv`: global vs local
 
 A quick comparison to help you choose.
@@ -153,6 +180,8 @@ A quick comparison to help you choose.
 | Best for | Data-science stacks needing system libs | Everyday Python projects |
 
 > 💡
-> Our default recommendation: **uv**. Create one `.venv` per project, and use `uv run`
-> so you rarely have to activate manually. Switch to conda only if a package you need
-> ships non-Python system libraries.
+> Our default recommendation: **conda (Miniconda)** for this course — one environment
+> manager that also handles data-science and non-Python system libraries, with the option of
+> the full Anaconda distribution pre-installed. For everyday Python projects outside the
+> course, uv is a great fast alternative: create one `.venv` per project and use `uv run`
+> so you rarely have to activate manually.
