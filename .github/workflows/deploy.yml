@@ -1,9 +1,10 @@
 name: Deploy static content to Pages
 
 on:
-  # Rebuild on every push (any branch, including PR merges) so a commit always
-  # triggers a redeploy.
+  # Rebuild only when main changes (e.g. a PR merged into main). Pushes to
+  # other branches do NOT trigger a deploy.
   push:
+    branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
