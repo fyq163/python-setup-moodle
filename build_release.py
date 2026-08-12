@@ -22,11 +22,10 @@ Run it in your own CI (e.g. a local `conda activate nlp-mark` env):
 
 Requires: Python 3.8+, the `markdown` package.
 
-TODO: image references in the release still point to the local relative path
-(`../assets/img/...`) as produced by the Markdown. Before publishing, rewrite
-these to GitHub permalinks (e.g.
-`https://github.com/fyq163/python-setup-moodle/raw/main/assets/img/...`) so the
-release needs no bundled `assets/` folder. This step is done manually.
+Image handling in the release build: any image whose URL is already an absolute
+`https://` link is kept as-is, while local repo-relative paths (`../assets/img/...`)
+are rewritten to a public CDN URL. So the release output is fully self-contained
+and needs no bundled `assets/` folder.
 """
 import os
 import re
@@ -76,15 +75,20 @@ def slugify(s):
 def render_body(md_text):
     """Render markdown to HTML and add heading ids / collect a TOC."""
     html = _md.markdown(md_text, extensions=MD_EXTENSIONS)
-    # Rewrite local image paths (../assets/img/...) to GitHub permalink
-    # via jsDelivr CDN, so the release HTML is fully self-contained and
-    # needs no bundled assets/ folder.
+    # Rewrite ONLY local repo-relative image paths (../assets/img/...) to a
+    # public URL. Images that already use an absolute https:// URL are left
+    # untouched ("detect https -> skip; detect repo path -> render").
     GITHUB_CDN = "https://cdn.jsdelivr.net/gh/fyq163/python-setup-moodle@main"
-    html = re.sub(
-        r'src="\.\./assets/img/([^"]+)"',
-        lambda mo: 'src="%s/assets/img/%s"' % (GITHUB_CDN, mo.group(1)),
-        html,
-    )
+
+    def _rewrite_img(mo):
+        src = mo.group(1)
+        if src.startswith("https://"):
+            return mo.group(0)          # already public -> keep as-is
+        if src.startswith("../assets/img/"):
+            return 'src="%s/assets/img/%s"' % (GITHUB_CDN, src[len("../assets/img/"):])
+        return mo.group(0)              # other relative path -> leave alone
+
+    html = re.sub(r'src="([^"]+)"', _rewrite_img, html)
     # Turn any leftover GitHub-style alert markers into emoji callouts.
     html = re.sub(
         r'<blockquote>\s*<p>\s*\[!(NOTE|TIP|WARNING|IMPORTANT|CAUTION)\]\s*',
@@ -268,7 +272,6 @@ def main():
         with open(os.path.join(OUT, name + ".html"), "w", encoding="utf-8") as f:
             f.write(out)
         print("built release/%s.html" % name)
-    # No local assets/ folder: release references images via GitHub permalink.
     print("release build complete -> %s" % OUT)
 
 
