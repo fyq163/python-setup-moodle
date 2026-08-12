@@ -292,6 +292,41 @@ On macOS you might see something like:
 > `source .venv/bin/activate`) or adding the install path to your shell config
 > (`~/.zshrc` on macOS, `~/.bashrc` on Linux). Then reopen the terminal and re-test.
 
+### Verify your installed packages
+
+Beyond the Python path, confirm the course packages themselves are visible. The listing
+command differs by method:
+
+**conda** — inside the `mffintech` environment:
+
+```bash
+conda activate mffintech
+conda list
+```
+
+You should see these entries:
+
+| Component  | Version | Source   |
+| ---------- | ------- | -------- |
+| Python     | 3.14.6  | Anaconda |
+| NumPy      | 2.4.6   | Anaconda |
+| pandas     | 3.0.3   | Anaconda |
+| PyArrow    | 23.0.1  | Anaconda |
+| pytest     | 9.0.3   | Anaconda |
+| JupyterLab | 4.5.9   | Anaconda |
+| DuckDB     | 1.5.4   |          |
+| Polars     | 1.43.2  |          |
+| yfinance   | 1.5.2   |          |
+
+**uv** — inside your project folder:
+
+```bash
+cd myproject
+uv pip list
+```
+
+The same nine packages should appear.
+
 > 💡 The surest test that everything is installed correctly is being able to **run your first
 > program** below — head there next.
 
