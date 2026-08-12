@@ -70,14 +70,13 @@ Options and arguments (and corresponding environment variables):
 - why executables on windows has `exe` extension and why unix does not have
 - pwsh commands: unix-like aliases and its original commands and why windows is not prefered. e.g. `Get-Command` = `which`
 ### (short, non-compulsory)concept of virtual enviroment
-- why need virtual env rather than standalone python, why uv is prefered. why /usr/bin/python3 cannot be used directly
-- uv
+- why need virtual env rather than standalone python, why conda is preferred (uv as a fast alternative). why /usr/bin/python3 cannot be used directly
 - conda:https://www.anaconda.com/docs/getting-started/concepts/anaconda-or-miniconda
-- anaconda 
-- miniconda, difference of channels, conda-forge and others
+- anaconda (full distribution: conda + 250+ pre-installed packages, ~3 GB) and miniconda (minimal installer: conda only, ~100 MB), difference of channels, conda-forge and others
+- uv:https://docs.astral.sh/uv/ (fast alternative)
 - difference of `conda` and `uv`, `conda activate` vs `source .venv/bin/activate`, global vs local enviroment
 ### (very detail) How to installation python executable
-- how to choose version (amd64, arm64, x86_64, exe) and how to set up first python enviroment
+- how to choose **specific, concrete versions** — a fixed Python version (e.g. 3.12), the exact CPU arch (amd64, arm64, x86_64, aarch64), and the exact installer version number for Anaconda/Miniconda. Never write "latest" or leave the version blank. Then how to set up first python enviroment
 - standalone installation, double click exe to install
     - win: 
         - https://www.python.org/downloads/windows/
@@ -91,14 +90,18 @@ Options and arguments (and corresponding environment variables):
         - with standalone installer:https://www.python.org/downloads/source/
         - typecially it will be installed under the path of 
     
-- with conda:
-    - url: 
-        - macos:https://www.anaconda.com/docs/getting-started/miniconda/install/mac-cli-install#using-miniconda-in-a-commercial-setting
-        - windows:https://www.anaconda.com/docs/getting-started/miniconda/install/windows-cli-install#powershell
-        - linux:https://www.anaconda.com/docs/getting-started/miniconda/install/linux-install#installation-steps
-    - how to install
-        - introduce cli reference`conda create --name py310 python=3.12`
-        - `conda activate <enviroment name>` condaand how to re-activate after close terminal
+- with conda (two distributions — pick one):
+    - **Anaconda** (full distribution: conda + 250+ pre-installed packages, ~3 GB) — official install docs:
+        - macos: https://www.anaconda.com/docs/getting-started/anaconda/install/mac-cli-install
+        - windows: https://www.anaconda.com/docs/getting-started/anaconda/install/windows-cli-install
+        - linux: https://www.anaconda.com/docs/getting-started/anaconda/install/linux-install
+    - **Miniconda** (minimal installer: conda only, no pre-installed packages — recommended) — official install docs:
+        - macos: https://www.anaconda.com/docs/getting-started/miniconda/install/mac-cli-install
+        - windows: https://www.anaconda.com/docs/getting-started/miniconda/install/windows-cli-install
+        - linux: https://www.anaconda.com/docs/getting-started/miniconda/install/linux-install
+    - how to install (same for both distributions)
+        - introduce cli reference `conda create --name py310 python=3.12`
+        - `conda activate <enviroment name>` and how to re-activate after close terminal
         - how to set specific pre-installed python executable for new env to save space
 - with uv:
     - url: https://docs.astral.sh/uv/getting-started/installation/#pypi

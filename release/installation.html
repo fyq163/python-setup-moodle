@@ -360,12 +360,12 @@ body[data-md="index.md"] #toc { display: none; }
 <body data-md="installation.md">
 <header id="topnav" class="topnav"><a class="brand" href="index.html"><span class="dot"></span> Python Setup Guide</a><nav class="navlinks"><a href="unix-basics.html">Basic Unix-like Systems</a><a href="virtual-environment.html">Virtual Environments</a><a href="installation.html">Installing Python</a><a href="ide-setup.html">Code Editors & IDEs</a><a href="recommended-reading.html">Recommended Reading</a></nav></header>
 <div class="layout">
-<aside class="sidebar"><h4>In this chapter</h4><nav id="toc"><ol><li class="toc-h2"><a href="#how-to-choose-a-version-amp-architecture">How to choose a version &amp;amp; architecture</a></li><li class="toc-h2"><a href="#method-a-with-uv-most-recommended">Method A · With uv (most recommended)</a></li><li class="toc-h2"><a href="#method-b-with-conda-miniconda-recommended">Method B · With conda (Miniconda, recommended)</a></li><li class="toc-h3"><a href="#what-to-do-if-you-are-asked-to-run-conda-init">What to do if you are asked to run conda init</a></li><li class="toc-h2"><a href="#method-c-standalone-installer">Method C · Standalone installer</a></li><li class="toc-h3"><a href="#windows">Windows</a></li><li class="toc-h3"><a href="#macos">macOS</a></li><li class="toc-h3"><a href="#linux">Linux</a></li><li class="toc-h2"><a href="#after-install-test-it-works">After install · test it works</a></li><li class="toc-h2"><a href="#how-to-debug-a-broken-install">How to debug a broken install</a></li><li class="toc-h2"><a href="#run-your-first-program">Run your first program</a></li></ol></nav></aside>
+<aside class="sidebar"><h4>In this chapter</h4><nav id="toc"><ol><li class="toc-h2"><a href="#how-to-choose-a-version-amp-architecture">How to choose a version &amp;amp; architecture</a></li><li class="toc-h2"><a href="#method-a-with-conda-most-recommended">Method A · With conda (most recommended)</a></li><li class="toc-h3"><a href="#install-conda">Install Conda.</a></li><li class="toc-h3"><a href="#what-to-do-if-you-are-asked-to-run-conda-init">What to do if you are asked to run conda init</a></li><li class="toc-h2"><a href="#method-b-with-uv-recommended">Method B · With uv (recommended)</a></li><li class="toc-h2"><a href="#method-c-standalone-installer">Method C · Standalone installer</a></li><li class="toc-h3"><a href="#windows">Windows</a></li><li class="toc-h3"><a href="#macos">macOS</a></li><li class="toc-h3"><a href="#linux">Linux</a></li><li class="toc-h2"><a href="#after-install-test-it-works">After install · test it works</a></li><li class="toc-h2"><a href="#run-your-first-program">Run your first program</a></li><li class="toc-h2"><a href="#how-to-debug-a-broken-install">How to debug a broken install</a></li></ol></nav></aside>
 <div class="article">
 <div id="pagehead" class="pagehead"><span class="tag tag-required">Required</span><h1 id="top">3 · Installing Python</h1></div>
 <main id="content" class="markdown">
-<p>The detailed chapter. Three methods (standalone / conda / uv) × three platforms (macOS
-arm64, Windows amd64, Linux x86_64). <strong>Pick one method</strong> — we recommend <strong>uv</strong> for
+<p>The detailed chapter. Three methods (conda / uv / standalone) × three platforms (macOS
+arm64, Windows amd64, Linux x86_64). <strong>Pick one method</strong> — we recommend <strong>conda</strong> for
 beginners. You only need Python installed once per machine.</p>
 <h2 id="how-to-choose-a-version-amp-architecture">How to choose a version &amp; architecture</h2>
 <ul>
@@ -375,66 +375,126 @@ beginners. You only need Python installed once per machine.</p>
 <li><strong>Architecture</strong> (your CPU type):</li>
 <li><strong>macOS:</strong> Apple Silicon Macs (M1/M2/M3/M4) → <strong>arm64</strong>. Intel Macs → <strong>x86_64</strong>.</li>
 <li><strong>Windows:</strong> almost all modern PCs → <strong>amd64</strong> (also called x64).</li>
-<li><strong>Linux:</strong> most desktops/servers → <strong>x86_64</strong>; newer ARM boards → <strong>aarch64</strong>.</li>
+<li><strong>Linux:</strong> most desktops/servers → <strong>x86_64</strong>; newer ARM boards → <strong>aarch64</strong>.<blockquote>
+<p>📝 The guide below shows one standard installation. This course will teach using this
+version as the reference, but you are always free to choose your own way to install
+based on your needs.</p>
+</blockquote>
+</li>
 </ul>
-<p>If you are unsure, the installer pages below usually auto-detect the right one.</p>
-<blockquote>
-<p><strong>⚠️ Choose a Stable Release (all methods &amp; platforms).</strong> Whether you use the standalone
-installer, conda, or uv, pick a <strong>Stable Release</strong> — the latest stable version (e.g.
-Python 3.12.x or 3.13.x). <strong>Do not</strong> download or install anything marked <em>Pre-release</em> or
-<em>Development</em>: those builds are for testing and may be unstable or break your packages.</p>
-</blockquote>
-<h2 id="method-a-with-uv-most-recommended">Method A · With uv (most recommended)</h2>
-<p>Best for beginners: one fast tool, local environments, minimal fuss.</p>
+<h2 id="method-a-with-conda-most-recommended">Method A · With conda (most recommended)</h2>
+<p>Best for beginners: one environment manager that also handles data-science and
+non-Python system dependencies (CUDA, R, …).</p>
+<h3 id="install-conda">Install Conda.</h3>
+<h4>Standard Anaconda Installation</h4>
+<h5>Windows: Anaconda Windows 64-bit</h5>
 <ol>
-<li>Install uv. Open the uv website (docs.astral.sh/uv) in your browser, go to the
-   <strong>Installation</strong> page, and download the installer for your system (macOS, Windows, or
-   Linux). Run it and follow the on-screen prompts — pick the default options when asked.
-   When it finishes, uv is installed.</li>
+<li>download the installer
+   <code>powershell
+   Invoke-WebRequest -Uri "https://repo.anaconda.com/archive/Anaconda3-2026.07-1-Windows-x86_64.exe" -OutFile ".\Anaconda3-2026.07-1-Windows-x86_64.exe"</code>
+   <strong>Alternatively</strong>, download the installer from the url and change directory to the location where it was downloaded, then double click it to run.</li>
+<li>Then <strong>double click it to run installation</strong>.</li>
 </ol>
+<h5>macOS</h5>
+<p><code>bash
+   curl -O https://repo.anaconda.com/archive/Anaconda3-2026.07-1-MacOSX-arm64.sh
+   bash ./Anaconda3-2026.07-1-MacOSX-arm64.sh</code></p>
 <blockquote>
-<p>📝 After install, <strong>close the terminal and open a new one</strong>, then verify with <code>uv --version</code>.</p>
+<p><strong>Alternatively</strong>, download the installer from the url and change directory to the location where it was downloaded, then paste it's path in the terminal and run it with <code>bash &lt;installer.sh&gt;</code>.
+⚠️ If you have an <em>Intel Mac</em>, see below for miniconda option, anaconda has stopped supporting Intel Macs.</p>
 </blockquote>
-<ol start="2">
-<li>Install a Python and create your first project:</li>
-</ol>
-<pre><code class="language-bash">uv python install 3.12          # download CPython 3.12 (one time)
-uv init myproject               # create a project folder with a .venv
-cd myproject
-uv pip install pandas           # install a package into this project
-uv run main.py                  # run a script with this project's Python
-</code></pre>
+<h5>Linux</h5>
+<p>Please refer to https://www.anaconda.com/docs/getting-started/anaconda/install/linux-install for the latest instructions for installing Anaconda on Linux.</p>
 <ul>
-<li><strong>After closing the terminal</strong>, you do <strong>not</strong> need to "activate" — just run
-  <code>uv run &lt;script&gt;</code> from the project folder and uv uses the local <code>.venv</code> automatically.</li>
-<li><strong>To pin a pre-installed interpreter</strong> (avoid re-downloading), set it in
-  <code>pyproject.toml</code>: <code>requires-python = "&amp;gt;=3.12"</code> and <code>uv venv --python 3.12</code>.</li>
+<li><strong>Miniconda</strong> — download the installer for your system from the official install docs:</li>
+<li><strong>Windows:</strong> <a href="https://www.anaconda.com/docs/getting-started/miniconda/install/windows-cli-install">https://www.anaconda.com/docs/getting-started/miniconda/install/windows-cli-install</a></li>
+<li><strong>macOS:</strong> <a href="https://www.anaconda.com/docs/getting-started/miniconda/install/mac-cli-install">https://www.anaconda.com/docs/getting-started/miniconda/install/mac-cli-install</a></li>
+<li><strong>Linux:</strong> <a href="https://www.anaconda.com/docs/getting-started/miniconda/install/linux-install">https://www.anaconda.com/docs/getting-started/miniconda/install/linux-install</a></li>
 </ul>
-<h2 id="method-b-with-conda-miniconda-recommended">Method B · With conda (Miniconda, recommended)</h2>
-<p>Best if you will use data-science packages with non-Python system dependencies.</p>
-<ol>
-<li>Install Miniconda. Open the Miniconda website (anaconda.com) in your browser, find the
-   <strong>Miniconda</strong> download for your system (macOS, Windows, or Linux), and download the
-   installer. Run it and follow the on-screen prompts — when asked whether to "Add Miniconda
-   to PATH" or "run conda init", you can leave the default; we explain <code>conda init</code> below.
-   When it finishes, Miniconda is installed.</li>
-</ol>
+<p>Run it and follow the on-screen prompts — when asked whether to "Add Miniconda to PATH"
+  or "run conda init", you can leave the default; we explain <code>conda init</code> below. When it
+  finishes, Miniconda is installed.</p>
+<ul>
+<li>For macOS Intel, run:
+  <code>bash
+  curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh</code></li>
+</ul>
 <blockquote>
 <p>📝 After install, <strong>close the terminal and open a new one</strong> so the <code>conda</code> command is
-available. Then verify with <code>conda --version</code>.
-2. Create and activate an environment:</p>
+available. Then verify with <code>conda --version</code>.</p>
 </blockquote>
-<pre><code class="language-bash">conda create --name py312 python=3.12
-conda activate py312
+<h4>Create your first environment</h4>
+<ol start="3">
+<li>Create and activate the course environment:</li>
+</ol>
+<pre><code class="language-bash">conda create -n mffintech --clone base
+conda activate mffintech
 python --version
 </code></pre>
+<p>This gives you the following packages out of the box (no extra install needed):</p>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python</td>
+<td>3.14.6</td>
+</tr>
+<tr>
+<td>NumPy</td>
+<td>2.4.6</td>
+</tr>
+<tr>
+<td>pandas</td>
+<td>3.0.3</td>
+</tr>
+<tr>
+<td>PyArrow</td>
+<td>23.0.1</td>
+</tr>
+<tr>
+<td>pytest</td>
+<td>9.0.3</td>
+</tr>
+<tr>
+<td>JupyterLab</td>
+<td>4.5.9</td>
+</tr>
+</tbody>
+</table>
+<p>💡 These six cover the whole course toolchain: <strong>Python</strong> is the language runtime; <strong>NumPy</strong>
+is the array/math foundation every numerical library builds on; <strong>pandas</strong> is the core
+tabular-data library; <strong>PyArrow</strong> provides efficient columnar data and pairs with pandas;
+<strong>pytest</strong> runs and checks your code; <strong>JupyterLab</strong> is the interactive notebook environment
+you'll learn in. They ship <strong>pre-installed in Anaconda</strong> (the full distribution), and because
+<code>mffintech</code> is cloned from <code>base</code> with <code>conda create --clone base</code>, they are inherited
+automatically — so you never install them by hand. Only duckdb, polars, and yfinance need
+installing (see below).</p>
 <ul>
 <li><strong>After closing the terminal</strong>, the environment deactivates. Re-enter it with
-  <code>conda activate py312</code> — the environment still exists globally, so you never recreate it.</li>
-<li><strong>To save disk space</strong>, point conda at a Python you already installed instead of letting
-  it download another copy: <code>conda create --name py312 --clone base</code> or use
-  <code>conda create --name py312 python=$(python3 --version 2&gt;&amp;1 | cut -d' ' -f2)</code>.</li>
+  <code>conda activate mffintech</code> — the environment still exists globally, so you never recreate it.</li>
 </ul>
+<p><strong>Additional Packages</strong></p>
+<p>Do not install additional packages into Anaconda's base environment. Instead, clone the
+base environment and install there:</p>
+<pre><code class="language-bash">conda create -n mffintech --clone base
+conda activate mffintech
+conda install -c conda-forge duckdb=1.5.4 polars=1.43.2 yfinance=1.5.2
+</code></pre>
+<p>💡 Inside a conda environment, <strong>prefer <code>conda install</code> over <code>pip</code></strong>. Packages installed with
+<code>pip</code> live outside conda's view, so conda may fail to see or manage them, and dependency
+conflicts are easier to miss. Use <code>pip</code> only in special cases (a package exists only on PyPI)
+— which is rare for this course. Here we install the three extra packages with
+<code>conda install -c conda-forge</code>.</p>
+<p>This keeps the base Anaconda installation clean. If anything goes wrong, the TA can delete
+and recreate the environment.</p>
+<p>Before every bootcamp session, activate the environment:</p>
+<pre><code class="language-bash">conda activate mffintech
+</code></pre>
 <h3 id="what-to-do-if-you-are-asked-to-run-conda-init">What to do if you are asked to run <code>conda init</code></h3>
 <p>The first time you open a terminal after installing conda, <code>conda activate</code> may fail with a
 message like <em>"To activate this environment, run <code>conda init</code> first."</em> Here is why, and what
@@ -461,11 +521,43 @@ your current conda environment in the prompt, e.g. <code>(base)</code> when no e
 That <code>(base)</code> is a reminder of which environment your commands run in.</p>
 <blockquote>
 <p><strong>⚠️ Don't use <code>base</code> as your main environment.</strong> <code>base</code> is conda's built-in default env.
-Keep it clean and instead <code>conda activate py312</code> (or any env you create) for real work,
+Keep it clean and instead <code>conda activate mffintech</code> (or any env you create) for real work,
 so packages for different projects don't clash. Tip: run <code>conda config --set
 auto_activate_base false</code> to stop conda from auto-activating <code>base</code> every time you open a
 terminal.</p>
 </blockquote>
+<h2 id="method-b-with-uv-recommended">Method B · With uv (recommended)</h2>
+<p>Best for everyday Python projects: one fast tool, local environments, minimal fuss.</p>
+<ol>
+<li>Install uv. Open the uv website (docs.astral.sh/uv) in your browser, go to the
+   <strong>Installation</strong> page, and download the installer for your system (macOS, Windows, or
+   Linux). Run it and follow the on-screen prompts — pick the default options when asked.
+   When it finishes, uv is installed.</li>
+</ol>
+<blockquote>
+<p>📝 After install, <strong>close the terminal and open a new one</strong>, then verify with <code>uv --version</code>.</p>
+</blockquote>
+<ol start="2">
+<li>Install a Python and create your first project:</li>
+</ol>
+<pre><code class="language-bash">uv python install 3.12          # download CPython 3.12 (one time)
+uv init myproject               # create a project folder with a .venv
+cd myproject                    # step into the folder FIRST (see warning below)
+uv pip install duckdb==1.5.4 polars==1.43.2 yfinance==1.5.2   # packages go into myproject/.venv
+uv run main.py                  # run a script with this project's Python
+</code></pre>
+<blockquote>
+<p>⚠️ A fresh terminal opens in your home directory (<code>~</code>). If you run <code>uv pip install …</code> or
+<code>uv run …</code> <em>before</em> <code>cd myproject</code>, uv finds no project folder and creates a <code>~/.venv</code> in
+your home directory instead — polluting home rather than the project. <code>cd myproject</code> is not
+optional.</p>
+</blockquote>
+<ul>
+<li><strong>After closing the terminal</strong>, you do <strong>not</strong> need to "activate" — just run
+  <code>uv run &lt;script&gt;</code> from the project folder and uv uses the local <code>.venv</code> automatically.</li>
+<li><strong>To pin a pre-installed interpreter</strong> (avoid re-downloading), set it in
+  <code>pyproject.toml</code>: <code>requires-python = "&amp;gt;=3.12"</code> and <code>uv venv --python 3.12</code>.</li>
+</ul>
 <h2 id="method-c-standalone-installer">Method C · Standalone installer</h2>
 <p>Best if you want the official Python and nothing else.</p>
 <h3 id="windows">Windows</h3>
@@ -546,18 +638,9 @@ If it points to <strong>Xcode's</strong> or the <strong>system</strong> Python i
 <code>PATH</code> is wrong. Fix it by either activating your environment (<code>conda activate …</code> /
 <code>source .venv/bin/activate</code>) or adding the install path to your shell config
 (<code>~/.zshrc</code> on macOS, <code>~/.bashrc</code> on Linux). Then reopen the terminal and re-test.</p>
+<p>💡 The surest test that everything is installed correctly is being able to <strong>run your first
+program</strong> below — head there next.</p>
 </blockquote>
-<h2 id="how-to-debug-a-broken-install">How to debug a broken install</h2>
-<ol>
-<li><strong>Find the correct executable path</strong> with <code>which python3</code> (macOS/Linux) or
-   <code>Get-Command python</code> (PowerShell).</li>
-<li><strong>Confirm PATH</strong>: <code>echo $PATH</code> (macOS/Linux) or <code>$env:PATH</code> (PowerShell) — your install
-   directory should appear <em>before</em> system paths.</li>
-<li><strong>Activate your environment</strong> (conda / <code>.venv</code>) — this is the easiest fix and avoids
-   touching <code>PATH</code> at all.</li>
-<li>As a last resort, add the install path to your shell startup file and restart the
-   terminal.</li>
-</ol>
 <h2 id="run-your-first-program">Run your first program</h2>
 <p>Now that Python is installed, let's run a real script. Create a file named
 <code>hello.py</code> (any plain-text editor works) and paste the code below. Then run it with
@@ -565,7 +648,10 @@ If it points to <strong>Xcode's</strong> or the <strong>system</strong> Python i
 <p>This example prints a friendly greeting and reports your machine's architecture
 (<code>platform.machine()</code>), the Python version, and the operating system — a quick sanity
 check that your install is alive and that you know which CPU it runs on.</p>
-<pre><code class="language-python">import sys
+<pre><code class="language-python">&quot;&quot;&quot;
+hello.py
+&quot;&quot;&quot;
+import sys
 import platform
 
 def main():
@@ -634,6 +720,17 @@ ignores it. So far it has had no effect at all.</p>
 <p><strong>Windows:</strong> the shebang is meaningless there — Windows picks the program from the
 <code>.py</code> extension/association, not the first line, so you can leave it out.</p>
 </blockquote>
+<h2 id="how-to-debug-a-broken-install">How to debug a broken install</h2>
+<ol>
+<li><strong>Find the correct executable path</strong> with <code>which python3</code> (macOS/Linux) or
+   <code>Get-Command python</code> (PowerShell).</li>
+<li><strong>Confirm PATH</strong>: <code>echo $PATH</code> (macOS/Linux) or <code>$env:PATH</code> (PowerShell) — your install
+   directory should appear <em>before</em> system paths.</li>
+<li><strong>Activate your environment</strong> (conda / <code>.venv</code>) — this is the easiest fix and avoids
+   touching <code>PATH</code> at all.</li>
+<li>As a last resort, add the install path to your shell startup file and restart the
+   terminal.</li>
+</ol>
 </main>
 </div>
 </div>

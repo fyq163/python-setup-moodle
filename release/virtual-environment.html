@@ -360,7 +360,7 @@ body[data-md="index.md"] #toc { display: none; }
 <body data-md="virtual-environment.md">
 <header id="topnav" class="topnav"><a class="brand" href="index.html"><span class="dot"></span> Python Setup Guide</a><nav class="navlinks"><a href="unix-basics.html">Basic Unix-like Systems</a><a href="virtual-environment.html">Virtual Environments</a><a href="installation.html">Installing Python</a><a href="ide-setup.html">Code Editors & IDEs</a><a href="recommended-reading.html">Recommended Reading</a></nav></header>
 <div class="layout">
-<aside class="sidebar"><h4>In this chapter</h4><nav id="toc"><ol><li class="toc-h2"><a href="#why-you-need-a-virtual-environment">Why you need a virtual environment</a></li><li class="toc-h2"><a href="#uv">uv</a></li><li class="toc-h2"><a href="#locking-amp-recording-dependencies-uv-lock-and-requirementstxt">Locking &amp;amp; recording dependencies: uv lock and requirements.txt</a></li><li class="toc-h3"><a href="#requirementstxt-the-classic-pip-style-list">requirements.txt (the classic, pip-style list)</a></li><li class="toc-h3"><a href="#uv-lock-the-modern-exact-solution">uv lock (the modern, exact solution)</a></li><li class="toc-h2"><a href="#conda-anaconda-miniconda">conda / Anaconda / Miniconda</a></li><li class="toc-h2"><a href="#channels-conda-forge-and-others">Channels: conda-forge and others</a></li><li class="toc-h2"><a href="#conda-vs-uv-global-vs-local">conda vs uv: global vs local</a></li></ol></nav></aside>
+<aside class="sidebar"><h4>In this chapter</h4><nav id="toc"><ol><li class="toc-h2"><a href="#why-you-need-a-virtual-environment">Why you need a virtual environment</a></li><li class="toc-h2"><a href="#conda-anaconda-miniconda">conda / Anaconda / Miniconda</a></li><li class="toc-h2"><a href="#channels-conda-forge-and-others">Channels: conda-forge and others</a></li><li class="toc-h2"><a href="#uv">uv</a></li><li class="toc-h2"><a href="#locking-amp-recording-dependencies-uv-lock-and-requirementstxt">Locking &amp;amp; recording dependencies: uv lock and requirements.txt</a></li><li class="toc-h3"><a href="#requirementstxt-the-classic-pip-style-list">requirements.txt (the classic, pip-style list)</a></li><li class="toc-h3"><a href="#uv-lock-the-modern-exact-solution">uv lock (the modern, exact solution)</a></li><li class="toc-h2"><a href="#conda-vs-uv-global-vs-local">conda vs uv: global vs local</a></li></ol></nav></aside>
 <div class="article">
 <div id="pagehead" class="pagehead"><span class="tag tag-optional">Optional</span><h1 id="top">2 · Virtual Environments</h1></div>
 <main id="content" class="markdown">
@@ -383,10 +383,88 @@ never step on each other — and never touch the system Python.</p>
 On macOS/Linux, <code>/usr/bin/python3</code> is managed by the system. Installing packages into it
 with <code>sudo pip install …</code> can break OS tools. <strong>Always work inside a project environment.</strong></p>
 </blockquote>
+<h2 id="conda-anaconda-miniconda">conda / Anaconda / Miniconda</h2>
+<p><strong>conda</strong> is an environment manager especially popular in data science. The naming is
+confusing, so here is the split. There are two conda <em>distributions</em>:</p>
+<ul>
+<li><strong>Anaconda</strong> — the full distribution: conda plus 250+ pre-installed packages. Large
+  (~3 GB). Good if you want everything out of the box.</li>
+<li><strong>Miniconda</strong> — conda with <em>no</em> pre-installed packages. Small and clean. <strong>We recommend
+  Miniconda</strong> if you go the conda route.</li>
+<li><strong>conda-forge</strong> — a <em>community channel</em> (see below), <strong>not</strong> a distribution. It is a
+  repository of packages; usually more up to date than the default <code>defaults</code> channel.</li>
+</ul>
+<p>The only difference between the two distributions is <strong>what comes pre-installed</strong>:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Anaconda</th>
+<th>Miniconda</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>What it is</td>
+<td>Full distribution: conda + 250+ packages</td>
+<td>Minimal installer: conda only</td>
+</tr>
+<tr>
+<td>Download size</td>
+<td>~3 GB</td>
+<td>~100 MB</td>
+</tr>
+<tr>
+<td>Install time</td>
+<td>Longer</td>
+<td>Short</td>
+</tr>
+<tr>
+<td>Disk footprint</td>
+<td>Large</td>
+<td>Small</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Want everything out of the box</td>
+<td>Clean start — you pick the packages</td>
+</tr>
+<tr>
+<td><code>conda</code> command</td>
+<td>Identical</td>
+<td>Identical</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 Both distributions ship the <strong>same <code>conda</code> command</strong> — <code>conda create</code>,
+<code>conda activate</code>, etc. work exactly the same way. Only the pre-installed package set
+differs.</p>
+</blockquote>
+<p>Unlike uv/pip, conda can also install <strong>non-Python</strong> dependencies (e.g. CUDA, R), which is
+why many scientists like it.</p>
+<pre><code class="language-bash">conda create --name py312 python=3.12   # create a named environment
+conda activate py312                     # switch into it
+</code></pre>
+<h2 id="channels-conda-forge-and-others">Channels: conda-forge and others</h2>
+<p>A <strong>channel</strong> is a repository conda downloads packages from. The two you will meet:</p>
+<ul>
+<li><code>defaults</code> — Anaconda's official, curated channel.</li>
+<li><code>conda-forge</code> — a community-run channel with broader, faster-updated packages.</li>
+</ul>
+<p>We recommend preferring conda-forge:</p>
+<pre><code class="language-bash">conda create -n py312 python=3.12 -c conda-forge
+</code></pre>
+<p>This differs from <strong>PyPI</strong> (the Python Package Index), which is what <code>pip</code> and <code>uv</code> use.
+conda packages and PyPI packages are not always interchangeable. <strong>Inside a conda
+environment, prefer <code>conda install</code></strong> over <code>pip</code>: packages installed with <code>pip</code> live outside
+conda's view, so conda may fail to see or manage them, and dependency conflicts are easier to
+miss. Use <code>pip</code> only in special cases (a package exists only on PyPI) — which is rare for
+this course.</p>
 <h2 id="uv">uv</h2>
 <p><strong><a href="https://docs.astral.sh/uv/">uv</a></strong> is a modern, extremely fast Python package and
 environment manager written in Rust. It replaces <code>pip</code>, <code>virtualenv</code>, and parts of
-<code>conda</code>. We recommend it for beginners because:</p>
+<code>conda</code>. We recommend it for everyday Python projects because:</p>
 <ul>
 <li>One tool does everything (install Python, create envs, install packages, run scripts).</li>
 <li>It is 10–100× faster than <code>pip</code>.</li>
@@ -397,6 +475,12 @@ cd myproject
 uv pip install pandas  # install a package into this project's env
 uv run main.py         # run a script using this project's Python
 </code></pre>
+<p>💡 <strong>Second way — install from a <code>requirements.txt</code>.</strong> Instead of installing packages one by
+one, list them all in a <code>requirements.txt</code> (format below) and install in one go:</p>
+<pre><code class="language-bash">uv pip install -r requirements.txt
+</code></pre>
+<p>Run this from inside the project folder (after <code>cd myproject</code>) so the packages land in
+<code>myproject/.venv</code> — not in a stray <code>~/.venv</code> in your home directory.</p>
 <h2 id="locking-amp-recording-dependencies-uv-lock-and-requirementstxt">Locking &amp; recording dependencies: <code>uv lock</code> and <code>requirements.txt</code></h2>
 <p>Installing packages is only half the story. To make your project <strong>reproducible</strong> —
 so someone else (or future you) can rebuild the exact same environment — you record
@@ -468,35 +552,6 @@ matters (a real app, a paper's analysis), switch to <code>uv.lock</code> so resu
 reproducible. Either way, <strong>keep the file alongside your project</strong> so the environment
 travels with your code.</p>
 </blockquote>
-<h2 id="conda-anaconda-miniconda">conda / Anaconda / Miniconda</h2>
-<p><strong>conda</strong> is an older, very popular environment manager, especially in data science. The
-naming is confusing, so here is the split:</p>
-<ul>
-<li><strong>Anaconda</strong> — the full distribution: conda plus 250+ pre-installed packages. Large
-  (~3 GB). Good if you want everything out of the box.</li>
-<li><strong>Miniconda</strong> — conda with <em>no</em> pre-installed packages. Small and clean. <strong>We recommend
-  Miniconda</strong> if you go the conda route.</li>
-<li><strong>conda-forge</strong> — a community channel (see below) of packages; usually more up to date
-  than the default <code>defaults</code> channel.</li>
-</ul>
-<p>Unlike uv/pip, conda can also install <strong>non-Python</strong> dependencies (e.g. CUDA, R), which is
-why many scientists like it.</p>
-<pre><code class="language-bash">conda create --name py312 python=3.12   # create a named environment
-conda activate py312                     # switch into it
-</code></pre>
-<h2 id="channels-conda-forge-and-others">Channels: conda-forge and others</h2>
-<p>A <strong>channel</strong> is a repository conda downloads packages from. The two you will meet:</p>
-<ul>
-<li><code>defaults</code> — Anaconda's official, curated channel.</li>
-<li><code>conda-forge</code> — a community-run channel with broader, faster-updated packages.</li>
-</ul>
-<p>We recommend preferring conda-forge:</p>
-<pre><code class="language-bash">conda create -n py312 python=3.12 -c conda-forge
-</code></pre>
-<p>This differs from <strong>PyPI</strong> (the Python Package Index), which is what <code>pip</code> and <code>uv</code> use.
-conda packages and PyPI packages are not always interchangeable — generally, <em>inside</em> an
-environment, prefer <code>uv pip</code>/<code>pip</code> for Python packages and let conda handle only what it
-does best.</p>
 <h2 id="conda-vs-uv-global-vs-local"><code>conda</code> vs <code>uv</code>: global vs local</h2>
 <p>A quick comparison to help you choose.</p>
 <table>
@@ -542,9 +597,11 @@ does best.</p>
 </table>
 <blockquote>
 <p>💡
-Our default recommendation: <strong>uv</strong>. Create one <code>.venv</code> per project, and use <code>uv run</code>
-so you rarely have to activate manually. Switch to conda only if a package you need
-ships non-Python system libraries.</p>
+Our default recommendation: <strong>conda (Miniconda)</strong> for this course — one environment
+manager that also handles data-science and non-Python system libraries, with the option of
+the full Anaconda distribution pre-installed. For everyday Python projects outside the
+course, uv is a great fast alternative: create one <code>.venv</code> per project and use <code>uv run</code>
+so you rarely have to activate manually.</p>
 </blockquote>
 </main>
 </div>
