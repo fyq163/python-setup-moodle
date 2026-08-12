@@ -360,7 +360,7 @@ body[data-md="index.md"] #toc { display: none; }
 <body data-md="ide-setup.md">
 <header id="topnav" class="topnav"><a class="brand" href="index.html"><span class="dot"></span> Python Setup Guide</a><nav class="navlinks"><a href="unix-basics.html">Basic Unix-like Systems</a><a href="virtual-environment.html">Virtual Environments</a><a href="installation.html">Installing Python</a><a href="ide-setup.html">Code Editors & IDEs</a><a href="recommended-reading.html">Recommended Reading</a></nav></header>
 <div class="layout">
-<aside class="sidebar"><h4>In this chapter</h4><nav id="toc"><ol><li class="toc-h2"><a href="#visual-studio-code-family-vs-code-cursor-codebuddy-trae">Visual Studio Code family (VS Code, Cursor, CodeBuddy, Trae…)</a></li><li class="toc-h2"><a href="#pycharm-community-edition">PyCharm Community Edition</a></li><li class="toc-h2"><a href="#other-popular-coding-clis">Other popular coding CLIs</a></li><li class="toc-h2"><a href="#github-copilot-university-subscription">GitHub Copilot — university subscription</a></li></ol></nav></aside>
+<aside class="sidebar"><h4>In this chapter</h4><nav id="toc"><ol><li class="toc-h2"><a href="#visual-studio-code-family-vs-code-cursor-codebuddy-trae">Visual Studio Code family (VS Code, Cursor, CodeBuddy, Trae…)</a></li><li class="toc-h2"><a href="#pycharm">PyCharm</a></li><li class="toc-h2"><a href="#other-popular-coding-clis">Other popular coding CLIs</a></li><li class="toc-h2"><a href="#github-copilot-university-subscription">GitHub Copilot — university subscription</a></li></ol></nav></aside>
 <div class="article">
 <div id="pagehead" class="pagehead"><span class="tag tag-required">Required</span><h1 id="top">4 · Code Editors &amp; IDEs</h1></div>
 <main id="content" class="markdown">
@@ -377,29 +377,39 @@ identical:</p>
 <li>Select the interpreter: press <code>Ctrl/Cmd + Shift + P</code>, type <strong>"Python: Select
    Interpreter"</strong>, and choose the environment you made in Chapter 3 (the <code>.venv</code> or conda
    env). The bottom-right status bar then shows that Python.
-   <img alt="vscode plugin marketplace" src="https://cdn.jsdelivr.net/gh/fyq163/python-setup-moodle@main/assets/img/vscode-extension-python.png" /></li>
+   <img alt="vscode plugin marketplace" src="https://pub-639e92bd227c4441a00a10db2a268512.r2.dev/image/GitHub-pages/python-install/vscode-extension-python.png" /></li>
 <li>Use the built-in terminal (<code>Ctrl/Cmd + ``</code>) to run <code>uv run main.py</code> or
-   <code>python main.py</code>.</li>
+   <code>python main.py</code>.
+<img alt="Screenshot of VS Code — the &quot;Python: Select Interpreter&quot; picker, highlighting the virtual environment created in Chapter 3." src="https://pub-639e92bd227c4441a00a10db2a268512.r2.dev/image/GitHub-pages/python-install/vscode-interpreter-selection.png" /></li>
 </ol>
-<p><img alt="Screenshot of VS Code — the &quot;Python: Select Interpreter&quot; picker, highlighting the virtual environment created in Chapter 3." src="https://cdn.jsdelivr.net/gh/fyq163/python-setup-moodle@main/assets/img/vscode-interpreter-selection.png" /></p>
 <blockquote>
 <p>💡
 Once the interpreter is selected, the play button (▶) and the terminal both use <em>your</em>
 project's Python — not the system one. That is the whole point.</p>
 </blockquote>
-<h2 id="pycharm-community-edition">PyCharm Community Edition</h2>
-<p>PyCharm is a Python-focused IDE with a free <strong>Community</strong> edition (the <strong>Professional</strong>
-edition adds web/DB features and is paid, though free for students).</p>
+<h2 id="pycharm">PyCharm</h2>
+<blockquote>
+<p>❗
+Since 2025, JetBrains has <strong>merged the Community and Professional editions</strong> of PyCharm
+into a single product. The <strong>basic features are free to use</strong>; the <strong>advanced features
+require a paid subscription</strong>. As a student, you can get that subscription for free via
+the <a href="https://www.jetbrains.com/academy/student-pack/">JetBrains Student Pack</a> — sign in
+with your school email and the advanced features unlock at no cost.</p>
+</blockquote>
+<p>PyCharm is a Python-focused IDE. The <strong>basic features</strong> (editing, running, debugging Python)
+are free; the <strong>advanced features</strong> (web frameworks, database tools, etc.) need a
+subscription, which students get free with the Student Pack above.</p>
 <ol>
-<li>Download <a href="https://www.jetbrains.com/pycharm/download/">PyCharm Community</a>.</li>
+<li>Download <a href="https://www.jetbrains.com/pycharm/download/">PyCharm</a>.</li>
 <li><strong>New Project</strong> → choose a location. Under "Python Interpreter", select <strong>Previously
    configured interpreter</strong> and point it at your <code>conda</code> env or the <code>python</code> inside
    <code>.venv/bin</code> (macOS/Linux) / <code>.venv\Scripts\python.exe</code> (Windows). Or let PyCharm create
    a new <code>venv</code> for you.</li>
-<li>Right-click a <code>.py</code> file and choose <strong>Run</strong>.</li>
+<li>Right-click a <code>.py</code> file and choose <strong>Run</strong>.
+- <img alt="PyCharm change interpreter" src="https://pub-639e92bd227c4441a00a10db2a268512.r2.dev/image/GitHub-pages/python-install/pycharm-interpreter-selection.png" />
+References: <a href="https://www.anaconda.com/docs/getting-started/working-with-conda/ides/pycharm">PyCharm + conda</a>,
+<a href="https://www.anaconda.com/docs/getting-started/working-with-conda/ides/python-path">Python path</a></li>
 </ol>
-<p>References: <a href="https://www.anaconda.com/docs/getting-started/working-with-conda/ides/pycharm">PyCharm + conda</a>,
-<a href="https://www.anaconda.com/docs/getting-started/working-with-conda/ides/python-path">Python path</a></p>
 <h2 id="other-popular-coding-clis">Other popular coding CLIs</h2>
 <p>A newer wave of editors runs <strong>inside the terminal</strong> — perfect if you liked Chapter 1:</p>
 <ul>

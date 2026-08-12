@@ -34,8 +34,8 @@ That prompt is the shell asking "what next?".
 - **Linux (Ubuntu/GNOME):** press `Ctrl + Alt + T`.
 - **Windows:** install **Windows Terminal** from the Microsoft Store, then open
   **PowerShell**. Avoid the old `cmd.exe` — PowerShell understands more modern commands.
-
-![TODO: Screenshot of opening the terminal — macOS Spotlight → Terminal, Windows Terminal → PowerShell, or Linux Ctrl+Alt+T → GNOME Terminal.](../assets/img/placeholder.svg)
+- how to find cmd.exe:![cmd.exe from windows start menu](https://pub-639e92bd227c4441a00a10db2a268512.r2.dev/image/GitHub-pages/python-install/windows-cmd.PNG)
+- how to find powershell: ![Windows Terminal → PowerShell(DONE), or Linux Ctrl+Alt+T → GNOME Terminal.](https://pub-639e92bd227c4441a00a10db2a268512.r2.dev/image/GitHub-pages/python-install/windows-terminal.PNG)
 
 ## sudo and "run as administrator"
 
