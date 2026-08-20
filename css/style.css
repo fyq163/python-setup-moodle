@@ -318,6 +318,10 @@ html[data-theme="dark"] {
 }
 @media (prefers-color-scheme: dark) {
   body { background: var(--bg-alt); }
+  /* Links use the dark-green --primary in light mode, which is near-invisible on
+     the dark background — switch to the bright --primary-dark in dark mode. */
+  a { color: var(--primary-dark); }
+  .sidebar a:hover { color: var(--primary-dark); }
   .topnav { background: rgba(17,24,39,.85); border-bottom-color: var(--border); }
   .topnav .brand { color: #F8FAFC; }
   .markdown blockquote { background: var(--primary-soft); }
@@ -342,6 +346,8 @@ html[data-theme="dark"] {
   t-tag:not(:defined)[theme="primary"] { background: #0E2A1A; color: #4ADE80; }
 }
 html[data-theme="dark"] body { background: var(--bg-alt); }
+html[data-theme="dark"] a { color: var(--primary-dark); }
+html[data-theme="dark"] .sidebar a:hover { color: var(--primary-dark); }
 html[data-theme="dark"] .topnav { background: rgba(17,24,39,.85); border-bottom-color: var(--border); }
 html[data-theme="dark"] .topnav .brand { color: #F8FAFC; }
 html[data-theme="dark"] .markdown blockquote { background: var(--primary-soft); }
