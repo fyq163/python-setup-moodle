@@ -101,7 +101,15 @@
           setTimeout(function () { btn.textContent = 'Copy'; }, 1500);
         });
       });
-      pre.appendChild(btn);
+      // Wrap the <pre> in a non-scrolling, relatively-positioned container and
+      // put the button on the wrapper. Appending the button to the scrolling
+      // <pre> itself would make it scroll along with the code, so it must live
+      // on the wrapper to stay pinned to the top-right corner.
+      var wrap = document.createElement('div');
+      wrap.className = 'code-block';
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.appendChild(pre);
+      wrap.appendChild(btn);
     });
     return toc;
   }

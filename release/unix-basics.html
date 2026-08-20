@@ -2,372 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>1 · Basic Unix-like Systems</title>
-<style>/* ============================================================
-   Python Setup Guide — shared stylesheet
-   Markdown-driven static site. Chrome (nav/sidebar/pager) is built
-   by assets/js/render.js; the article body comes from .md files.
-   Design tokens follow TDesign's palette.
-   ============================================================ */
-
-:root {
-  --primary: #005A33;
-  --primary-dark: #003D22;
-  --primary-soft: #E7F0EA;
-  --bg: #FFFFFF;
-  --bg-alt: #F5F8FF;
-  --surface: #FFFFFF;
-  --text: #1F2937;
-  --text-muted: #6B7280;
-  --border: #E5E7EB;
-  --code-bg: #0F172A;
-  --code-text: #E2E8F0;
-  --ok: #16A34A;
-  --warn: #D97706;
-  --danger: #DC2626;
-  --radius: 12px;
-  --radius-sm: 8px;
-  --maxw: 1120px;
-  --nav-h: 62px;
-  --shadow: 0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.06);
-  --shadow-lg: 0 12px 40px rgba(0,90,51,.18);
-}
-
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: var(--text);
-  background: var(--bg-alt);
-  font-size: 16px;
-  line-height: 1.72;
-  -webkit-font-smoothing: antialiased;
-}
-a { color: var(--primary); text-decoration: none; transition: color .15s ease; }
-a:hover { color: var(--primary-dark); }
-h1, h2, h3, h4 { color: #111827; line-height: 1.3; font-weight: 700; }
-/* Keep anchored headings clear of the sticky top navigation when jumped to. */
-h1, h2, h3 { scroll-margin-top: calc(var(--nav-h) + 1rem); }
-h2 { font-size: 24px; margin-top: 2.2rem; }
-h3 { font-size: 19px; margin-top: 1.6rem; }
-h4 { font-size: 16px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
-p { margin: .8rem 0; }
-
-code {
-  font-family: 'SFMono-Regular', ui-monospace, Menlo, Consolas, 'Liberation Mono', monospace;
-  background: var(--primary-soft);
-  color: var(--primary-dark);
-  padding: .12em .42em;
-  border-radius: 6px;
-  font-size: .9em;
-}
-
-/* ---------- Top navigation ---------- */
-.topnav {
-  position: sticky; top: 0; z-index: 50;
-  height: var(--nav-h); display: flex; align-items: center; gap: 1.2rem;
-  padding: 0 clamp(1rem, 4vw, 2.4rem);
-  background: rgba(255,255,255,.85);
-  backdrop-filter: saturate(160%) blur(10px);
-  border-bottom: 1px solid var(--border);
-}
-.topnav .brand {
-  font-weight: 800; font-size: 17px; color: #111827;
-  display: flex; align-items: center; gap: .55rem;
-}
-.topnav .brand .dot {
-  width: 12px; height: 12px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), #4ADE80);
-  box-shadow: 0 0 0 4px var(--primary-soft);
-}
-.topnav .navlinks { margin-left: auto; display: flex; gap: .4rem; flex-wrap: wrap; }
-.topnav .navlinks a {
-  padding: .4rem .8rem; border-radius: 999px;
-  color: var(--text-muted); font-size: 14px; font-weight: 600;
-}
-.topnav .navlinks a:hover { background: var(--primary-soft); color: var(--primary-dark); }
-
-/* ---------- Layout ---------- */
-.container { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.4rem); }
-.layout {
-  max-width: var(--maxw); margin: 0 auto;
-  padding: 2rem clamp(1rem, 4vw, 2.4rem) 4rem;
-  display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 2.4rem; align-items: start;
-}
-.article { min-width: 0; }
-
-/* ---------- Sidebar TOC ("In this chapter") ---------- */
-.sidebar {
-  position: sticky; top: calc(var(--nav-h) + 1.5rem); align-self: start;
-  /* Never let a long TOC push the footer off-screen or get clipped: cap its
-     height to the viewport (minus the nav + some breathing room) and scroll. */
-  max-height: calc(100vh - var(--nav-h) - 3rem);
-  overflow-y: auto;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1.1rem 1.2rem; box-shadow: var(--shadow);
-}
-.sidebar h4 {
-  margin: 0 0 .8rem; font-size: 13px; text-transform: uppercase; letter-spacing: .06em;
-  color: var(--primary-dark); border-bottom: 1px solid var(--border); padding-bottom: .5rem;
-}
-.sidebar ol { margin: 0; padding-left: 0; list-style: none; counter-reset: toc-major; }
-.sidebar li { margin: .3rem 0; position: relative; }
-/* H2 = top-level entry (1, 2, 3…). Increment the major counter and reset the
-   minor one; render just the major number. */
-.sidebar li.toc-h2 {
-  counter-increment: toc-major; counter-reset: toc-minor;
-  padding-left: 1.8rem;
-}
-.sidebar li.toc-h2 > a::before {
-  content: counter(toc-major); position: absolute; left: 0;
-  min-width: 1.4rem; color: var(--primary); font-weight: 700;
-  font-variant-numeric: tabular-nums; font-size: 12.5px;
-}
-/* H3 = sub-entry (1.1, 1.2, 2.1…). Increment the minor counter and render the
-   combined "major.minor" number; indent a little further. */
-.sidebar li.toc-h3 {
-  counter-increment: toc-minor; padding-left: 2.8rem;
-}
-.sidebar li.toc-h3 > a::before {
-  content: counter(toc-major) "." counter(toc-minor); position: absolute; left: 0;
-  min-width: 2.2rem; color: var(--primary); font-weight: 700;
-  font-variant-numeric: tabular-nums; font-size: 12.5px;
-}
-.sidebar a { color: var(--text-muted); font-size: 14.5px; display: block; }
-.sidebar a:hover { color: var(--primary); }
-
-/* ---------- Page header (tag + title) ---------- */
-.pagehead { margin-bottom: .4rem; }
-.pagehead h1 { margin: .2rem 0 .8rem; font-size: 30px; }
-
-/* ---------- Markdown body ---------- */
-.markdown h2 { border-bottom: 1px solid var(--border); padding-bottom: .3rem; }
-.markdown h3 { margin-top: 1.6rem; }
-.markdown ul, .markdown ol { padding-left: 1.4rem; }
-.markdown li { margin: .35rem 0; }
-.markdown img { max-width: 100%; height: auto; }
-
-/* ---------- Code blocks ---------- */
-pre {
-  background: var(--code-bg); color: var(--code-text);
-  padding: 1.1rem 1.2rem; border-radius: var(--radius-sm);
-  overflow-x: auto; font-size: 14px; line-height: 1.6; border: 1px solid #1E293B;
-}
-pre { position: relative; }
-pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
-pre .prompt { color: #60A5FA; }
-pre .comment { color: #64748B; }
-.copy-btn {
-  position: absolute; top: .5rem; right: .5rem;
-  font: inherit; font-size: 12px; line-height: 1;
-  padding: .35rem .6rem; border-radius: var(--radius-sm);
-  border: 1px solid #334155; background: #1E293B; color: #CBD5E1;
-  cursor: pointer; opacity: 0; transition: opacity .15s ease, background .15s ease;
-}
-pre:hover .copy-btn, .copy-btn:focus { opacity: 1; }
-.copy-btn:hover { background: #334155; color: #fff; }
-
-/* ---------- Tables ---------- */
-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 14.5px; }
-th, td { text-align: left; padding: .7rem .9rem; border-bottom: 1px solid var(--border); }
-th { background: var(--bg-alt); color: #111827; font-weight: 700; }
-tr:hover td { background: var(--primary-soft); }
-
-/* ---------- Placeholder figure ---------- */
-figure.screenshot {
-  margin: 1.4rem 0; border: 1px dashed var(--border);
-  border-radius: var(--radius); overflow: hidden; background: var(--bg-alt);
-}
-figure.screenshot img { display: block; width: 100%; height: auto; background: #E2E8F0; }
-figure.screenshot img.img-failed { height: 220px; object-fit: contain; filter: grayscale(1); }
-figure.screenshot figcaption {
-  padding: .7rem 1rem; font-size: 13.5px; color: var(--text-muted);
-  border-top: 1px dashed var(--border); background: #FCFCFD;
-}
-figure.screenshot figcaption::before { content: "▢ "; color: var(--warn); font-weight: 700; }
-
-/* ---------- Callouts (GitHub-style alerts) ---------- */
-.markdown blockquote {
-  border-left: 4px solid var(--primary); background: var(--primary-soft);
-  padding: .8rem 1.1rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 1.1rem 0; font-size: 14.5px;
-}
-.markdown blockquote p { margin: .4rem 0; }
-.markdown blockquote.note-tip { border-color: var(--ok); background: #F0FDF4; }
-.markdown blockquote.note-warning,
-.markdown blockquote.note-caution { border-color: var(--warn); background: #FFFBEB; }
-.markdown blockquote.note-important { border-color: var(--danger); background: #FEF2F2; }
-.markdown blockquote strong { color: #111827; }
-
-/* ---------- Tags (chapter chips) ---------- */
-.tag {
-  display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .03em;
-  padding: .15rem .6rem; border-radius: 999px; margin-bottom: .5rem;
-}
-.tag-optional { background: #FEF3C7; color: var(--warn); }
-.tag-skip { background: #E0E7FF; color: var(--primary-dark); }
-.tag-required { background: #DCFCE7; color: var(--ok); }
-/* Fallback styling for <t-tag> before TDesign upgrades (or if the CDN is blocked). */
-t-tag:not(:defined) {
-  display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .03em;
-  padding: .15rem .6rem; border-radius: 999px; margin-bottom: .5rem;
-  background: #E5E7EB; color: var(--text-muted);
-}
-t-tag:not(:defined)[theme="success"] { background: #DCFCE7; color: var(--ok); }
-t-tag:not(:defined)[theme="warning"] { background: #FEF3C7; color: var(--warn); }
-t-tag:not(:defined)[theme="primary"] { background: #E0E7FF; color: var(--primary-dark); }
-
-/* ---------- Prev / next nav ---------- */
-.pager {
-  display: flex; justify-content: space-between; gap: 1rem; margin: 2.5rem auto 0;
-  max-width: var(--maxw); padding: 0 clamp(1rem, 4vw, 2.4rem); flex-wrap: wrap;
-}
-.pager a {
-  flex: 1 1 200px; border: 1px solid var(--border); border-radius: var(--radius);
-  padding: .9rem 1.1rem; background: var(--surface); box-shadow: var(--shadow);
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-.pager a:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-.pager .dir { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
-.pager .ttl { font-weight: 700; color: #111827; }
-
-/* ---------- Hero (index) ---------- */
-.hero {
-  background: radial-gradient(1200px 500px at 80% -10%, #D7E9DE 0%, transparent 60%),
-              linear-gradient(135deg, #005A33 0%, #003D22 100%);
-  color: #fff; padding: 4rem clamp(1rem, 4vw, 2.4rem) 3.4rem;
-}
-.hero .container { max-width: var(--maxw); }
-.hero .eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: 13px; font-weight: 700; opacity: .85; }
-.hero h1 { color: #fff; font-size: clamp(30px, 5vw, 46px); margin: .5rem 0 .8rem; }
-.hero p.lead { font-size: 18px; max-width: 720px; opacity: .95; }
-.hero .pill {
-  display: inline-block; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.3);
-  padding: .3rem .8rem; border-radius: 999px; font-size: 13px; font-weight: 600; margin: .3rem .4rem .3rem 0;
-}
-
-/* ---------- TOC index table ---------- */
-.toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.1rem; margin-top: 1.6rem; }
-.toc-item {
-  display: block; background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1.2rem 1.3rem; box-shadow: var(--shadow);
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-.toc-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: #A8D5B8; }
-.toc-item .num {
-  display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px;
-  background: var(--primary-soft); color: var(--primary-dark); font-weight: 800; font-size: 14px; margin-bottom: .6rem;
-}
-.toc-item h3 { margin: 0 0 .3rem; font-size: 17px; }
-.toc-item p { margin: 0; font-size: 13.5px; color: var(--text-muted); }
-.toc-item .meta { margin-top: .7rem; font-size: 12px; }
-
-/* ---------- Footer ---------- */
-footer.site {
-  border-top: 1px solid var(--border); background: var(--surface); color: var(--text-muted);
-  font-size: 13.5px; padding: 2rem clamp(1rem, 4vw, 2.4rem); text-align: center;
-}
-footer.site a { color: var(--primary); }
-
-/* ---------- Responsive ---------- */
-@media (max-width: 860px) {
-  .layout { grid-template-columns: 1fr; }
-  .sidebar { position: static; top: auto; }
-  .topnav .navlinks { display: none; }
-}
-
-/* ---------- Dark theme (night mode) ----------
-   Triggered automatically when the OS requests dark color scheme, or when
-   <html data-theme="dark"> is set by assets/js/render.js. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0B1120;
-    --bg-alt: #0F172A;
-    --surface: #111827;
-    --text: #E2E8F0;
-    --text-muted: #94A3B8;
-    --border: #1E293B;
-    --primary-soft: #0E2A1A;
-    --primary-dark: #4ADE80;
-    --code-bg: #0B1120;
-    --code-text: #E2E8F0;
-    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
-    --shadow-lg: 0 12px 40px rgba(0,90,51,.35);
-  }
-}
-html[data-theme="dark"] {
-  --bg: #0B1120;
-  --bg-alt: #0F172A;
-  --surface: #111827;
-  --text: #E2E8F0;
-  --text-muted: #94A3B8;
-  --border: #1E293B;
-  --primary-soft: #0E2A1A;
-  --primary-dark: #4ADE80;
-  --code-bg: #0B1120;
-  --code-text: #E2E8F0;
-  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
-  --shadow-lg: 0 12px 40px rgba(0,90,51,.35);
-}
-@media (prefers-color-scheme: dark) {
-  body { background: var(--bg-alt); }
-  .topnav { background: rgba(17,24,39,.85); border-bottom-color: var(--border); }
-  .topnav .brand { color: #F8FAFC; }
-  .markdown blockquote { background: var(--primary-soft); }
-  .markdown blockquote.note-tip { background: #0E2A1A; }
-  .markdown blockquote.note-warning,
-  .markdown blockquote.note-caution { background: #2C2410; }
-  .markdown blockquote.note-important { background: #2C1414; }
-  th { background: var(--bg-alt); color: #F8FAFC; }
-  tr:hover td { background: var(--primary-soft); }
-  .hero { background: radial-gradient(1200px 500px at 80% -10%, #0E2A1A 0%, transparent 60%),
-                      linear-gradient(135deg, #003D22 0%, #001A0F 100%); }
-  figure.screenshot { background: var(--bg-alt); }
-  figure.screenshot figcaption { background: #0F172A; }
-  t-tag:not(:defined) { background: #1E293B; color: var(--text-muted); }
-  t-tag:not(:defined)[theme="success"] { background: #0E2A1A; color: #4ADE80; }
-  t-tag:not(:defined)[theme="warning"] { background: #2C2410; color: #FBBF24; }
-  t-tag:not(:defined)[theme="primary"] { background: #0E2A1A; color: #4ADE80; }
-}
-html[data-theme="dark"] body { background: var(--bg-alt); }
-html[data-theme="dark"] .topnav { background: rgba(17,24,39,.85); border-bottom-color: var(--border); }
-html[data-theme="dark"] .topnav .brand { color: #F8FAFC; }
-html[data-theme="dark"] .markdown blockquote { background: var(--primary-soft); }
-html[data-theme="dark"] .markdown blockquote.note-tip { background: #0E2A1A; }
-html[data-theme="dark"] .markdown blockquote.note-warning,
-html[data-theme="dark"] .markdown blockquote.note-caution { background: #2C2410; }
-html[data-theme="dark"] .markdown blockquote.note-important { background: #2C1414; }
-html[data-theme="dark"] th { background: var(--bg-alt); color: #F8FAFC; }
-html[data-theme="dark"] tr:hover td { background: var(--primary-soft); }
-html[data-theme="dark"] .hero { background: radial-gradient(1200px 500px at 80% -10%, #0E2A1A 0%, transparent 60%),
-                      linear-gradient(135deg, #003D22 0%, #001A0F 100%); }
-html[data-theme="dark"] figure.screenshot { background: var(--bg-alt); }
-html[data-theme="dark"] figure.screenshot figcaption { background: #0F172A; }
-html[data-theme="dark"] t-tag:not(:defined) { background: #1E293B; color: var(--text-muted); }
-html[data-theme="dark"] t-tag:not(:defined)[theme="success"] { background: #0E2A1A; color: #4ADE80; }
-html[data-theme="dark"] t-tag:not(:defined)[theme="warning"] { background: #2C2410; color: #FBBF24; }
-html[data-theme="dark"] t-tag:not(:defined)[theme="primary"] { background: #0E2A1A; color: #4ADE80; }
-
-/* ---------- Index page: hide the auto-generated #toc list ----------
-   The #toc element is populated by buildToc in render.js as an <ol>
-   ("1. python version / 2. Why learn this..."). On the index page we keep
-   the markdown-rendered ## headings (inside #content) visible but hide this
-   injected list. Chapter pages render their TOC via .sidebar, unaffected. */
-body[data-md="index.md"] #toc { display: none; }
-</style>
 </head>
-<body data-md="unix-basics.md">
-<header id="topnav" class="topnav"><a class="brand" href="index.html"><span class="dot"></span> Python Setup Guide</a><nav class="navlinks"><a href="unix-basics.html">Basic Unix-like Systems</a><a href="virtual-environment.html">Virtual Environments</a><a href="installation.html">Installing Python</a><a href="ide-setup.html">Code Editors & IDEs</a><a href="recommended-reading.html">Recommended Reading</a></nav></header>
-<div class="layout">
-<aside class="sidebar"><h4>In this chapter</h4><nav id="toc"><ol><li class="toc-h2"><a href="#what-is-the-command-line">What is the command line?</a></li><li class="toc-h2"><a href="#how-to-find-the-terminal-on-your-computer">How to find the terminal on your computer</a></li><li class="toc-h2"><a href="#sudo-and-run-as-administrator">sudo and &quot;run as administrator&quot;</a></li><li class="toc-h2"><a href="#using--h---help">Using -h / --help</a></li><li class="toc-h2"><a href="#difference-between-options-and-arguments">Difference between options and arguments</a></li><li class="toc-h2"><a href="#how-the-shell-finds-a-command-the-path">How the shell finds a command: the PATH</a></li><li class="toc-h2"><a href="#what-is-an-executable-and-why-python-is-one">What is an &quot;executable&quot;? (and why python is one)</a></li><li class="toc-h2"><a href="#powershell-notes-windows">PowerShell notes (Windows)</a></li><li class="toc-h2"><a href="#why-windows-is-less-preferred-for-this-guide">Why Windows is less preferred (for this guide)</a></li><li class="toc-h2"><a href="#path-separators-slash-vs-backslash">Path separators: / (slash) vs \ (backslash)</a></li><li class="toc-h3"><a href="#in-powershell-you-can-use-either">In PowerShell you can use either</a></li><li class="toc-h2"><a href="#users-and-the-home-folder">Users and the home folder (~)</a></li><li class="toc-h3"><a href="#what-does-ltyougt-mean-in-cusersltyougt">What does &amp;lt;you&amp;gt; mean in C:\Users\&amp;lt;you&amp;gt;?</a></li><li class="toc-h3"><a href="#whoami-ask-who-am-i-right-now">whoami — ask &quot;who am I right now?&quot;</a></li><li class="toc-h3"><a href="#what-is-tilde">What is ~ (tilde)?</a></li><li class="toc-h3"><a href="#tab-completion">Tab completion</a></li></ol></nav></aside>
-<div class="article">
-<div id="pagehead" class="pagehead"><span class="tag tag-skip">Skippable</span><h1 id="top">1 · Basic Unix-like Systems</h1></div>
-<main id="content" class="markdown">
+<body>
 <p>A very short, friendly introduction to the command line. If you already open a terminal
 daily, you can skip this chapter — but a 5-minute read helps if terms like <em>shell</em>, <em>PATH</em>,
 or <em>sudo</em> are new to you.</p>
-<h2 id="what-is-the-command-line">What is the command line?</h2>
+<h2>What is the command line?</h2>
 <p>The command line (also called the <em>terminal</em> or <em>shell</em>) is a text interface where you
 type commands instead of clicking icons. You type a command, press Enter, and the computer
 does exactly that.</p>
@@ -385,7 +26,7 @@ That prompt is the shell asking "what next?".</p>
 In the code blocks below, the <code>$</code> (or <code>%</code> on macOS zsh) at the start of a line is the
 <strong>prompt</strong>, not something you type. Only type what comes after it.</p>
 </blockquote>
-<h2 id="how-to-find-the-terminal-on-your-computer">How to find the terminal on your computer</h2>
+<h2>How to find the terminal on your computer</h2>
 <ul>
 <li><strong>macOS:</strong> press <code>Cmd + Space</code> to open Spotlight, type <code>Terminal</code>, and press Enter.
   (Or use a nicer terminal such as iTerm2 or the one built into VS Code — see Chapter 4.)</li>
@@ -395,7 +36,7 @@ In the code blocks below, the <code>$</code> (or <code>%</code> on macOS zsh) at
 <li>how to find cmd.exe:<img alt="cmd.exe from windows start menu" src="https://pub-639e92bd227c4441a00a10db2a268512.r2.dev/image/GitHub-pages/python-install/windows-cmd.PNG" /></li>
 <li>how to find powershell: <img alt="Windows Terminal → PowerShell(DONE), or Linux Ctrl+Alt+T → GNOME Terminal." src="https://pub-639e92bd227c4441a00a10db2a268512.r2.dev/image/GitHub-pages/python-install/windows-terminal.PNG" /></li>
 </ul>
-<h2 id="sudo-and-run-as-administrator">sudo and "run as administrator"</h2>
+<h2>sudo and "run as administrator"</h2>
 <p>Some commands change system-level settings (installing software, editing protected files).
 Those need elevated rights:</p>
 <ul>
@@ -428,22 +69,22 @@ environments and `uv` install things into your own home folder, not system-wide.
 
 </details>
 
-<pre><code class="language-bash">sudo whoami
+<pre><code>sudo whoami
 # macOS/Linux: enter your login password when prompted
-# prints &quot;root&quot; → you are now acting as the administrator
-</code></pre>
-<h2 id="using--h---help">Using <code>-h</code> / <code>--help</code></h2>
+# prints "root" → you are now acting as the administrator</code></pre>
+
+<h2>Using <code>-h</code> / <code>--help</code></h2>
 <p>Almost every command accepts <em>flags</em> that change its behavior. A <strong>single dash</strong> (<code>-</code>)
 introduces a short flag (one letter); a <strong>double dash</strong> (<code>--</code>) introduces a long, readable
 flag.</p>
-<pre><code class="language-bash">ls -la          # short flags: -l (long format) + -a (include hidden files)
-python3 --help  # long flag: full help text
-</code></pre>
+<pre><code>ls -la          # short flags: -l (long format) + -a (include hidden files)
+python3 --help  # long flag: full help text</code></pre>
+
 <p>When stuck, append <code>-h</code> or <code>--help</code> to nearly any command to see its options.</p>
-<pre><code class="language-bash">ls -la
+<pre><code>ls -la
 python3 -h
-# zsh: command not found: python  →  we use python3 (see below)
-</code></pre>
+# zsh: command not found: python  →  we use python3 (see below)</code></pre>
+
 <details>
 <summary>Why there is no <code>python</code> on macOS？</summary>
 
@@ -456,21 +97,21 @@ default may be Apple's, not the one you want for your projects.
 
 </details>
 
-<h2 id="difference-between-options-and-arguments">Difference between options and arguments</h2>
+<h2>Difference between options and arguments</h2>
 <p>A command line has two kinds of inputs:</p>
 <ul>
 <li><strong>Options / flags</strong> modify <em>how</em> the command runs (e.g. <code>-l</code>, <code>--help</code>). They usually
   start with <code>-</code> or <code>--</code>.</li>
 <li><strong>Arguments</strong> are the <em>targets</em> the command acts on — file names, URLs, values.</li>
 </ul>
-<pre><code class="language-bash">  cp -r project backup
+<pre><code>  cp -r project backup
 #└┬┘ └┬┘  └┬┘    └┬┘
 # │   │    │      └─ argument: destination
 # │   │    └──────── argument: source
 # │   └───────────── option: recursive
-# └───────────────── command
-</code></pre>
-<h2 id="how-the-shell-finds-a-command-the-path">How the shell finds a command: the <code>PATH</code></h2>
+# └───────────────── command</code></pre>
+
+<h2>How the shell finds a command: the <code>PATH</code></h2>
 <p>When you type <code>python3</code> and press Enter, the shell does <strong>not</strong> magically know what
 <code>python3</code> means. It is really just a <em>name</em>. The shell asks the operating system:
 "where is the program called <code>python3</code>?" — and the OS answers by searching a list
@@ -482,30 +123,29 @@ opens the first folder that contains a matching executable.</p>
 <pre><code>$ echo $PATH
 /usr/local/bin:/usr/bin:/bin:/Users/you/.local/bin
                  │        │      │                 └─ searched last
-                 └────────┴──────┘─ searched first → first match wins
-</code></pre>
+                 └────────┴──────┘─ searched first → first match wins</code></pre>
+
 <p>So <code>python3</code> is actually: <em>the system takes the name <code>python3</code> and looks through
 every folder in <code>PATH</code> until it finds a file with that name it can run.</em> The first
 match wins — which is why, if you have several Pythons installed, <strong>the one found
 earliest in <code>PATH</code> is the one that runs</strong>.
 - Unix:</p>
-<pre><code class="language-bash"># Show the folders your shell searches, in order:
+<pre><code># Show the folders your shell searches, in order:
 echo $PATH                 # macOS / Linux
-which python3              # macOS / Linux  → prints e.g. /usr/local/bin/python3
-</code></pre>
+which python3              # macOS / Linux  → prints e.g. /usr/local/bin/python3</code></pre>
 <ul>
 <li>Windows:</li>
 </ul>
-<pre><code class="language-bash">$env:PATH                  # Windows (PowerShell)
-Get-Command python3        # Windows (PowerShell)
-</code></pre>
-<blockquote class="note note-tip"><p>This is also why a freshly installed Python sometimes <strong>"doesn't work"</strong> until you
+<pre><code>$env:PATH                  # Windows (PowerShell)
+Get-Command python3        # Windows (PowerShell)</code></pre>
+
+<blockquote><p>This is also why a freshly installed Python sometimes <strong>"doesn't work"</strong> until you
 <strong>reopen</strong> the terminal: installing it adds its folder to <code>PATH</code>, but already-open
 shells loaded the old <code>PATH</code>. Close and reopen the terminal (or run the installer's
 "add to PATH" step) so the new folder is included. We return to this in
 <a href="installation.html">Chapter 3 · Installing Python</a>.</p>
 </blockquote>
-<h2 id="what-is-an-executable-and-why-python-is-one">What is an "executable"? (and why <code>python</code> is one)</h2>
+<h2>What is an "executable"? (and why <code>python</code> is one)</h2>
 <p>An <strong>executable</strong> is simply a file the operating system knows how to <em>run directly</em> —
 as a program, not as data to be opened in another program. When you type <code>python3</code> and
 press Enter, you are asking the OS to launch the <code>python3</code> executable; it then reads
@@ -516,8 +156,8 @@ executable interprets. That is the key mental model:</p>
 <pre><code>python3  hello.py
 │        │
 │        └─ your script = DATA (text the interpreter reads)
-└────────── the executable = PROGRAM (actually runs)
-</code></pre>
+└────────── the executable = PROGRAM (actually runs)</code></pre>
+
 <details>
 <summary>How the OS knows a file is executable</summary>
 
@@ -535,21 +175,21 @@ your own `.py` files need `python3` in front of them (unless you add a shebang a
 them executable, as seen in Chapter 3).
 </details>
 
-<h2 id="powershell-notes-windows">PowerShell notes (Windows)</h2>
+<h2>PowerShell notes (Windows)</h2>
 <p>PowerShell ships convenience <em>aliases</em> that mimic Unix commands, but its native commands
 are different (verb-noun cmdlets). We recommend PowerShell over <code>cmd.exe</code>.</p>
-<pre><code class="language-powershell"># PowerShell alias   ≈   Unix command
+<pre><code># PowerShell alias   ≈   Unix command
 Get-Command          # ≈ which   (locate a command)
 Get-ChildItem        # ≈ ls      (list files)
 Get-Location         # ≈ pwd     (print working directory)
-Set-Location         # ≈ cd      (change directory)
-</code></pre>
+Set-Location         # ≈ cd      (change directory)</code></pre>
+
 <blockquote>
 <p>💡
 In PowerShell, the path separator is <code>\</code> (back-slash) and environment variables use
 <code>$env:NAME</code> (e.g. <code>$env:PATH</code>) instead of Unix <code>$NAME</code>.</p>
 </blockquote>
-<h2 id="why-windows-is-less-preferred-for-this-guide">Why Windows is less preferred (for this guide)</h2>
+<h2>Why Windows is less preferred (for this guide)</h2>
 <p>We recommend PowerShell over <code>cmd.exe</code>, but <strong>Unix-like shells (bash/zsh) are still
 preferred over Windows overall</strong>, and here is the honest reason:</p>
 <ul>
@@ -569,7 +209,7 @@ preferred over Windows overall</strong>, and here is the honest reason:</p>
 <p>None of this means Windows is "bad" — millions use it daily. It just means you will
 meet more friction following Python tutorials written from a Unix point of view, so
 expect to adapt commands rather than copy them verbatim.</p>
-<h2 id="path-separators-slash-vs-backslash">Path separators: <code>/</code> (slash) vs <code>\</code> (backslash)</h2>
+<h2>Path separators: <code>/</code> (slash) vs <code>\</code> (backslash)</h2>
 <p>A <strong>path</strong> tells the OS where a file lives. The character that separates folders
 differs by system:</p>
 <ul>
@@ -583,23 +223,23 @@ changes the meaning of the next character, e.g. <code>\n</code> = newline). So i
 either double it (<code>"C:\\Users\\you"</code>) or use a <strong>raw string</strong> (<code>r"C:\Users\you"</code>).
 Forward slashes have no such problem and are safer in code.</p>
 </blockquote>
-<h3 id="in-powershell-you-can-use-either">In PowerShell you can use <em>either</em></h3>
+<h3>In PowerShell you can use <em>either</em></h3>
 <p><strong>A nice surprise</strong>: PowerShell accepts <strong>both <code>/</code> and <code>\</code></strong> when you type a path, and it
 normalises them automatically. So these all work:</p>
-<pre><code class="language-powershell">cd C:\Users\you\Documents      # classic Windows backslash
+<pre><code>cd C:\Users\you\Documents      # classic Windows backslash
 cd C:/Users/you/Documents      # forward slash — also fine in pwsh
 cd ~/Documents                 # ~ means your home folder
-Get-ChildItem C:/Users/you/hello.py
-</code></pre>
+Get-ChildItem C:/Users/you/hello.py</code></pre>
+
 <p>On macOS/Linux the shell only understands <code>/</code>; a <code>\</code> there is an escaping character,
 not a separator. So when you write cross-platform scripts or Python code, <strong>prefer <code>/</code></strong>
 everywhere.</p>
-<h2 id="users-and-the-home-folder">Users and the home folder (<code>~</code>)</h2>
+<h2>Users and the home folder (<code>~</code>)</h2>
 <p>You may have noticed paths like <code>C:\Users\you\hello.py</code> (Windows) or
 <code>/Users/you/hello.py</code> (macOS). That <code>you</code> is a <strong>username</strong> — every person who
 logs into a computer gets their own account, and each account has its own private
 space on disk.</p>
-<h3 id="what-does-ltyougt-mean-in-cusersltyougt">What does <code>&lt;you&gt;</code> mean in <code>C:\Users\&lt;you&gt;</code>?</h3>
+<h3>What does <code>&lt;you&gt;</code> mean in <code>C:\Users\&lt;you&gt;</code>?</h3>
 <p>In tutorials you will often see a placeholder like <code>C:\Users\&lt;you&gt;</code> or
 <code>/home/&lt;you&gt;</code>. The <code>&lt;you&gt;</code> is <strong>not literal text you type</strong> — it is a stand-in
 for <em>your own</em> username on the machine. Replace it with whatever name you used
@@ -612,21 +252,21 @@ when you set up the computer.</p>
 </ul>
 <p>The angle brackets <code>&lt; &gt;</code> are a common notation meaning "fill in your own value
 here". Whenever you copy a command, swap <code>&lt;you&gt;</code> for your actual username.</p>
-<h3 id="whoami-ask-who-am-i-right-now"><code>whoami</code> — ask "who am I right now?"</h3>
+<h3><code>whoami</code> — ask "who am I right now?"</h3>
 <p>The <code>whoami</code> command prints the username of the account you are currently logged
 into the shell as. It is handy when you are unsure whose home folder a path
 refers to.</p>
-<pre><code class="language-bash"># macOS / Linux (bash, zsh):
+<pre><code># macOS / Linux (bash, zsh):
 whoami
-# prints e.g. &quot;you&quot;  → that is the name that replaces &lt;you&gt; above
-</code></pre>
-<pre><code class="language-bash"># Windows (PowerShell):
+# prints e.g. "you"  → that is the name that replaces &lt;you&gt; above</code></pre>
+
+<pre><code># Windows (PowerShell):
 whoami
-# prints e.g. &quot;desktop-abc\alice&quot;  → the part after &quot;\&quot; is your username,
+# prints e.g. "desktop-abc\alice"  → the part after "\" is your username,
 # or use the shorter form:
 $env:USERNAME
-# prints just &quot;alice&quot;
-</code></pre>
+# prints just "alice"</code></pre>
+
 <blockquote>
 <p>📝
 <strong>A small difference between systems.</strong> On macOS/Linux, <code>whoami</code> returns just
@@ -636,7 +276,7 @@ the short username (<code>you</code>). On Windows, the plain <code>whoami</code>
 only want the bare username on Windows, use <code>$env:USERNAME</code> instead — it
 behaves like the Unix <code>whoami</code>.</p>
 </blockquote>
-<h3 id="what-is-tilde">What is <code>~</code> (tilde)?</h3>
+<h3>What is <code>~</code> (tilde)?</h3>
 <p><code>~</code> is a <strong>shortcut for your home folder</strong> — the private directory the OS creates
 for your account. Instead of typing the full <code>/Users/you</code> or
 <code>C:\Users\you</code> every time, you can write <code>~</code> and the shell expands it.</p>
@@ -644,49 +284,41 @@ for your account. Instead of typing the full <code>/Users/you</code> or
 <li>On macOS/Linux: <code>~</code> = <code>/Users/you</code></li>
 <li>On Windows (PowerShell): <code>~</code> = <code>C:\Users\you</code></li>
 </ul>
-<pre><code class="language-bash">cd ~              # go straight to your home folder
+<pre><code>cd ~              # go straight to your home folder
 cd ~/Documents    # go to Documents inside your home folder
-echo ~            # print the full path your ~ resolves to
-</code></pre>
-<pre><code class="language-powershell">cd ~              # PowerShell also understands ~ as your home folder
-cd ~/Documents
-</code></pre>
+echo ~            # print the full path your ~ resolves to</code></pre>
+
+<pre><code>cd ~              # PowerShell also understands ~ as your home folder
+cd ~/Documents</code></pre>
+
 <p>So <code>&lt;you&gt;</code> in <code>C:\Users\&lt;you&gt;</code> is just "your username", and <code>~</code> is the fast way
 to refer to <code>C:\Users\&lt;you&gt;</code> (or <code>/Users/&lt;you&gt;</code>) without writing it out.</p>
-<h3 id="tab-completion">Tab completion</h3>
+<h3>Tab completion</h3>
 <p>You rarely have to type a long path or command name in full. Press <strong>Tab</strong> and the
 shell finishes it for you; press Tab again to cycle through multiple matches.</p>
 <p>Here is a real session in a project folder (the <code>&lt;you&gt;</code> part is your username, as
 explained earlier — see <em>Users and the home folder (<code>~</code>)</em>):</p>
-<pre><code class="language-bash"># &lt;you&gt; at Mbp.lan in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:03]
+<pre><code># &lt;you&gt; at your_computer in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:03]
 $ ls
 AGENTS.md        assets           azure-api-key.py css              index.html       index.md         pages            readme.md        serve.py
 
-# &lt;you&gt; at Mbp.lan in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:04]
+# &lt;you&gt; at your_computer in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:04]
 $ vim AGENT&lt;Tab&gt;
 # → shell auto-completes to: vim AGENTS.md
 
-# &lt;you&gt; at Mbp.lan in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:29]
+# &lt;you&gt; at your_computer in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:29]
 $ vim AGENTS.md
-# → opens the file; no need to type the rest of the name by hand
-</code></pre>
-<pre><code class="language-powershell"># In PowerShell the same Tab key works:
+# → opens the file; no need to type the rest of the name by hand</code></pre>
+
+<pre><code># In PowerShell the same Tab key works:
 cd ~/Doc&lt;Tab&gt;      # → ~/Documents/
-Get-Command pyth&lt;Tab&gt;   # → fills in the matching command name
-</code></pre>
+Get-Command pyth&lt;Tab&gt;   # → fills in the matching command name</code></pre>
+
 <blockquote>
 <p>💡
 If Tab does nothing, you may have typed a wrong starting letter — the shell only
 completes from what it can uniquely match. Tab is your best friend for avoiding
 typos in long paths.</p>
 </blockquote>
-</main>
-</div>
-</div>
-<nav class="pager"><a class="next" href="virtual-environment.html"><span class="dir">→ Next</span><span class="ttl">2 · Virtual Environments</span></a></nav>
-<footer id="footer" class="site">
-<p>Python Setup Guide &middot; <a href="index.html">Back to home</a></p>
-<p>Content is a work in progress &mdash; see the project readme for status.</p>
-</footer>
 </body>
 </html>
