@@ -224,7 +224,7 @@ python -m pip install duckdb==1.5.4 polars==1.43.2 yfinance==1.5.2
 - **VS Code / other editors** are independent of the Python stack; the setup is covered in
   Chapter 4 (Editors & IDEs).
 - **API key for the Day 2 afternoon:** provided by the programme; store it as an environment
-  variable — see `day2-07-agents/api-keys.md`.
+  variable.
 
 ## Method B · With uv (recommended)
 
