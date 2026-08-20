@@ -86,11 +86,20 @@ CONTENT_TYPES = {
 
 RELOAD_CLIENT = b"""<script>
 (function(){
-  var last = 0;
+  // Persist the last-seen counter across reloads. Otherwise `last` resets to 0
+  // on every page load while the server's counter only ever increases, so the
+  // page reloads again immediately after each reload (infinite refresh loop).
+  var KEY = 'livereload-last';
+  var last = parseInt(sessionStorage.getItem(KEY) || '0', 10);
   function poll(){
     fetch('/__reload?last='+last).then(function(r){ return r.text(); }).then(function(t){
       var n = parseInt(t, 10);
-      if (n > last) { last = n; location.reload(); } else { poll(); }
+      if (n > last) {
+        sessionStorage.setItem(KEY, n);
+        location.reload();
+      } else {
+        poll();
+      }
     }).catch(function(){ setTimeout(poll, 2000); });
   }
   poll();
