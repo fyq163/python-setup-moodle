@@ -50,18 +50,17 @@ subscription, which students get free with the Student Pack above.
 References: [PyCharm + conda](https://www.anaconda.com/docs/getting-started/working-with-conda/ides/pycharm),
 [Python path](https://www.anaconda.com/docs/getting-started/working-with-conda/ides/python-path)
 
-## Other popular coding CLIs
-
-A newer wave of editors runs **inside the terminal** — perfect if you liked Chapter 1:
-
-- **opencode** — an open agentic coding CLI.
-- **kilo** (within OpenCode) and **mimo** — terminal-based assistants.
-
-They are just editors with an AI chat bolted on; everything from Chapter 1 (paths, `cd`,
-running scripts) still applies. Launch them in your project folder and they use whatever
-Python your shell currently has active.
-
 ## GitHub Copilot — university subscription
 
 GitHub Copilot is an AI pair-programmer that suggests code as you type. **Students get it
 free** (and many other developer tools) through the [GitHub Copilot - Information Technology Services - HKU](https://its.hku.hk/software/github-copilot/)
+
+## OpenCode and other terminal coding CLIs
+
+OpenCode is the AI coding agent used in the bootcamp. Install it from
+<https://opencode.ai/> and **connect it to your environment** — no command-line setup is
+needed here. (It is independent of the Python stack.)
+
+> 💡 opencode, kilo, mimo and similar run **inside the terminal** — everything from
+> Chapter 1 (paths, `cd`, running scripts) still applies. Launch them in your project
+> folder and they use whatever Python your shell currently has active.

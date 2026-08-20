@@ -221,17 +221,10 @@ python -m pip install duckdb==1.5.4 polars==1.43.2 yfinance==1.5.2
 - **git** is independent of Python; install it separately if `git --version` does not work
   in your terminal. (Anaconda bundles the *gitpython* library, which is **not** the `git`
   command-line tool.)
-- **OpenCode and VS Code** are independent of the Python stack; see `day2-07-agents/opencode-se`
-  and the TA's installation guide.
+- **VS Code / other editors** are independent of the Python stack; the setup is covered in
+  Chapter 4 (Editors & IDEs).
 - **API key for the Day 2 afternoon:** provided by the programme; store it as an environment
   variable — see `day2-07-agents/api-keys.md`.
-
-### OpenCode
-
-OpenCode is the AI coding agent used in the bootcamp. Install it from
-<https://opencode.ai/> and **connect it to your environment** — no command-line setup is
-needed here. See the TA's installation guide (`day2-07-agents/opencode-se`) for the
-connection steps.
 
 ## Method B · With uv (recommended)
 
