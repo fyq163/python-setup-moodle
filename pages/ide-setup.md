@@ -11,7 +11,9 @@ can also use the terminal skills from Chapter 1 inside the editor's built-in ter
 GitHub Copilot is an AI pair-programmer that suggests code as you type. **Students get it
 free** (and many other developer tools) through the [GitHub Copilot - Information Technology Services - HKU](https://its.hku.hk/software/github-copilot/)
 
-## OpenCode and other terminal coding CLIs
+## OpenCode and other terminal coding CLIs — Required
+
+> ❗ OpenCode is **compulsory** for the bootcamp — you must install it.
 
 OpenCode is the AI coding agent used in the bootcamp. Install it from
 <https://opencode.ai/> and **connect it to your environment** — no command-line setup is
