@@ -10,8 +10,7 @@ arm64, Windows amd64, Linux x86_64). <strong>Pick one method</strong> — we rec
 beginners. You only need Python installed once per machine.</p>
 <h2>How to choose a version &amp; architecture</h2>
 <ul>
-<li><strong>Version:</strong> pick a recent stable release — <strong>Python 3.12</strong> or <strong>3.13</strong> are safe choices
-  in 2026. Not Python 2 (dead since 2020) and the very latest <code>.0</code> release if a package
+<li><strong>Version:</strong> pick a recent stable release — <strong>Python 3.14</strong> are the desinated version of this course. Not Python 2 (dead since 2020) and the very latest <code>.0</code> release if a package
   you need hasn't caught up yet.</li>
 <li><strong>Architecture</strong> (your CPU type):</li>
 <li><strong>macOS:</strong> Apple Silicon Macs (M1/M2/M3/M4) → <strong>arm64</strong>. Intel Macs → <strong>x86_64</strong>.</li>
@@ -31,15 +30,14 @@ non-Python system dependencies (CUDA, R, …).</p>
 <h5>Windows: Anaconda Windows 64-bit</h5>
 <ol>
 <li>download the installer
-   <code>powershell
-   Invoke-WebRequest -Uri "https://repo.anaconda.com/archive/Anaconda3-2026.07-1-Windows-x86_64.exe" -OutFile ".\Anaconda3-2026.07-1-Windows-x86_64.exe"</code>
-   <strong>Alternatively</strong>, download the installer from the url and change directory to the location where it was downloaded, then double click it to run.</li>
-<li>Then <strong>double click it to run installation</strong>.</li>
+ <br />
+<pre><code>   Invoke-WebRequest -Uri "https://repo.anaconda.com/archive/Anaconda3-2026.07-1-Windows-x86_64.exe" -OutFile ".\Anaconda3-2026.07-1-Windows-x86_64.exe"</code></pre></li>
 </ol>
+<p><strong>Alternatively</strong>, download the installer from the url and change directory to the location where it was downloaded, then double click it to run.
+2. Then <strong>double click it to run installation</strong>.</p>
 <h5>macOS</h5>
-<p><code>bash
-   curl -O https://repo.anaconda.com/archive/Anaconda3-2026.07-1-MacOSX-arm64.sh
-   bash ./Anaconda3-2026.07-1-MacOSX-arm64.sh</code></p>
+<pre><code>   curl -O https://repo.anaconda.com/archive/Anaconda3-2026.07-1-MacOSX-arm64.sh
+   bash ./Anaconda3-2026.07-1-MacOSX-arm64.sh</code></pre>
 <blockquote>
 <p><strong>Alternatively</strong>, download the installer from the url and change directory to the location where it was downloaded, then paste it's path in the terminal and run it with <code>bash &lt;installer.sh&gt;</code>.
 ⚠️ If you have an <em>Intel Mac</em>, see below for miniconda option, anaconda has stopped supporting Intel Macs.</p>
@@ -57,8 +55,9 @@ non-Python system dependencies (CUDA, R, …).</p>
   finishes, Miniconda is installed.</p>
 <ul>
 <li>For macOS Intel, run:
-  <code>bash
-  curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh</code></li>
+<br />
+<pre><code>  curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh</code></pre>
+</li>
 </ul>
 <blockquote>
 <p>📝 After install, <strong>close the terminal and open a new one</strong> so the <code>conda</code> command is
@@ -68,10 +67,10 @@ available. Then verify with <code>conda --version</code>.</p>
 <ol start="3">
 <li>Create and activate the course environment:</li>
 </ol>
-<pre><code class="language-bash">conda create -n mffintech --clone base
+<pre><code>conda create -n mffintech --clone base
 conda activate mffintech
-python --version
-</code></pre>
+python --version</code></pre>
+
 <p>This gives you the following packages out of the box (no extra install needed):</p>
 <pre><code>| Package | Version |
 | --- | --- |
@@ -80,8 +79,7 @@ python --version
 | pandas | 3.0.3 |
 | PyArrow | 23.0.1 |
 | pytest | 9.0.3 |
-| JupyterLab | 4.5.9 |
-</code></pre>
+| JupyterLab | 4.5.9 |</code></pre>
 <p>💡 These six cover the whole course toolchain: <strong>Python</strong> is the language runtime; <strong>NumPy</strong>
 is the array/math foundation every numerical library builds on; <strong>pandas</strong> is the core
 tabular-data library; <strong>PyArrow</strong> provides efficient columnar data and pairs with pandas;
@@ -97,10 +95,10 @@ installing (see below).</p>
 <p><strong>Additional Packages</strong></p>
 <p>Do not install additional packages into Anaconda's base environment. Instead, clone the
 base environment and install there:</p>
-<pre><code class="language-bash">conda create -n mffintech --clone base
+<pre><code>conda create -n mffintech --clone base
 conda activate mffintech
-conda install -c conda-forge duckdb=1.5.4 polars=1.43.2 yfinance=1.5.2
-</code></pre>
+conda install -c conda-forge duckdb=1.5.4 polars=1.43.2 yfinance=1.5.2</code></pre>
+
 <p>💡 Inside a conda environment, <strong>prefer <code>conda install</code> over <code>pip</code></strong>. Packages installed with
 <code>pip</code> live outside conda's view, so conda may fail to see or manage them, and dependency
 conflicts are easier to miss. Use <code>pip</code> only in special cases (a package exists only on PyPI)
@@ -109,8 +107,8 @@ conflicts are easier to miss. Use <code>pip</code> only in special cases (a pack
 <p>This keeps the base Anaconda installation clean. If anything goes wrong, the TA can delete
 and recreate the environment.</p>
 <p>Before every bootcamp session, activate the environment:</p>
-<pre><code class="language-bash">conda activate mffintech
-</code></pre>
+<pre><code>conda activate mffintech</code></pre>
+
 <h3>What to do if you are asked to run <code>conda init</code></h3>
 <p>The first time you open a terminal after installing conda, <code>conda activate</code> may fail with a
 message like <em>"To activate this environment, run <code>conda init</code> first."</em> Here is why, and what
@@ -120,10 +118,10 @@ shell's startup file. <code>conda init</code> writes a small block of code into 
 loads conda automatically every time you open a new terminal. Until you do this, the shell
 doesn't know what <code>conda activate</code> means.</p>
 <p><strong>How to do it.</strong> Just run it once for your shell (the command is harmless to re-run):</p>
-<pre><code class="language-bash">conda init bash        # Linux default shell
+<pre><code>conda init bash        # Linux default shell
 conda init zsh         # macOS default shell
-conda init powershell  # Windows (run in PowerShell)
-</code></pre>
+conda init powershell  # Windows (run in PowerShell)</code></pre>
+
 <p>Then <strong>close and reopen the terminal</strong> — the change only takes effect in new sessions.</p>
 <p><strong>Where does conda write the code?</strong>
 - <strong>macOS / Linux (unix):</strong> into your shell's rc file in your home directory —
@@ -156,12 +154,12 @@ terminal.</p>
 <ol start="2">
 <li>Install a Python and create your first project:</li>
 </ol>
-<pre><code class="language-bash">uv python install 3.12          # download CPython 3.12 (one time)
+<pre><code>uv python install 3.12          # download CPython 3.12 (one time)
 uv init myproject               # create a project folder with a .venv
 cd myproject                    # step into the folder FIRST (see warning below)
 uv pip install duckdb==1.5.4 polars==1.43.2 yfinance==1.5.2   # packages go into myproject/.venv
-uv run main.py                  # run a script with this project's Python
-</code></pre>
+uv run main.py                  # run a script with this project's Python</code></pre>
+
 <blockquote>
 <p>⚠️ A fresh terminal opens in your home directory (<code>~</code>). If you run <code>uv pip install …</code> or
 <code>uv run …</code> <em>before</em> <code>cd myproject</code>, uv finds no project folder and creates a <code>~/.venv</code> in
@@ -184,18 +182,17 @@ optional.</p>
    clicking Install Now.</li>
 <li>After install, reopen PowerShell and verify:</li>
 </ol>
-<pre><code class="language-powershell">python --version
-# Python 3.12.x   (on Windows the command is `python`, not `python3`)
-</code></pre>
+<pre><code>python --version
+# Python 3.12.x   (on Windows the command is `python`, not `python3`)</code></pre>
+
 <p>Most Windows personal computers are amd64 architecture; if you have a Microsoft Surface, it may be arm64.
 To be sure which one you have, run this in PowerShell and check the value it prints:</p>
-<pre><code class="language-powershell">echo $env:PROCESSOR_ARCHITECTURE
+<pre><code>echo $env:PROCESSOR_ARCHITECTURE
 # ARM64  -&gt; you have an Arm-based Surface; download the arm64 installer
-# AMD64  -&gt; standard x64 PC; download the amd64 installer
-</code></pre>
+# AMD64  -&gt; standard x64 PC; download the amd64 installer</code></pre>
 <p>Typical install path:</p>
-<pre><code class="language-text">C:\Users\&lt;you&gt;\AppData\Local\Programs\Python\Python312\
-</code></pre>
+<pre><code>C:\Users\&lt;you&gt;\AppData\Local\Programs\Python\Python312\</code></pre>
+
 <blockquote>
 <p>⚠️\
 If <code>python --version</code> still says "command not found" or opens the Microsoft Store, you
@@ -217,12 +214,12 @@ forgot to tick <strong>Add to PATH</strong>. Re-run the installer and choose "Mo
   itself to PATH automatically when brew is set up.</li>
 </ul>
 <p>Typical paths:</p>
-<pre><code class="language-text"># Official installer:
+<pre><code># Official installer:
 /Library/Frameworks/Python.framework/Versions/3.12/bin/python3
 # Homebrew:
 /opt/homebrew/bin/python3        # Apple Silicon
-/usr/local/bin/python3           # Intel
-</code></pre>
+/usr/local/bin/python3           # Intel</code></pre>
+
 <h3>Linux</h3>
 <p>Use your package manager, or build from source.</p>
 <ul>
@@ -241,13 +238,13 @@ packages globally with <code>sudo</code>.</p>
 <h2>After install · test it works</h2>
 <p>Run this in your terminal. It prints the path of the Python that actually runs — this is
 the one your commands use.</p>
-<pre><code class="language-bash">python3 -c &quot;import sys; print(sys.executable)&quot;
-</code></pre>
+<pre><code>python3 -c "import sys; print(sys.executable)"</code></pre>
+
 <p>On macOS you might see something like:</p>
-<pre><code class="language-text">/opt/homebrew/bin/python3        # good — the one you installed
+<pre><code>/opt/homebrew/bin/python3        # good — the one you installed
 # or, if you forgot to set PATH:
-/Applications/Xcode.app/Contents/Developer/usr/bin/python3   # Apple's, not yours
-</code></pre>
+/Applications/Xcode.app/Contents/Developer/usr/bin/python3   # Apple's, not yours</code></pre>
+
 <blockquote>
 <p>⚠️
 If it points to <strong>Xcode's</strong> or the <strong>system</strong> Python instead of what you installed, your
@@ -259,9 +256,9 @@ If it points to <strong>Xcode's</strong> or the <strong>system</strong> Python i
 <p>Beyond the Python path, confirm the course packages themselves are visible. The listing
 command differs by method:</p>
 <p><strong>conda</strong> — inside the <code>mffintech</code> environment:</p>
-<pre><code class="language-bash">conda activate mffintech
-conda list
-</code></pre>
+<pre><code>conda activate mffintech
+conda list</code></pre>
+
 <p>You should see these entries:</p>
 <table>
 <thead>
@@ -320,9 +317,9 @@ conda list
 </tbody>
 </table>
 <p><strong>uv</strong> — inside your project folder:</p>
-<pre><code class="language-bash">cd myproject
-uv pip list
-</code></pre>
+<pre><code>cd myproject
+uv pip list</code></pre>
+
 <p>The same nine packages should appear.</p>
 <blockquote>
 <p>💡 The surest test that everything is installed correctly is being able to <strong>run your first
@@ -335,35 +332,35 @@ program</strong> below — head there next.</p>
 <p>This example prints a friendly greeting and reports your machine's architecture
 (<code>platform.machine()</code>), the Python version, and the operating system — a quick sanity
 check that your install is alive and that you know which CPU it runs on.</p>
-<pre><code class="language-python">&quot;&quot;&quot;
+<pre><code>"""
 hello.py
-&quot;&quot;&quot;
+"""
 import sys
 import platform
 
 def main():
     # 1. The classic first program
-    print(&quot;Hello, world!&quot;)
+    print("Hello, world!")
 
     # 2. Report the computer architecture and environment
-    print(&quot;\n--- Your machine ---&quot;)
-    print(f&quot;OS        : {platform.system()} {platform.release()}&quot;)
-    print(f&quot;Arch      : {platform.machine()}&quot;)   # e.g. arm64, x86_64, AMD64
-    print(f&quot;Python    : {sys.version.splitlines()[0]}&quot;)
-    print(f&quot;Executable: {sys.executable}&quot;)
+    print("\n--- Your machine ---")
+    print(f"OS        : {platform.system()} {platform.release()}")
+    print(f"Arch      : {platform.machine()}")   # e.g. arm64, x86_64, AMD64
+    print(f"Python    : {sys.version.splitlines()[0]}")
+    print(f"Executable: {sys.executable}")
 
-if __name__ == &quot;__main__&quot;:
-    main()
-</code></pre>
+if __name__ == "__main__":
+    main()</code></pre>
+
 <p>Expected output (your numbers will differ):</p>
-<pre><code class="language-text">Hello, world!
+<pre><code>Hello, world!
 
 --- Your machine ---
 OS        : Darwin 24.0.0
 Arch      : arm64
 Python    : 3.12.4 (main, Jun  6 2024, 10:26:29) [Clang 15.0.0]
-Executable: /opt/homebrew/bin/python3
-</code></pre>
+Executable: /opt/homebrew/bin/python3</code></pre>
+
 <blockquote>
 <p>💡
 The <code>if __name__ == "__main__":</code> line is a Python convention: it makes <code>main()</code> run

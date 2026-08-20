@@ -46,7 +46,7 @@ CHAPTERS = [
     ("recommended-reading",  "5 · Recommended Reading",      "Optional",   "PEP 8 style, language servers (ty, pyright) and linters (ruff) to level up."),
 ]
 
-MD_EXTENSIONS = ["fenced_code", "tables", "sane_lists"]
+MD_EXTENSIONS = ["tables", "sane_lists"]
 
 
 # ---------------------------------------------------------------------------
@@ -64,9 +64,42 @@ def parse_frontmatter(text):
     return meta, text[m.end():]
 
 
+# Match a ```lang ... ``` fence where the language sits on the opening line
+# and the closing ``` is alone on its own line. Non-greedy so the first
+# closing fence ends the block.
+_FENCE_RE = re.compile(r"```([^\n`]*)\n(.*?)\n[ \t]*```", re.DOTALL)
+
+
+def convert_fenced_code(md_text):
+    """Turn ```lang ... ``` blocks into plain <pre><code> HTML ourselves.
+
+    We do this instead of relying on the markdown `fenced_code` extension:
+    depending on the installed `markdown` version / environment that extension
+    sometimes fails to fire, which leaks the language tag as visible text
+    (e.g. ``bash``) and collapses the block into an inline <code>. Handling the
+    fence here makes the build independent of the extension's behaviour.
+
+    The language is dropped (no `class="language-..."` attribute) on purpose:
+    the release output must stay free of class/id attributes, and the reader
+    does not need the language marker.
+    """
+    def _repl(mo):
+        lang = mo.group(1).strip()
+        code = mo.group(2)
+        if code.endswith("\n"):
+            code = code[:-1]
+        code = _html.escape(code, quote=False)
+        return "<pre><code>%s</code></pre>" % code
+
+    return _FENCE_RE.sub(_repl, md_text)
+
+
 def render_body(md_text):
     """Render markdown to HTML. No heading-id injection, no TOC collection —
     the release output contains only what the Markdown source itself produces."""
+    # Convert fenced code blocks ourselves before markdown processing so the
+    # result is correct regardless of the markdown extension set.
+    md_text = convert_fenced_code(md_text)
     html = _md.markdown(md_text, extensions=MD_EXTENSIONS)
     # Rewrite ONLY local repo-relative image paths (../assets/img/...) to a
     # public URL. Images that already use an absolute https:// URL are left

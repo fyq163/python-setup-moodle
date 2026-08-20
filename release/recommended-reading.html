@@ -29,18 +29,18 @@ do not need to memorize it — your editor can enforce it — but know the big o
 </ul>
 <p>Enable in your editor: install the <strong>Python</strong> extension (pyright/ty come along), or run
 the checker from the terminal:</p>
-<pre><code class="language-bash">uv pip install pyright
-pyright .            # type-check the project
-</code></pre>
+<pre><code>uv pip install pyright
+pyright .            # type-check the project</code></pre>
+
 <h2>Linters: <code>ruff</code></h2>
 <p><a href="https://docs.astral.sh/ruff/">ruff</a> is an extremely fast all-in-one <strong>linter and
 formatter</strong> (it replaces <code>flake8</code>, <code>black</code>, <code>isort</code>, and more in one tool). One command
 cleans and formats your code:</p>
-<pre><code class="language-bash">uv pip install ruff
+<pre><code>uv pip install ruff
 ruff check .          # lint: report style/bug issues
 ruff check --fix .    # lint + auto-fix what it can
-ruff format .         # format: rewrite files to a consistent style
-</code></pre>
+ruff format .         # format: rewrite files to a consistent style</code></pre>
+
 <p>Drop a <code>ruff.toml</code> in your project to configure rules. Most teams adopt ruff because it
 runs in milliseconds even on large codebases.</p>
 <blockquote>

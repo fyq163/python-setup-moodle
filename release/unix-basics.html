@@ -69,22 +69,22 @@ environments and `uv` install things into your own home folder, not system-wide.
 
 </details>
 
-<pre><code class="language-bash">sudo whoami
+<pre><code>sudo whoami
 # macOS/Linux: enter your login password when prompted
-# prints &quot;root&quot; → you are now acting as the administrator
-</code></pre>
+# prints "root" → you are now acting as the administrator</code></pre>
+
 <h2>Using <code>-h</code> / <code>--help</code></h2>
 <p>Almost every command accepts <em>flags</em> that change its behavior. A <strong>single dash</strong> (<code>-</code>)
 introduces a short flag (one letter); a <strong>double dash</strong> (<code>--</code>) introduces a long, readable
 flag.</p>
-<pre><code class="language-bash">ls -la          # short flags: -l (long format) + -a (include hidden files)
-python3 --help  # long flag: full help text
-</code></pre>
+<pre><code>ls -la          # short flags: -l (long format) + -a (include hidden files)
+python3 --help  # long flag: full help text</code></pre>
+
 <p>When stuck, append <code>-h</code> or <code>--help</code> to nearly any command to see its options.</p>
-<pre><code class="language-bash">ls -la
+<pre><code>ls -la
 python3 -h
-# zsh: command not found: python  →  we use python3 (see below)
-</code></pre>
+# zsh: command not found: python  →  we use python3 (see below)</code></pre>
+
 <details>
 <summary>Why there is no <code>python</code> on macOS？</summary>
 
@@ -104,13 +104,13 @@ default may be Apple's, not the one you want for your projects.
   start with <code>-</code> or <code>--</code>.</li>
 <li><strong>Arguments</strong> are the <em>targets</em> the command acts on — file names, URLs, values.</li>
 </ul>
-<pre><code class="language-bash">  cp -r project backup
+<pre><code>  cp -r project backup
 #└┬┘ └┬┘  └┬┘    └┬┘
 # │   │    │      └─ argument: destination
 # │   │    └──────── argument: source
 # │   └───────────── option: recursive
-# └───────────────── command
-</code></pre>
+# └───────────────── command</code></pre>
+
 <h2>How the shell finds a command: the <code>PATH</code></h2>
 <p>When you type <code>python3</code> and press Enter, the shell does <strong>not</strong> magically know what
 <code>python3</code> means. It is really just a <em>name</em>. The shell asks the operating system:
@@ -123,23 +123,22 @@ opens the first folder that contains a matching executable.</p>
 <pre><code>$ echo $PATH
 /usr/local/bin:/usr/bin:/bin:/Users/you/.local/bin
                  │        │      │                 └─ searched last
-                 └────────┴──────┘─ searched first → first match wins
-</code></pre>
+                 └────────┴──────┘─ searched first → first match wins</code></pre>
+
 <p>So <code>python3</code> is actually: <em>the system takes the name <code>python3</code> and looks through
 every folder in <code>PATH</code> until it finds a file with that name it can run.</em> The first
 match wins — which is why, if you have several Pythons installed, <strong>the one found
 earliest in <code>PATH</code> is the one that runs</strong>.
 - Unix:</p>
-<pre><code class="language-bash"># Show the folders your shell searches, in order:
+<pre><code># Show the folders your shell searches, in order:
 echo $PATH                 # macOS / Linux
-which python3              # macOS / Linux  → prints e.g. /usr/local/bin/python3
-</code></pre>
+which python3              # macOS / Linux  → prints e.g. /usr/local/bin/python3</code></pre>
 <ul>
 <li>Windows:</li>
 </ul>
-<pre><code class="language-bash">$env:PATH                  # Windows (PowerShell)
-Get-Command python3        # Windows (PowerShell)
-</code></pre>
+<pre><code>$env:PATH                  # Windows (PowerShell)
+Get-Command python3        # Windows (PowerShell)</code></pre>
+
 <blockquote><p>This is also why a freshly installed Python sometimes <strong>"doesn't work"</strong> until you
 <strong>reopen</strong> the terminal: installing it adds its folder to <code>PATH</code>, but already-open
 shells loaded the old <code>PATH</code>. Close and reopen the terminal (or run the installer's
@@ -157,8 +156,8 @@ executable interprets. That is the key mental model:</p>
 <pre><code>python3  hello.py
 │        │
 │        └─ your script = DATA (text the interpreter reads)
-└────────── the executable = PROGRAM (actually runs)
-</code></pre>
+└────────── the executable = PROGRAM (actually runs)</code></pre>
+
 <details>
 <summary>How the OS knows a file is executable</summary>
 
@@ -179,12 +178,12 @@ them executable, as seen in Chapter 3).
 <h2>PowerShell notes (Windows)</h2>
 <p>PowerShell ships convenience <em>aliases</em> that mimic Unix commands, but its native commands
 are different (verb-noun cmdlets). We recommend PowerShell over <code>cmd.exe</code>.</p>
-<pre><code class="language-powershell"># PowerShell alias   ≈   Unix command
+<pre><code># PowerShell alias   ≈   Unix command
 Get-Command          # ≈ which   (locate a command)
 Get-ChildItem        # ≈ ls      (list files)
 Get-Location         # ≈ pwd     (print working directory)
-Set-Location         # ≈ cd      (change directory)
-</code></pre>
+Set-Location         # ≈ cd      (change directory)</code></pre>
+
 <blockquote>
 <p>💡
 In PowerShell, the path separator is <code>\</code> (back-slash) and environment variables use
@@ -227,11 +226,11 @@ Forward slashes have no such problem and are safer in code.</p>
 <h3>In PowerShell you can use <em>either</em></h3>
 <p><strong>A nice surprise</strong>: PowerShell accepts <strong>both <code>/</code> and <code>\</code></strong> when you type a path, and it
 normalises them automatically. So these all work:</p>
-<pre><code class="language-powershell">cd C:\Users\you\Documents      # classic Windows backslash
+<pre><code>cd C:\Users\you\Documents      # classic Windows backslash
 cd C:/Users/you/Documents      # forward slash — also fine in pwsh
 cd ~/Documents                 # ~ means your home folder
-Get-ChildItem C:/Users/you/hello.py
-</code></pre>
+Get-ChildItem C:/Users/you/hello.py</code></pre>
+
 <p>On macOS/Linux the shell only understands <code>/</code>; a <code>\</code> there is an escaping character,
 not a separator. So when you write cross-platform scripts or Python code, <strong>prefer <code>/</code></strong>
 everywhere.</p>
@@ -257,17 +256,17 @@ here". Whenever you copy a command, swap <code>&lt;you&gt;</code> for your actua
 <p>The <code>whoami</code> command prints the username of the account you are currently logged
 into the shell as. It is handy when you are unsure whose home folder a path
 refers to.</p>
-<pre><code class="language-bash"># macOS / Linux (bash, zsh):
+<pre><code># macOS / Linux (bash, zsh):
 whoami
-# prints e.g. &quot;you&quot;  → that is the name that replaces &lt;you&gt; above
-</code></pre>
-<pre><code class="language-bash"># Windows (PowerShell):
+# prints e.g. "you"  → that is the name that replaces &lt;you&gt; above</code></pre>
+
+<pre><code># Windows (PowerShell):
 whoami
-# prints e.g. &quot;desktop-abc\alice&quot;  → the part after &quot;\&quot; is your username,
+# prints e.g. "desktop-abc\alice"  → the part after "\" is your username,
 # or use the shorter form:
 $env:USERNAME
-# prints just &quot;alice&quot;
-</code></pre>
+# prints just "alice"</code></pre>
+
 <blockquote>
 <p>📝
 <strong>A small difference between systems.</strong> On macOS/Linux, <code>whoami</code> returns just
@@ -285,13 +284,13 @@ for your account. Instead of typing the full <code>/Users/you</code> or
 <li>On macOS/Linux: <code>~</code> = <code>/Users/you</code></li>
 <li>On Windows (PowerShell): <code>~</code> = <code>C:\Users\you</code></li>
 </ul>
-<pre><code class="language-bash">cd ~              # go straight to your home folder
+<pre><code>cd ~              # go straight to your home folder
 cd ~/Documents    # go to Documents inside your home folder
-echo ~            # print the full path your ~ resolves to
-</code></pre>
-<pre><code class="language-powershell">cd ~              # PowerShell also understands ~ as your home folder
-cd ~/Documents
-</code></pre>
+echo ~            # print the full path your ~ resolves to</code></pre>
+
+<pre><code>cd ~              # PowerShell also understands ~ as your home folder
+cd ~/Documents</code></pre>
+
 <p>So <code>&lt;you&gt;</code> in <code>C:\Users\&lt;you&gt;</code> is just "your username", and <code>~</code> is the fast way
 to refer to <code>C:\Users\&lt;you&gt;</code> (or <code>/Users/&lt;you&gt;</code>) without writing it out.</p>
 <h3>Tab completion</h3>
@@ -299,7 +298,7 @@ to refer to <code>C:\Users\&lt;you&gt;</code> (or <code>/Users/&lt;you&gt;</code
 shell finishes it for you; press Tab again to cycle through multiple matches.</p>
 <p>Here is a real session in a project folder (the <code>&lt;you&gt;</code> part is your username, as
 explained earlier — see <em>Users and the home folder (<code>~</code>)</em>):</p>
-<pre><code class="language-bash"># &lt;you&gt; at your_computer in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:03]
+<pre><code># &lt;you&gt; at your_computer in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:03]
 $ ls
 AGENTS.md        assets           azure-api-key.py css              index.html       index.md         pages            readme.md        serve.py
 
@@ -309,12 +308,12 @@ $ vim AGENT&lt;Tab&gt;
 
 # &lt;you&gt; at your_computer in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:29]
 $ vim AGENTS.md
-# → opens the file; no need to type the rest of the name by hand
-</code></pre>
-<pre><code class="language-powershell"># In PowerShell the same Tab key works:
+# → opens the file; no need to type the rest of the name by hand</code></pre>
+
+<pre><code># In PowerShell the same Tab key works:
 cd ~/Doc&lt;Tab&gt;      # → ~/Documents/
-Get-Command pyth&lt;Tab&gt;   # → fills in the matching command name
-</code></pre>
+Get-Command pyth&lt;Tab&gt;   # → fills in the matching command name</code></pre>
+
 <blockquote>
 <p>💡
 If Tab does nothing, you may have typed a wrong starting letter — the shell only

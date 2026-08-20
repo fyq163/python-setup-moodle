@@ -153,6 +153,11 @@ pre { position: relative; }
 pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
 pre .prompt { color: #60A5FA; }
 pre .comment { color: #64748B; }
+/* Wrapper that holds the (scrolling) <pre> and the copy button. It is
+   relatively positioned and does NOT scroll, so the button stays pinned to
+   the top-right corner while the code scrolls horizontally inside <pre>. */
+.code-block { position: relative; margin: 1rem 0; }
+.code-block pre { margin: 0; }
 .copy-btn {
   position: absolute; top: .5rem; right: .5rem;
   font: inherit; font-size: 12px; line-height: 1;
@@ -160,7 +165,7 @@ pre .comment { color: #64748B; }
   border: 1px solid #334155; background: #1E293B; color: #CBD5E1;
   cursor: pointer; opacity: 0; transition: opacity .15s ease, background .15s ease;
 }
-pre:hover .copy-btn, .copy-btn:focus { opacity: 1; }
+.code-block:hover .copy-btn, .copy-btn:focus { opacity: 1; }
 .copy-btn:hover { background: #334155; color: #fff; }
 
 /* ---------- Tables ---------- */
@@ -313,6 +318,11 @@ html[data-theme="dark"] {
   .markdown blockquote.note-warning,
   .markdown blockquote.note-caution { background: #2C2410; }
   .markdown blockquote.note-important { background: #2C1414; }
+  /* Bold text inside callouts is near-black in light mode (dark text on a light
+     green background). In dark mode the callout background is dark green, so
+     keep the bold text light to stay readable and clearly separate from the
+     block's green. */
+  .markdown blockquote strong { color: #F8FAFC; }
   th { background: var(--bg-alt); color: #F8FAFC; }
   tr:hover td { background: var(--primary-soft); }
   .hero { background: radial-gradient(1200px 500px at 80% -10%, #0E2A1A 0%, transparent 60%),
@@ -332,6 +342,7 @@ html[data-theme="dark"] .markdown blockquote.note-tip { background: #0E2A1A; }
 html[data-theme="dark"] .markdown blockquote.note-warning,
 html[data-theme="dark"] .markdown blockquote.note-caution { background: #2C2410; }
 html[data-theme="dark"] .markdown blockquote.note-important { background: #2C1414; }
+html[data-theme="dark"] .markdown blockquote strong { color: #F8FAFC; }
 html[data-theme="dark"] th { background: var(--bg-alt); color: #F8FAFC; }
 html[data-theme="dark"] tr:hover td { background: var(--primary-soft); }
 html[data-theme="dark"] .hero { background: radial-gradient(1200px 500px at 80% -10%, #0E2A1A 0%, transparent 60%),
