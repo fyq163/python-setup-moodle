@@ -3,14 +3,13 @@ title: 3 · Installing Python
 tag: Required
 ---
 
-The detailed chapter. Three methods (conda / uv / standalone) × three platforms (macOS
+Three methods (conda / uv / standalone) × three platforms (macOS
 arm64, Windows amd64, Linux x86_64). **Pick one method** — we recommend **conda** for
 beginners. You only need Python installed once per machine.
 
 ## How to choose a version & architecture
 
-- **Version:** pick a recent stable release — **Python 3.12** or **3.13** are safe choices
-  in 2026. Not Python 2 (dead since 2020) and the very latest `.0` release if a package
+- **Version:** pick a recent stable release — **Python 3.14** are the desinated version of this course. Not Python 2 (dead since 2020) and the very latest `.0` release if a package
   you need hasn't caught up yet.
 - **Architecture** (your CPU type):
   - **macOS:** Apple Silicon Macs (M1/M2/M3/M4) → **arm64**. Intel Macs → **x86_64**.
@@ -79,7 +78,7 @@ python --version
 ```
 
 This gives you the following packages out of the box (no extra install needed):
-
+```
 | Package | Version |
 | --- | --- |
 | Python | 3.14.6 |
@@ -88,7 +87,7 @@ This gives you the following packages out of the box (no extra install needed):
 | PyArrow | 23.0.1 |
 | pytest | 9.0.3 |
 | JupyterLab | 4.5.9 |
-
+```
 💡 These six cover the whole course toolchain: **Python** is the language runtime; **NumPy**
 is the array/math foundation every numerical library builds on; **pandas** is the core
 tabular-data library; **PyArrow** provides efficient columnar data and pairs with pandas;
