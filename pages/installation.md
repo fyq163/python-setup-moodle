@@ -165,6 +165,74 @@ That `(base)` is a reminder of which environment your commands run in.
 > auto_activate_base false` to stop conda from auto-activating `base` every time you open a
 > terminal.
 
+## Course Requirements (A.1 – A.4)
+
+The bootcamp specifies the installation requirements below. They build on the **conda**
+method from Method A, so read that section first and treat this as the authoritative
+checklist.
+
+### A.1 Base Installation
+
+> 📝 Install **Anaconda Distribution 2026.07-1 (Python 3.14.6)** from
+> <https://www.anaconda.com/docs/getting-started/installation>.
+> **Do not independently upgrade** the packages that ship with Anaconda.
+>
+> On macOS, Anaconda 2026.07-1 requires an **Apple Silicon Mac (M1 or later)**; Intel Mac
+> users should contact the TA for an alternative setup.
+>
+> Anaconda already includes: **Python 3.14.6, NumPy 2.4.6, pandas 3.0.3, PyArrow 23.0.1,
+> pytest 9.0.3, and JupyterLab 4.5.9**.
+
+### A.2 The mffintech Environment
+
+> 📝 Do not install additional packages into Anaconda's `base` environment. Clone it and
+> install there:
+
+```bash
+conda create -n mffintech --clone base
+conda activate mffintech
+python -m pip install duckdb==1.5.4 polars==1.43.2 yfinance==1.5.2
+```
+
+> If anything goes wrong, the environment can be deleted and recreated without touching the
+> `base` installation. **Before every bootcamp session:** `conda activate mffintech`.
+
+> 💡 The command above uses `python -m pip install` as required by the bootcamp
+> specification. Earlier in Method A we showed the equivalent `conda install -c conda-forge …`
+> form — both install the same three packages, but the course requires the `pip` form above,
+> so use that if your TA checks your environment.
+
+### A.3 Version Summary
+
+| Component  | Version | Source   |
+| ---------- | ------- | -------- |
+| Python     | 3.14.6  | Anaconda |
+| NumPy      | 2.4.6   | Anaconda |
+| pandas     | 3.0.3   | Anaconda |
+| PyArrow    | 23.0.1  | Anaconda |
+| pytest     | 9.0.3   | Anaconda |
+| JupyterLab | 4.5.9   | Anaconda |
+| DuckDB     | 1.5.4   | pip      |
+| Polars     | 1.43.2  | pip      |
+| yfinance   | 1.5.2   | pip      |
+
+### A.4 Other Tools
+
+- **git** is independent of Python; install it separately if `git --version` does not work
+  in your terminal. (Anaconda bundles the *gitpython* library, which is **not** the `git`
+  command-line tool.)
+- **OpenCode and VS Code** are independent of the Python stack; see `day2-07-agents/opencode-se`
+  and the TA's installation guide.
+- **API key for the Day 2 afternoon:** provided by the programme; store it as an environment
+  variable — see `day2-07-agents/api-keys.md`.
+
+### OpenCode
+
+OpenCode is the AI coding agent used in the bootcamp. Install it from
+<https://opencode.ai/> and **connect it to your environment** — no command-line setup is
+needed here. See the TA's installation guide (`day2-07-agents/opencode-se`) for the
+connection steps.
+
 ## Method B · With uv (recommended)
 
 Best for everyday Python projects: one fast tool, local environments, minimal fuss.
