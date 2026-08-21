@@ -14,7 +14,7 @@ never blocked just because a tool failed.
 
 
 ## python version
-We use **CPython**, the official
+We use **CPython** 3.14, the official
 reference implementation of Python, rather than alternatives such as **PyPy**.
 PyPy is a different implementation with a JIT compiler that can run some programs
 much faster, but it is not the standard interpreter, may lag behind on new Python
@@ -24,5 +24,6 @@ features, and is rarely what courseware or libraries expect. CPython is what
 
 ## How to use this guide: 
 click a card below to jump to that chapter. Tags show
-whether a chapter is required or can be skipped.
-
+whether a chapter is required or can be skipped. You should **at least** see the 
+[Installation page](https://python-install.quantinvest.qzz.io/pages/installation.html)
+for required packages.

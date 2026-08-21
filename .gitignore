@@ -5,3 +5,4 @@ hku-logo-xs.png
 .vscode
 .idea
 assets/.DS_Store
+.playwright-cli/
