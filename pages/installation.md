@@ -12,7 +12,7 @@ beginners. You only need Python installed once per machine.
 - **Version:** pick a recent stable release — **Python 3.14** are the desinated version of this course. Not Python 2 (dead since 2020) and the very latest `.0` release if a package
   you need hasn't caught up yet.
 - **Architecture** (your CPU type):
-  - **macOS:** Apple Silicon Macs (M1/M2/M3/M4) → **arm64**. Intel Macs → **x86_64**.
+  - **macOS:** Apple Silicon Macs (M1/M2/M3/M4) → **arm64**. Intel Macs → **x86_64** (Models before and of A2251).
   - **Windows:** almost all modern PCs → **amd64** (also called x64).
   - **Linux:** most desktops/servers → **x86_64**; newer ARM boards → **aarch64**.
 > 📝 The guide below shows one standard installation. This course will teach using this
@@ -38,7 +38,7 @@ non-Python system dependencies (CUDA, R, …).
 2. Then **double click it to run installation**.
 
 ##### macOS
-
+   - **Apple Silicon (M1/M2/M3/M4)**, run:
    ```bash
    curl -O https://repo.anaconda.com/archive/Anaconda3-2026.07-1-MacOSX-arm64.sh
    bash ./Anaconda3-2026.07-1-MacOSX-arm64.sh
@@ -46,11 +46,17 @@ non-Python system dependencies (CUDA, R, …).
    > **Alternatively**, download the installer from the url and change directory to the location where it was downloaded, then paste it's path in the terminal and run it with `bash <installer.sh>`.
    > ⚠️ If you have an *Intel Mac*, see below for miniconda option, anaconda has stopped supporting Intel Macs.
 
+   - For Intel Mac, run:
+  ```bash
+  curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+  bash ./Miniconda3-latest-MacOSX-x86_64.sh
+  ```
 ##### Linux
 
    Please refer to https://www.anaconda.com/docs/getting-started/anaconda/install/linux-install for the latest instructions for installing Anaconda on Linux.
 
-- **Miniconda** — download the installer for your system from the official install docs:
+#### Miniconda
+  download the installer for your system from the official install docs:
   - **Windows:** [https://www.anaconda.com/docs/getting-started/miniconda/install/windows-cli-install](https://www.anaconda.com/docs/getting-started/miniconda/install/windows-cli-install)
   - **macOS:** [https://www.anaconda.com/docs/getting-started/miniconda/install/mac-cli-install](https://www.anaconda.com/docs/getting-started/miniconda/install/mac-cli-install)
   - **Linux:** [https://www.anaconda.com/docs/getting-started/miniconda/install/linux-install](https://www.anaconda.com/docs/getting-started/miniconda/install/linux-install)
@@ -59,10 +65,6 @@ non-Python system dependencies (CUDA, R, …).
   or "run conda init", you can leave the default; we explain `conda init` below. When it
   finishes, Miniconda is installed.
 
-  - For macOS Intel, run:
-  ```bash
-  curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
-  ```
 
   > 📝 After install, **close the terminal and open a new one** so the `conda` command is
   > available. Then verify with `conda --version`.
