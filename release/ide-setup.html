@@ -366,7 +366,63 @@ body[data-md="index.md"] #toc { display: none; }
 <main id="content" class="markdown">
 <p>Pick any editor and point it at the Python interpreter you created in Chapter 3. You
 can also use the terminal skills from Chapter 1 inside the editor's built-in terminal.</p>
-<h2 id="visual-studio-code-family-vs-code-cursor-codebuddy-trae">Visual Studio Code family (VS Code, Cursor, CodeBuddy, Trae…)</h2>
+<h2>GitHub Copilot — university subscription</h2>
+<p>GitHub Copilot is an AI pair-programmer that suggests code as you type. <strong>Students get it
+free</strong> (and many other developer tools) through the <a href="https://its.hku.hk/software/github-copilot/">GitHub Copilot - Information Technology Services - HKU</a></p>
+<h2>OpenCode and other terminal coding CLIs — Required</h2>
+<blockquote>
+<p>❗ OpenCode is <strong>compulsory</strong> for the bootcamp — you must install it.</p>
+</blockquote>
+<p>OpenCode is the AI coding agent used in the bootcamp. Install it from
+<a href="https://opencode.ai/">https://opencode.ai/</a> and <strong>connect it to your environment</strong> — no command-line setup is
+needed here. (It is independent of the Python stack.) We recommend installing through a
+package manager (Homebrew or npm): it manages the version and your shell <code>PATH</code> for you, so
+you don't have to download the binary and place it by hand.</p>
+<p>Install — pick the one that matches your setup:</p>
+<ul>
+<li>
+<p>macOS (Homebrew):
+<br />
+<pre><code>  brew install opencode</code></pre></p>
+</li>
+<li>
+<p>Any OS that already has Node.js (npm):
+<br />
+<pre><code>  npm install -g opencode</code></pre>
+</p>
+</li>
+</ul>
+<blockquote>
+<p>💡 opencode, kilo, mimo and similar run <strong>inside the terminal</strong> — everything from
+Chapter 1 (paths, <code>cd</code>, running scripts) still applies. Launch them in your project
+folder and they use whatever Python your shell currently has active.</p>
+</blockquote>
+<h3>The project directory</h3>
+<p>When you start OpenCode you give it a <strong>project directory</strong> — the folder you were standing
+in when you ran the command (e.g. <code>cd ./my-project &amp;&amp; opencode</code>). The agent can <strong>only see
+files inside that folder</strong> (and its sub-folders), nothing outside it. So always launch
+OpenCode from the project you are working on, not from your home directory.
+<img alt="an Opencode with highlighted project folder" src="https://pub-639e92bd227c4441a00a10db2a268512.r2.dev/image/GitHub-pages/python-install/opencode-project-dir.png" /></p>
+<h3>Slash commands</h3>
+<p>Type <code>/</code> in the chat box to open the command menu — these are <em>slash commands</em>. You don't
+need to memorise them; the <code>/</code> menu shows them as you type. Common ones:
+<code>/help</code> (list what's available), <code>/init</code> (create a project config), <code>/models</code> (switch the AI
+model), <code>/clear</code> (clear the conversation).
+<img alt="show slash command" src="https://pub-639e92bd227c4441a00a10db2a268512.r2.dev/image/GitHub-pages/python-install/opencode-slash-command.png" /></p>
+<h3>Adding skills &amp; reading more</h3>
+<p>OpenCode can be extended with <strong>skills</strong> (reusable instruction packs). Drop a skill folder
+into one of these locations:
+- your project (applies to this one project): <code>.opencode/skill/&lt;skill-name&gt;/</code> next to your code
+- your user profile (applies to every project): <code>~/.config/opencode/skill/&lt;skill-name&gt;/</code> on
+  macOS/Linux, or <code>%APPDATA%\opencode\skill\&lt;skill-name&gt;\</code> on Windows</p>
+<p>To see how a skill is written, read the official docs and the bundled <code>SKILL.md</code> examples.</p>
+<h3>LSP &amp; MCP</h3>
+<p>To make OpenCode actually understand your code (autocomplete, jump-to-definition) and to
+connect external tools:
+- <strong>LSP (language server):</strong> one-command install — see <a href="https://opencode.ai/docs/zh-cn/lsp/">https://opencode.ai/docs/zh-cn/lsp/</a>
+- <strong>MCP servers</strong> (connect other apps / databases): a simple install walkthrough is at
+  <a href="https://opencode.ai/docs/zh-cn/mcp-servers/">https://opencode.ai/docs/zh-cn/mcp-servers/</a></p>
+<h2>Visual Studio Code family (VS Code, Cursor, CodeBuddy, Trae…)</h2>
 <p>These editors share the same engine and the same <strong>Python extension</strong>, so the steps are
 identical:</p>
 <ol>
@@ -410,25 +466,5 @@ subscription, which students get free with the Student Pack above.</p>
 References: <a href="https://www.anaconda.com/docs/getting-started/working-with-conda/ides/pycharm">PyCharm + conda</a>,
 <a href="https://www.anaconda.com/docs/getting-started/working-with-conda/ides/python-path">Python path</a></li>
 </ol>
-<h2 id="other-popular-coding-clis">Other popular coding CLIs</h2>
-<p>A newer wave of editors runs <strong>inside the terminal</strong> — perfect if you liked Chapter 1:</p>
-<ul>
-<li><strong>opencode</strong> — an open agentic coding CLI.</li>
-<li><strong>kilo</strong> (within OpenCode) and <strong>mimo</strong> — terminal-based assistants.</li>
-</ul>
-<p>They are just editors with an AI chat bolted on; everything from Chapter 1 (paths, <code>cd</code>,
-running scripts) still applies. Launch them in your project folder and they use whatever
-Python your shell currently has active.</p>
-<h2 id="github-copilot-university-subscription">GitHub Copilot — university subscription</h2>
-<p>GitHub Copilot is an AI pair-programmer that suggests code as you type. <strong>Students get it
-free</strong> (and many other developer tools) through the <a href="https://its.hku.hk/software/github-copilot/">GitHub Copilot - Information Technology Services - HKU</a></p>
-</main>
-</div>
-</div>
-<nav class="pager"><a class="prev" href="installation.html"><span class="dir">← Previous</span><span class="ttl">3 · Installing Python</span></a><a class="next" href="recommended-reading.html"><span class="dir">→ Next</span><span class="ttl">5 · Recommended Reading</span></a></nav>
-<footer id="footer" class="site">
-<p>Python Setup Guide &middot; <a href="index.html">Back to home</a></p>
-<p>Content is a work in progress &mdash; see the project readme for status.</p>
-</footer>
 </body>
 </html>

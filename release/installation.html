@@ -526,7 +526,105 @@ so packages for different projects don't clash. Tip: run <code>conda config --se
 auto_activate_base false</code> to stop conda from auto-activating <code>base</code> every time you open a
 terminal.</p>
 </blockquote>
-<h2 id="method-b-with-uv-recommended">Method B · With uv (recommended)</h2>
+<h2>Course Requirements (A.1 – A.4)</h2>
+<p>The bootcamp specifies the installation requirements below. They build on the <strong>conda</strong>
+method from Method A, so read that section first and treat this as the authoritative
+checklist.</p>
+<h3>A.1 Base Installation</h3>
+<blockquote>
+<p>📝 Install <strong>Anaconda Distribution 2026.07-1 (Python 3.14.6)</strong> from
+<a href="https://www.anaconda.com/docs/getting-started/installation">https://www.anaconda.com/docs/getting-started/installation</a>.
+<strong>Do not independently upgrade</strong> the packages that ship with Anaconda.</p>
+<p>On macOS, Anaconda 2026.07-1 requires an <strong>Apple Silicon Mac (M1 or later)</strong>; Intel Mac
+users should contact the TA for an alternative setup.</p>
+<p>Anaconda already includes: <strong>Python 3.14.6, NumPy 2.4.6, pandas 3.0.3, PyArrow 23.0.1,
+pytest 9.0.3, and JupyterLab 4.5.9</strong>.</p>
+</blockquote>
+<h3>A.2 The mffintech Environment</h3>
+<blockquote>
+<p>📝 Do not install additional packages into Anaconda's <code>base</code> environment. Clone it and
+install there:</p>
+</blockquote>
+<pre><code>conda create -n mffintech --clone base
+conda activate mffintech
+python -m pip install duckdb==1.5.4 polars==1.43.2 yfinance==1.5.2</code></pre>
+
+<blockquote>
+<p>If anything goes wrong, the environment can be deleted and recreated without touching the
+<code>base</code> installation. <strong>Before every bootcamp session:</strong> <code>conda activate mffintech</code>.</p>
+<p>💡 The command above uses <code>python -m pip install</code> as required by the bootcamp
+specification. Earlier in Method A we showed the equivalent <code>conda install -c conda-forge …</code>
+form — both install the same three packages, but the course requires the <code>pip</code> form above,
+so use that if your TA checks your environment.</p>
+</blockquote>
+<h3>A.3 Version Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Version</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python</td>
+<td>3.14.6</td>
+<td>Anaconda</td>
+</tr>
+<tr>
+<td>NumPy</td>
+<td>2.4.6</td>
+<td>Anaconda</td>
+</tr>
+<tr>
+<td>pandas</td>
+<td>3.0.3</td>
+<td>Anaconda</td>
+</tr>
+<tr>
+<td>PyArrow</td>
+<td>23.0.1</td>
+<td>Anaconda</td>
+</tr>
+<tr>
+<td>pytest</td>
+<td>9.0.3</td>
+<td>Anaconda</td>
+</tr>
+<tr>
+<td>JupyterLab</td>
+<td>4.5.9</td>
+<td>Anaconda</td>
+</tr>
+<tr>
+<td>DuckDB</td>
+<td>1.5.4</td>
+<td>pip</td>
+</tr>
+<tr>
+<td>Polars</td>
+<td>1.43.2</td>
+<td>pip</td>
+</tr>
+<tr>
+<td>yfinance</td>
+<td>1.5.2</td>
+<td>pip</td>
+</tr>
+</tbody>
+</table>
+<h3>A.4 Other Tools</h3>
+<ul>
+<li><strong>git</strong> is independent of Python; install it separately if <code>git --version</code> does not work
+  in your terminal. (Anaconda bundles the <em>gitpython</em> library, which is <strong>not</strong> the <code>git</code>
+  command-line tool.)</li>
+<li><strong>VS Code / other editors</strong> are independent of the Python stack; the setup is covered in
+  Chapter 4 (Editors &amp; IDEs).</li>
+<li><strong>API key for the Day 2 afternoon:</strong> provided by the programme; store it as an environment
+  variable.</li>
+</ul>
+<h2>Method B · With uv (recommended)</h2>
 <p>Best for everyday Python projects: one fast tool, local environments, minimal fuss.</p>
 <ol>
 <li>Install uv. Open the uv website (docs.astral.sh/uv) in your browser, go to the
