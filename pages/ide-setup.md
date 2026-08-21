@@ -39,16 +39,17 @@ Install — pick the one that matches your setup:
 ### The project directory
 
 When you start OpenCode you give it a **project directory** — the folder you were standing
-in when you ran the command (e.g. `cd my-project && opencode`). The agent can **only see
+in when you ran the command (e.g. `cd ./my-project && opencode`). The agent can **only see
 files inside that folder** (and its sub-folders), nothing outside it. So always launch
 OpenCode from the project you are working on, not from your home directory.
-
+![an Opencode with highlighted project folder](https://pub-639e92bd227c4441a00a10db2a268512.r2.dev/image/GitHub-pages/python-install/opencode-project-dir.png)
 ### Slash commands
 
 Type `/` in the chat box to open the command menu — these are *slash commands*. You don't
 need to memorise them; the `/` menu shows them as you type. Common ones:
 `/help` (list what's available), `/init` (create a project config), `/models` (switch the AI
 model), `/clear` (clear the conversation).
+![show slash command](https://pub-639e92bd227c4441a00a10db2a268512.r2.dev/image/GitHub-pages/python-install/opencode-slash-command.png)
 
 ### Adding skills & reading more
 
