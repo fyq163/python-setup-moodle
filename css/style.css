@@ -57,11 +57,20 @@ code {
   padding: .12em .42em;
   border-radius: 6px;
   font-size: .9em;
-  /* Long unbreakable tokens (e.g. Windows paths) must wrap on narrow/mobile
-     screens instead of overflowing the paragraph. */
-  overflow-wrap: break-word;
-  word-break: break-word;
+  /* Long unbreakable tokens (e.g. Windows paths like
+     C:\Users\<you>\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1)
+     must wrap on narrow/mobile screens instead of overflowing the paragraph.
+     `anywhere` is the standard, aggressive value: it breaks at any character
+     when the token is wider than the line. (The older `break-word` only fires
+     when the *entire* word cannot fit on a line by itself, which still fails
+     for very long paths inside list items on narrow viewports.) */
+  overflow-wrap: anywhere;
+  word-break: break-all;
 }
+/* `<pre>` already scrolls horizontally (overflow-x: auto) and preserves
+   whitespace, so the aggressive wrapping above must not apply to code
+   *inside* pre blocks — there we want scroll, not wrap. */
+pre code { overflow-wrap: normal; word-break: normal; }
 
 /* ---------- Top navigation ---------- */
 .topnav {
