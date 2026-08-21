@@ -2,371 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>2 · Virtual Environments</title>
-<style>/* ============================================================
-   Python Setup Guide — shared stylesheet
-   Markdown-driven static site. Chrome (nav/sidebar/pager) is built
-   by assets/js/render.js; the article body comes from .md files.
-   Design tokens follow TDesign's palette.
-   ============================================================ */
-
-:root {
-  --primary: #005A33;
-  --primary-dark: #003D22;
-  --primary-soft: #E7F0EA;
-  --bg: #FFFFFF;
-  --bg-alt: #F5F8FF;
-  --surface: #FFFFFF;
-  --text: #1F2937;
-  --text-muted: #6B7280;
-  --border: #E5E7EB;
-  --code-bg: #0F172A;
-  --code-text: #E2E8F0;
-  --ok: #16A34A;
-  --warn: #D97706;
-  --danger: #DC2626;
-  --radius: 12px;
-  --radius-sm: 8px;
-  --maxw: 1120px;
-  --nav-h: 62px;
-  --shadow: 0 1px 2px rgba(15,23,42,.04), 0 8px 24px rgba(15,23,42,.06);
-  --shadow-lg: 0 12px 40px rgba(0,90,51,.18);
-}
-
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: var(--text);
-  background: var(--bg-alt);
-  font-size: 16px;
-  line-height: 1.72;
-  -webkit-font-smoothing: antialiased;
-}
-a { color: var(--primary); text-decoration: none; transition: color .15s ease; }
-a:hover { color: var(--primary-dark); }
-h1, h2, h3, h4 { color: #111827; line-height: 1.3; font-weight: 700; }
-/* Keep anchored headings clear of the sticky top navigation when jumped to. */
-h1, h2, h3 { scroll-margin-top: calc(var(--nav-h) + 1rem); }
-h2 { font-size: 24px; margin-top: 2.2rem; }
-h3 { font-size: 19px; margin-top: 1.6rem; }
-h4 { font-size: 16px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
-p { margin: .8rem 0; }
-
-code {
-  font-family: 'SFMono-Regular', ui-monospace, Menlo, Consolas, 'Liberation Mono', monospace;
-  background: var(--primary-soft);
-  color: var(--primary-dark);
-  padding: .12em .42em;
-  border-radius: 6px;
-  font-size: .9em;
-}
-
-/* ---------- Top navigation ---------- */
-.topnav {
-  position: sticky; top: 0; z-index: 50;
-  height: var(--nav-h); display: flex; align-items: center; gap: 1.2rem;
-  padding: 0 clamp(1rem, 4vw, 2.4rem);
-  background: rgba(255,255,255,.85);
-  backdrop-filter: saturate(160%) blur(10px);
-  border-bottom: 1px solid var(--border);
-}
-.topnav .brand {
-  font-weight: 800; font-size: 17px; color: #111827;
-  display: flex; align-items: center; gap: .55rem;
-}
-.topnav .brand .dot {
-  width: 12px; height: 12px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), #4ADE80);
-  box-shadow: 0 0 0 4px var(--primary-soft);
-}
-.topnav .navlinks { margin-left: auto; display: flex; gap: .4rem; flex-wrap: wrap; }
-.topnav .navlinks a {
-  padding: .4rem .8rem; border-radius: 999px;
-  color: var(--text-muted); font-size: 14px; font-weight: 600;
-}
-.topnav .navlinks a:hover { background: var(--primary-soft); color: var(--primary-dark); }
-
-/* ---------- Layout ---------- */
-.container { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.4rem); }
-.layout {
-  max-width: var(--maxw); margin: 0 auto;
-  padding: 2rem clamp(1rem, 4vw, 2.4rem) 4rem;
-  display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 2.4rem; align-items: start;
-}
-.article { min-width: 0; }
-
-/* ---------- Sidebar TOC ("In this chapter") ---------- */
-.sidebar {
-  position: sticky; top: calc(var(--nav-h) + 1.5rem); align-self: start;
-  /* Never let a long TOC push the footer off-screen or get clipped: cap its
-     height to the viewport (minus the nav + some breathing room) and scroll. */
-  max-height: calc(100vh - var(--nav-h) - 3rem);
-  overflow-y: auto;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1.1rem 1.2rem; box-shadow: var(--shadow);
-}
-.sidebar h4 {
-  margin: 0 0 .8rem; font-size: 13px; text-transform: uppercase; letter-spacing: .06em;
-  color: var(--primary-dark); border-bottom: 1px solid var(--border); padding-bottom: .5rem;
-}
-.sidebar ol { margin: 0; padding-left: 0; list-style: none; counter-reset: toc-major; }
-.sidebar li { margin: .3rem 0; position: relative; }
-/* H2 = top-level entry (1, 2, 3…). Increment the major counter and reset the
-   minor one; render just the major number. */
-.sidebar li.toc-h2 {
-  counter-increment: toc-major; counter-reset: toc-minor;
-  padding-left: 1.8rem;
-}
-.sidebar li.toc-h2 > a::before {
-  content: counter(toc-major); position: absolute; left: 0;
-  min-width: 1.4rem; color: var(--primary); font-weight: 700;
-  font-variant-numeric: tabular-nums; font-size: 12.5px;
-}
-/* H3 = sub-entry (1.1, 1.2, 2.1…). Increment the minor counter and render the
-   combined "major.minor" number; indent a little further. */
-.sidebar li.toc-h3 {
-  counter-increment: toc-minor; padding-left: 2.8rem;
-}
-.sidebar li.toc-h3 > a::before {
-  content: counter(toc-major) "." counter(toc-minor); position: absolute; left: 0;
-  min-width: 2.2rem; color: var(--primary); font-weight: 700;
-  font-variant-numeric: tabular-nums; font-size: 12.5px;
-}
-.sidebar a { color: var(--text-muted); font-size: 14.5px; display: block; }
-.sidebar a:hover { color: var(--primary); }
-
-/* ---------- Page header (tag + title) ---------- */
-.pagehead { margin-bottom: .4rem; }
-.pagehead h1 { margin: .2rem 0 .8rem; font-size: 30px; }
-
-/* ---------- Markdown body ---------- */
-.markdown h2 { border-bottom: 1px solid var(--border); padding-bottom: .3rem; }
-.markdown h3 { margin-top: 1.6rem; }
-.markdown ul, .markdown ol { padding-left: 1.4rem; }
-.markdown li { margin: .35rem 0; }
-.markdown img { max-width: 100%; height: auto; }
-
-/* ---------- Code blocks ---------- */
-pre {
-  background: var(--code-bg); color: var(--code-text);
-  padding: 1.1rem 1.2rem; border-radius: var(--radius-sm);
-  overflow-x: auto; font-size: 14px; line-height: 1.6; border: 1px solid #1E293B;
-}
-pre { position: relative; }
-pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
-pre .prompt { color: #60A5FA; }
-pre .comment { color: #64748B; }
-.copy-btn {
-  position: absolute; top: .5rem; right: .5rem;
-  font: inherit; font-size: 12px; line-height: 1;
-  padding: .35rem .6rem; border-radius: var(--radius-sm);
-  border: 1px solid #334155; background: #1E293B; color: #CBD5E1;
-  cursor: pointer; opacity: 0; transition: opacity .15s ease, background .15s ease;
-}
-pre:hover .copy-btn, .copy-btn:focus { opacity: 1; }
-.copy-btn:hover { background: #334155; color: #fff; }
-
-/* ---------- Tables ---------- */
-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 14.5px; }
-th, td { text-align: left; padding: .7rem .9rem; border-bottom: 1px solid var(--border); }
-th { background: var(--bg-alt); color: #111827; font-weight: 700; }
-tr:hover td { background: var(--primary-soft); }
-
-/* ---------- Placeholder figure ---------- */
-figure.screenshot {
-  margin: 1.4rem 0; border: 1px dashed var(--border);
-  border-radius: var(--radius); overflow: hidden; background: var(--bg-alt);
-}
-figure.screenshot img { display: block; width: 100%; height: auto; background: #E2E8F0; }
-figure.screenshot img.img-failed { height: 220px; object-fit: contain; filter: grayscale(1); }
-figure.screenshot figcaption {
-  padding: .7rem 1rem; font-size: 13.5px; color: var(--text-muted);
-  border-top: 1px dashed var(--border); background: #FCFCFD;
-}
-figure.screenshot figcaption::before { content: "▢ "; color: var(--warn); font-weight: 700; }
-
-/* ---------- Callouts (GitHub-style alerts) ---------- */
-.markdown blockquote {
-  border-left: 4px solid var(--primary); background: var(--primary-soft);
-  padding: .8rem 1.1rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 1.1rem 0; font-size: 14.5px;
-}
-.markdown blockquote p { margin: .4rem 0; }
-.markdown blockquote.note-tip { border-color: var(--ok); background: #F0FDF4; }
-.markdown blockquote.note-warning,
-.markdown blockquote.note-caution { border-color: var(--warn); background: #FFFBEB; }
-.markdown blockquote.note-important { border-color: var(--danger); background: #FEF2F2; }
-.markdown blockquote strong { color: #111827; }
-
-/* ---------- Tags (chapter chips) ---------- */
-.tag {
-  display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .03em;
-  padding: .15rem .6rem; border-radius: 999px; margin-bottom: .5rem;
-}
-.tag-optional { background: #FEF3C7; color: var(--warn); }
-.tag-skip { background: #E0E7FF; color: var(--primary-dark); }
-.tag-required { background: #DCFCE7; color: var(--ok); }
-/* Fallback styling for <t-tag> before TDesign upgrades (or if the CDN is blocked). */
-t-tag:not(:defined) {
-  display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .03em;
-  padding: .15rem .6rem; border-radius: 999px; margin-bottom: .5rem;
-  background: #E5E7EB; color: var(--text-muted);
-}
-t-tag:not(:defined)[theme="success"] { background: #DCFCE7; color: var(--ok); }
-t-tag:not(:defined)[theme="warning"] { background: #FEF3C7; color: var(--warn); }
-t-tag:not(:defined)[theme="primary"] { background: #E0E7FF; color: var(--primary-dark); }
-
-/* ---------- Prev / next nav ---------- */
-.pager {
-  display: flex; justify-content: space-between; gap: 1rem; margin: 2.5rem auto 0;
-  max-width: var(--maxw); padding: 0 clamp(1rem, 4vw, 2.4rem); flex-wrap: wrap;
-}
-.pager a {
-  flex: 1 1 200px; border: 1px solid var(--border); border-radius: var(--radius);
-  padding: .9rem 1.1rem; background: var(--surface); box-shadow: var(--shadow);
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-.pager a:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-.pager .dir { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
-.pager .ttl { font-weight: 700; color: #111827; }
-
-/* ---------- Hero (index) ---------- */
-.hero {
-  background: radial-gradient(1200px 500px at 80% -10%, #D7E9DE 0%, transparent 60%),
-              linear-gradient(135deg, #005A33 0%, #003D22 100%);
-  color: #fff; padding: 4rem clamp(1rem, 4vw, 2.4rem) 3.4rem;
-}
-.hero .container { max-width: var(--maxw); }
-.hero .eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: 13px; font-weight: 700; opacity: .85; }
-.hero h1 { color: #fff; font-size: clamp(30px, 5vw, 46px); margin: .5rem 0 .8rem; }
-.hero p.lead { font-size: 18px; max-width: 720px; opacity: .95; }
-.hero .pill {
-  display: inline-block; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.3);
-  padding: .3rem .8rem; border-radius: 999px; font-size: 13px; font-weight: 600; margin: .3rem .4rem .3rem 0;
-}
-
-/* ---------- TOC index table ---------- */
-.toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.1rem; margin-top: 1.6rem; }
-.toc-item {
-  display: block; background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1.2rem 1.3rem; box-shadow: var(--shadow);
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-.toc-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: #A8D5B8; }
-.toc-item .num {
-  display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px;
-  background: var(--primary-soft); color: var(--primary-dark); font-weight: 800; font-size: 14px; margin-bottom: .6rem;
-}
-.toc-item h3 { margin: 0 0 .3rem; font-size: 17px; }
-.toc-item p { margin: 0; font-size: 13.5px; color: var(--text-muted); }
-.toc-item .meta { margin-top: .7rem; font-size: 12px; }
-
-/* ---------- Footer ---------- */
-footer.site {
-  border-top: 1px solid var(--border); background: var(--surface); color: var(--text-muted);
-  font-size: 13.5px; padding: 2rem clamp(1rem, 4vw, 2.4rem); text-align: center;
-}
-footer.site a { color: var(--primary); }
-
-/* ---------- Responsive ---------- */
-@media (max-width: 860px) {
-  .layout { grid-template-columns: 1fr; }
-  .sidebar { position: static; top: auto; }
-  .topnav .navlinks { display: none; }
-}
-
-/* ---------- Dark theme (night mode) ----------
-   Triggered automatically when the OS requests dark color scheme, or when
-   <html data-theme="dark"> is set by assets/js/render.js. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0B1120;
-    --bg-alt: #0F172A;
-    --surface: #111827;
-    --text: #E2E8F0;
-    --text-muted: #94A3B8;
-    --border: #1E293B;
-    --primary-soft: #0E2A1A;
-    --primary-dark: #4ADE80;
-    --code-bg: #0B1120;
-    --code-text: #E2E8F0;
-    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
-    --shadow-lg: 0 12px 40px rgba(0,90,51,.35);
-  }
-}
-html[data-theme="dark"] {
-  --bg: #0B1120;
-  --bg-alt: #0F172A;
-  --surface: #111827;
-  --text: #E2E8F0;
-  --text-muted: #94A3B8;
-  --border: #1E293B;
-  --primary-soft: #0E2A1A;
-  --primary-dark: #4ADE80;
-  --code-bg: #0B1120;
-  --code-text: #E2E8F0;
-  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
-  --shadow-lg: 0 12px 40px rgba(0,90,51,.35);
-}
-@media (prefers-color-scheme: dark) {
-  body { background: var(--bg-alt); }
-  .topnav { background: rgba(17,24,39,.85); border-bottom-color: var(--border); }
-  .topnav .brand { color: #F8FAFC; }
-  .markdown blockquote { background: var(--primary-soft); }
-  .markdown blockquote.note-tip { background: #0E2A1A; }
-  .markdown blockquote.note-warning,
-  .markdown blockquote.note-caution { background: #2C2410; }
-  .markdown blockquote.note-important { background: #2C1414; }
-  th { background: var(--bg-alt); color: #F8FAFC; }
-  tr:hover td { background: var(--primary-soft); }
-  .hero { background: radial-gradient(1200px 500px at 80% -10%, #0E2A1A 0%, transparent 60%),
-                      linear-gradient(135deg, #003D22 0%, #001A0F 100%); }
-  figure.screenshot { background: var(--bg-alt); }
-  figure.screenshot figcaption { background: #0F172A; }
-  t-tag:not(:defined) { background: #1E293B; color: var(--text-muted); }
-  t-tag:not(:defined)[theme="success"] { background: #0E2A1A; color: #4ADE80; }
-  t-tag:not(:defined)[theme="warning"] { background: #2C2410; color: #FBBF24; }
-  t-tag:not(:defined)[theme="primary"] { background: #0E2A1A; color: #4ADE80; }
-}
-html[data-theme="dark"] body { background: var(--bg-alt); }
-html[data-theme="dark"] .topnav { background: rgba(17,24,39,.85); border-bottom-color: var(--border); }
-html[data-theme="dark"] .topnav .brand { color: #F8FAFC; }
-html[data-theme="dark"] .markdown blockquote { background: var(--primary-soft); }
-html[data-theme="dark"] .markdown blockquote.note-tip { background: #0E2A1A; }
-html[data-theme="dark"] .markdown blockquote.note-warning,
-html[data-theme="dark"] .markdown blockquote.note-caution { background: #2C2410; }
-html[data-theme="dark"] .markdown blockquote.note-important { background: #2C1414; }
-html[data-theme="dark"] th { background: var(--bg-alt); color: #F8FAFC; }
-html[data-theme="dark"] tr:hover td { background: var(--primary-soft); }
-html[data-theme="dark"] .hero { background: radial-gradient(1200px 500px at 80% -10%, #0E2A1A 0%, transparent 60%),
-                      linear-gradient(135deg, #003D22 0%, #001A0F 100%); }
-html[data-theme="dark"] figure.screenshot { background: var(--bg-alt); }
-html[data-theme="dark"] figure.screenshot figcaption { background: #0F172A; }
-html[data-theme="dark"] t-tag:not(:defined) { background: #1E293B; color: var(--text-muted); }
-html[data-theme="dark"] t-tag:not(:defined)[theme="success"] { background: #0E2A1A; color: #4ADE80; }
-html[data-theme="dark"] t-tag:not(:defined)[theme="warning"] { background: #2C2410; color: #FBBF24; }
-html[data-theme="dark"] t-tag:not(:defined)[theme="primary"] { background: #0E2A1A; color: #4ADE80; }
-
-/* ---------- Index page: hide the auto-generated #toc list ----------
-   The #toc element is populated by buildToc in render.js as an <ol>
-   ("1. python version / 2. Why learn this..."). On the index page we keep
-   the markdown-rendered ## headings (inside #content) visible but hide this
-   injected list. Chapter pages render their TOC via .sidebar, unaffected. */
-body[data-md="index.md"] #toc { display: none; }
-</style>
 </head>
-<body data-md="virtual-environment.md">
-<header id="topnav" class="topnav"><a class="brand" href="index.html"><span class="dot"></span> Python Setup Guide</a><nav class="navlinks"><a href="unix-basics.html">Basic Unix-like Systems</a><a href="virtual-environment.html">Virtual Environments</a><a href="installation.html">Installing Python</a><a href="ide-setup.html">Code Editors & IDEs</a><a href="recommended-reading.html">Recommended Reading</a></nav></header>
-<div class="layout">
-<aside class="sidebar"><h4>In this chapter</h4><nav id="toc"><ol><li class="toc-h2"><a href="#why-you-need-a-virtual-environment">Why you need a virtual environment</a></li><li class="toc-h2"><a href="#conda-anaconda-miniconda">conda / Anaconda / Miniconda</a></li><li class="toc-h2"><a href="#channels-conda-forge-and-others">Channels: conda-forge and others</a></li><li class="toc-h2"><a href="#uv">uv</a></li><li class="toc-h2"><a href="#locking-amp-recording-dependencies-uv-lock-and-requirementstxt">Locking &amp;amp; recording dependencies: uv lock and requirements.txt</a></li><li class="toc-h3"><a href="#requirementstxt-the-classic-pip-style-list">requirements.txt (the classic, pip-style list)</a></li><li class="toc-h3"><a href="#uv-lock-the-modern-exact-solution">uv lock (the modern, exact solution)</a></li><li class="toc-h2"><a href="#conda-vs-uv-global-vs-local">conda vs uv: global vs local</a></li></ol></nav></aside>
-<div class="article">
-<div id="pagehead" class="pagehead"><span class="tag tag-optional">Optional</span><h1 id="top">2 · Virtual Environments</h1></div>
-<main id="content" class="markdown">
+<body>
 <p>A short, non-compulsory concept chapter. Understanding this now saves real pain later, when
 two projects need <em>different</em> versions of the same package.</p>
-<h2 id="why-you-need-a-virtual-environment">Why you need a virtual environment</h2>
+<h2>Why you need a virtual environment</h2>
 <p>A Python <strong>environment</strong> is a private, isolated copy of the interpreter plus its installed
 packages. Without one, every package you install lands in a single global location, and
 versions collide:</p>
@@ -383,7 +24,7 @@ never step on each other — and never touch the system Python.</p>
 On macOS/Linux, <code>/usr/bin/python3</code> is managed by the system. Installing packages into it
 with <code>sudo pip install …</code> can break OS tools. <strong>Always work inside a project environment.</strong></p>
 </blockquote>
-<h2 id="conda-anaconda-miniconda">conda / Anaconda / Miniconda</h2>
+<h2>conda / Anaconda / Miniconda</h2>
 <p><strong>conda</strong> is an environment manager especially popular in data science. The naming is
 confusing, so here is the split. There are two conda <em>distributions</em>:</p>
 <ul>
@@ -443,25 +84,25 @@ differs.</p>
 </blockquote>
 <p>Unlike uv/pip, conda can also install <strong>non-Python</strong> dependencies (e.g. CUDA, R), which is
 why many scientists like it.</p>
-<pre><code class="language-bash">conda create --name py312 python=3.12   # create a named environment
-conda activate py312                     # switch into it
-</code></pre>
-<h2 id="channels-conda-forge-and-others">Channels: conda-forge and others</h2>
+<pre><code>conda create --name py312 python=3.12   # create a named environment
+conda activate py312                     # switch into it</code></pre>
+
+<h2>Channels: conda-forge and others</h2>
 <p>A <strong>channel</strong> is a repository conda downloads packages from. The two you will meet:</p>
 <ul>
 <li><code>defaults</code> — Anaconda's official, curated channel.</li>
 <li><code>conda-forge</code> — a community-run channel with broader, faster-updated packages.</li>
 </ul>
 <p>We recommend preferring conda-forge:</p>
-<pre><code class="language-bash">conda create -n py312 python=3.12 -c conda-forge
-</code></pre>
+<pre><code>conda create -n py312 python=3.12 -c conda-forge</code></pre>
+
 <p>This differs from <strong>PyPI</strong> (the Python Package Index), which is what <code>pip</code> and <code>uv</code> use.
 conda packages and PyPI packages are not always interchangeable. <strong>Inside a conda
 environment, prefer <code>conda install</code></strong> over <code>pip</code>: packages installed with <code>pip</code> live outside
 conda's view, so conda may fail to see or manage them, and dependency conflicts are easier to
 miss. Use <code>pip</code> only in special cases (a package exists only on PyPI) — which is rare for
 this course.</p>
-<h2 id="uv">uv</h2>
+<h2>uv</h2>
 <p><strong><a href="https://docs.astral.sh/uv/">uv</a></strong> is a modern, extremely fast Python package and
 environment manager written in Rust. It replaces <code>pip</code>, <code>virtualenv</code>, and parts of
 <code>conda</code>. We recommend it for everyday Python projects because:</p>
@@ -470,48 +111,48 @@ environment manager written in Rust. It replaces <code>pip</code>, <code>virtual
 <li>It is 10–100× faster than <code>pip</code>.</li>
 <li>Environments are created in a local <code>.venv</code> folder — no global state to manage.</li>
 </ul>
-<pre><code class="language-bash">uv init myproject      # create a new project with a .venv
+<pre><code>uv init myproject      # create a new project with a .venv
 cd myproject
 uv pip install pandas  # install a package into this project's env
-uv run main.py         # run a script using this project's Python
-</code></pre>
+uv run main.py         # run a script using this project's Python</code></pre>
+
 <p>💡 <strong>Second way — install from a <code>requirements.txt</code>.</strong> Instead of installing packages one by
 one, list them all in a <code>requirements.txt</code> (format below) and install in one go:</p>
-<pre><code class="language-bash">uv pip install -r requirements.txt
-</code></pre>
+<pre><code>uv pip install -r requirements.txt</code></pre>
+
 <p>Run this from inside the project folder (after <code>cd myproject</code>) so the packages land in
 <code>myproject/.venv</code> — not in a stray <code>~/.venv</code> in your home directory.</p>
-<h2 id="locking-amp-recording-dependencies-uv-lock-and-requirementstxt">Locking &amp; recording dependencies: <code>uv lock</code> and <code>requirements.txt</code></h2>
+<h2>Locking &amp; recording dependencies: <code>uv lock</code> and <code>requirements.txt</code></h2>
 <p>Installing packages is only half the story. To make your project <strong>reproducible</strong> —
 so someone else (or future you) can rebuild the exact same environment — you record
 what you installed.</p>
-<h3 id="requirementstxt-the-classic-pip-style-list"><code>requirements.txt</code> (the classic, pip-style list)</h3>
+<h3><code>requirements.txt</code> (the classic, pip-style list)</h3>
 <p>A plain text file listing every package (and version) your project needs:</p>
-<pre><code class="language-text">pandas==2.2.2
+<pre><code>pandas==2.2.2
 numpy&gt;=1.26.0
-requests
-</code></pre>
+requests</code></pre>
+
 <ul>
 <li>Generate it from your current env with pip/uv:</li>
 </ul>
-<pre><code class="language-bash">uv pip freeze &gt; requirements.txt     # uv
-pip freeze    &gt; requirements.txt     # plain pip
-</code></pre>
+<pre><code>uv pip freeze &gt; requirements.txt     # uv
+pip freeze    &gt; requirements.txt     # plain pip</code></pre>
+
 <ul>
 <li>Rebuild an env from it on another machine:</li>
 </ul>
-<pre><code class="language-bash">uv pip install -r requirements.txt
-</code></pre>
+<pre><code>uv pip install -r requirements.txt</code></pre>
+
 <p>The catch: <code>requirements.txt</code> only pins <em>top-level</em> packages. If <code>pandas</code> silently
 pulls in a specific <code>numpy</code>, that sub-dependency version is <strong>not fixed</strong> — two people
 can end up with different environments.</p>
-<h3 id="uv-lock-the-modern-exact-solution"><code>uv lock</code> (the modern, exact solution)</h3>
+<h3><code>uv lock</code> (the modern, exact solution)</h3>
 <p><code>uv</code> goes further with a <strong>lockfile</strong> — <code>uv.lock</code> — that pins <strong>every</strong> package,
 including all transitive dependencies, to exact versions and hashes:</p>
-<pre><code class="language-bash">uv add pandas          # adds pandas AND writes/updates uv.lock + pyproject.toml
+<pre><code>uv add pandas          # adds pandas AND writes/updates uv.lock + pyproject.toml
 uv lock                # (re)resolve and write uv.lock without installing
-uv sync                # install exactly what uv.lock specifies
-</code></pre>
+uv sync                # install exactly what uv.lock specifies</code></pre>
+
 <p><code>uv.lock</code> guarantees that everyone who runs <code>uv sync</code> gets a byte-for-byte identical
 set of packages. Think of it as <code>requirements.txt</code> on steroids.</p>
 <table>
@@ -552,7 +193,7 @@ matters (a real app, a paper's analysis), switch to <code>uv.lock</code> so resu
 reproducible. Either way, <strong>keep the file alongside your project</strong> so the environment
 travels with your code.</p>
 </blockquote>
-<h2 id="conda-vs-uv-global-vs-local"><code>conda</code> vs <code>uv</code>: global vs local</h2>
+<h2><code>conda</code> vs <code>uv</code>: global vs local</h2>
 <p>A quick comparison to help you choose.</p>
 <table>
 <thead>
@@ -603,13 +244,5 @@ the full Anaconda distribution pre-installed. For everyday Python projects outsi
 course, uv is a great fast alternative: create one <code>.venv</code> per project and use <code>uv run</code>
 so you rarely have to activate manually.</p>
 </blockquote>
-</main>
-</div>
-</div>
-<nav class="pager"><a class="prev" href="unix-basics.html"><span class="dir">← Previous</span><span class="ttl">1 · Basic Unix-like Systems</span></a><a class="next" href="installation.html"><span class="dir">→ Next</span><span class="ttl">3 · Installing Python</span></a></nav>
-<footer id="footer" class="site">
-<p>Python Setup Guide &middot; <a href="index.html">Back to home</a></p>
-<p>Content is a work in progress &mdash; see the project readme for status.</p>
-</footer>
 </body>
 </html>

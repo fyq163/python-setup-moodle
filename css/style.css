@@ -14,6 +14,7 @@
   --surface: #FFFFFF;
   --text: #1F2937;
   --text-muted: #6B7280;
+  --heading: #111827;            /* heading colour: black in light mode, white in dark */
   --border: #E5E7EB;
   --code-bg: #0F172A;
   --code-text: #E2E8F0;
@@ -41,7 +42,7 @@ body {
 }
 a { color: var(--primary); text-decoration: none; transition: color .15s ease; }
 a:hover { color: var(--primary-dark); }
-h1, h2, h3, h4 { color: #111827; line-height: 1.3; font-weight: 700; }
+h1, h2, h3, h4 { color: var(--heading); line-height: 1.3; font-weight: 700; }
 /* Keep anchored headings clear of the sticky top navigation when jumped to. */
 h1, h2, h3 { scroll-margin-top: calc(var(--nav-h) + 1rem); }
 h2 { font-size: 24px; margin-top: 2.2rem; }
@@ -56,7 +57,20 @@ code {
   padding: .12em .42em;
   border-radius: 6px;
   font-size: .9em;
+  /* Long unbreakable tokens (e.g. Windows paths like
+     C:\Users\<you>\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1)
+     must wrap on narrow/mobile screens instead of overflowing the paragraph.
+     `anywhere` is the standard, aggressive value: it breaks at any character
+     when the token is wider than the line. (The older `break-word` only fires
+     when the *entire* word cannot fit on a line by itself, which still fails
+     for very long paths inside list items on narrow viewports.) */
+  overflow-wrap: anywhere;
+  word-break: break-all;
 }
+/* `<pre>` already scrolls horizontally (overflow-x: auto) and preserves
+   whitespace, so the aggressive wrapping above must not apply to code
+   *inside* pre blocks — there we want scroll, not wrap. */
+pre code { overflow-wrap: normal; word-break: normal; }
 
 /* ---------- Top navigation ---------- */
 .topnav {
@@ -153,6 +167,11 @@ pre { position: relative; }
 pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
 pre .prompt { color: #60A5FA; }
 pre .comment { color: #64748B; }
+/* Wrapper that holds the (scrolling) <pre> and the copy button. It is
+   relatively positioned and does NOT scroll, so the button stays pinned to
+   the top-right corner while the code scrolls horizontally inside <pre>. */
+.code-block { position: relative; margin: 1rem 0; }
+.code-block pre { margin: 0; }
 .copy-btn {
   position: absolute; top: .5rem; right: .5rem;
   font: inherit; font-size: 12px; line-height: 1;
@@ -160,7 +179,7 @@ pre .comment { color: #64748B; }
   border: 1px solid #334155; background: #1E293B; color: #CBD5E1;
   cursor: pointer; opacity: 0; transition: opacity .15s ease, background .15s ease;
 }
-pre:hover .copy-btn, .copy-btn:focus { opacity: 1; }
+.code-block:hover .copy-btn, .copy-btn:focus { opacity: 1; }
 .copy-btn:hover { background: #334155; color: #fff; }
 
 /* ---------- Tables ---------- */
@@ -288,6 +307,7 @@ footer.site a { color: var(--primary); }
     --code-text: #E2E8F0;
     --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
     --shadow-lg: 0 12px 40px rgba(0,90,51,.35);
+    --heading: #F8FAFC;
   }
 }
 html[data-theme="dark"] {
@@ -302,10 +322,15 @@ html[data-theme="dark"] {
   --code-bg: #0B1120;
   --code-text: #E2E8F0;
   --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
-  --shadow-lg: 0 12px 40px rgba(0,90,51,.35);
+    --shadow-lg: 0 12px 40px rgba(0,90,51,.35);
+    --heading: #F8FAFC;
 }
 @media (prefers-color-scheme: dark) {
   body { background: var(--bg-alt); }
+  /* Links use the dark-green --primary in light mode, which is near-invisible on
+     the dark background — switch to the bright --primary-dark in dark mode. */
+  a { color: var(--primary-dark); }
+  .sidebar a:hover { color: var(--primary-dark); }
   .topnav { background: rgba(17,24,39,.85); border-bottom-color: var(--border); }
   .topnav .brand { color: #F8FAFC; }
   .markdown blockquote { background: var(--primary-soft); }
@@ -313,6 +338,11 @@ html[data-theme="dark"] {
   .markdown blockquote.note-warning,
   .markdown blockquote.note-caution { background: #2C2410; }
   .markdown blockquote.note-important { background: #2C1414; }
+  /* Bold text inside callouts is near-black in light mode (dark text on a light
+     green background). In dark mode the callout background is dark green, so
+     keep the bold text light to stay readable and clearly separate from the
+     block's green. */
+  .markdown blockquote strong { color: #F8FAFC; }
   th { background: var(--bg-alt); color: #F8FAFC; }
   tr:hover td { background: var(--primary-soft); }
   .hero { background: radial-gradient(1200px 500px at 80% -10%, #0E2A1A 0%, transparent 60%),
@@ -325,6 +355,8 @@ html[data-theme="dark"] {
   t-tag:not(:defined)[theme="primary"] { background: #0E2A1A; color: #4ADE80; }
 }
 html[data-theme="dark"] body { background: var(--bg-alt); }
+html[data-theme="dark"] a { color: var(--primary-dark); }
+html[data-theme="dark"] .sidebar a:hover { color: var(--primary-dark); }
 html[data-theme="dark"] .topnav { background: rgba(17,24,39,.85); border-bottom-color: var(--border); }
 html[data-theme="dark"] .topnav .brand { color: #F8FAFC; }
 html[data-theme="dark"] .markdown blockquote { background: var(--primary-soft); }
@@ -332,6 +364,7 @@ html[data-theme="dark"] .markdown blockquote.note-tip { background: #0E2A1A; }
 html[data-theme="dark"] .markdown blockquote.note-warning,
 html[data-theme="dark"] .markdown blockquote.note-caution { background: #2C2410; }
 html[data-theme="dark"] .markdown blockquote.note-important { background: #2C1414; }
+html[data-theme="dark"] .markdown blockquote strong { color: #F8FAFC; }
 html[data-theme="dark"] th { background: var(--bg-alt); color: #F8FAFC; }
 html[data-theme="dark"] tr:hover td { background: var(--primary-soft); }
 html[data-theme="dark"] .hero { background: radial-gradient(1200px 500px at 80% -10%, #0E2A1A 0%, transparent 60%),

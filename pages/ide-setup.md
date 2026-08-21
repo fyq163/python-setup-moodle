@@ -112,19 +112,3 @@ subscription, which students get free with the Student Pack above.
 - ![PyCharm change interpreter](https://pub-639e92bd227c4441a00a10db2a268512.r2.dev/image/GitHub-pages/python-install/pycharm-interpreter-selection.png)
 References: [PyCharm + conda](https://www.anaconda.com/docs/getting-started/working-with-conda/ides/pycharm),
 [Python path](https://www.anaconda.com/docs/getting-started/working-with-conda/ides/python-path)
-
-## Other popular coding CLIs
-
-A newer wave of editors runs **inside the terminal** — perfect if you liked Chapter 1:
-
-- **opencode** — an open agentic coding CLI.
-- **kilo** (within OpenCode) and **mimo** — terminal-based assistants.
-
-They are just editors with an AI chat bolted on; everything from Chapter 1 (paths, `cd`,
-running scripts) still applies. Launch them in your project folder and they use whatever
-Python your shell currently has active.
-
-## GitHub Copilot — university subscription
-
-GitHub Copilot is an AI pair-programmer that suggests code as you type. **Students get it
-free** (and many other developer tools) through the [GitHub Copilot - Information Technology Services - HKU](https://its.hku.hk/software/github-copilot/)

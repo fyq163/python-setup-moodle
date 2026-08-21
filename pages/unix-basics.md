@@ -353,15 +353,15 @@ Here is a real session in a project folder (the `<you>` part is your username, a
 explained earlier — see *Users and the home folder (`~`)*):
 
 ```bash
-# <you> at Mbp.lan in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:03]
+# <you> at your_computer in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:03]
 $ ls
 AGENTS.md        assets           azure-api-key.py css              index.html       index.md         pages            readme.md        serve.py
 
-# <you> at Mbp.lan in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:04]
+# <you> at your_computer in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:04]
 $ vim AGENT<Tab>
 # → shell auto-completes to: vim AGENTS.md
 
-# <you> at Mbp.lan in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:29]
+# <you> at your_computer in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:29]
 $ vim AGENTS.md
 # → opens the file; no need to type the rest of the name by hand
 ```
