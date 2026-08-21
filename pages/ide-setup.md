@@ -17,11 +17,56 @@ free** (and many other developer tools) through the [GitHub Copilot - Informatio
 
 OpenCode is the AI coding agent used in the bootcamp. Install it from
 <https://opencode.ai/> and **connect it to your environment** — no command-line setup is
-needed here. (It is independent of the Python stack.)
+needed here. (It is independent of the Python stack.) We recommend installing through a
+package manager (Homebrew or npm): it manages the version and your shell `PATH` for you, so
+you don't have to download the binary and place it by hand.
+
+Install — pick the one that matches your setup:
+
+- macOS (Homebrew):
+  ```sh
+  brew install opencode
+  ```
+- Any OS that already has Node.js (npm):
+  ```sh
+  npm install -g opencode
+  ```
 
 > 💡 opencode, kilo, mimo and similar run **inside the terminal** — everything from
 > Chapter 1 (paths, `cd`, running scripts) still applies. Launch them in your project
 > folder and they use whatever Python your shell currently has active.
+
+### The project directory
+
+When you start OpenCode you give it a **project directory** — the folder you were standing
+in when you ran the command (e.g. `cd my-project && opencode`). The agent can **only see
+files inside that folder** (and its sub-folders), nothing outside it. So always launch
+OpenCode from the project you are working on, not from your home directory.
+
+### Slash commands
+
+Type `/` in the chat box to open the command menu — these are *slash commands*. You don't
+need to memorise them; the `/` menu shows them as you type. Common ones:
+`/help` (list what's available), `/init` (create a project config), `/models` (switch the AI
+model), `/clear` (clear the conversation).
+
+### Adding skills & reading more
+
+OpenCode can be extended with **skills** (reusable instruction packs). Drop a skill folder
+into one of these locations:
+- your project (applies to this one project): `.opencode/skill/<skill-name>/` next to your code
+- your user profile (applies to every project): `~/.config/opencode/skill/<skill-name>/` on
+  macOS/Linux, or `%APPDATA%\opencode\skill\<skill-name>\` on Windows
+
+To see how a skill is written, read the official docs and the bundled `SKILL.md` examples.
+
+### LSP & MCP
+
+To make OpenCode actually understand your code (autocomplete, jump-to-definition) and to
+connect external tools:
+- **LSP (language server):** one-command install — see <https://opencode.ai/docs/zh-cn/lsp/>
+- **MCP servers** (connect other apps / databases): a simple install walkthrough is at
+  <https://opencode.ai/docs/zh-cn/mcp-servers/>
 
 ## Visual Studio Code family (VS Code, Cursor, CodeBuddy, Trae…)
 
