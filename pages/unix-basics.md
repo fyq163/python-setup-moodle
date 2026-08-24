@@ -355,7 +355,7 @@ explained earlier — see *Users and the home folder (`~`)*):
 ```bash
 # <you> at your_computer in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:03]
 $ ls
-AGENTS.md        assets           azure-api-key.py css              index.html       index.md         pages            readme.md        serve.py
+AGENTS.md        assets           css              index.html       index.md         pages            readme.md        serve.py
 
 # <you> at your_computer in ~/PycharmProjects/python-setup-moodle on git:main x [11:17:04]
 $ vim AGENT<Tab>
