@@ -15,8 +15,7 @@ free** (and many other developer tools) through the [GitHub Copilot - Informatio
 
 > ❗ OpenCode is **compulsory** for the bootcamp — you must install it.
 
-OpenCode is the AI coding agent used in the bootcamp. Install it as described in
-`opencode-setup.md` in the course zip — no command-line setup is needed here, and it is
+OpenCode is the AI coding agent used in the bootcamp. It is
 independent of the Python stack. Once installed, **connect it to your environment**.
 
 > 💡 opencode, kilo, mimo and similar run **inside the terminal** — everything from
